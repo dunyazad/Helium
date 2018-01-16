@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include <Helium\internal\_GraphicsDevice.h>
-#include <Helium\Window.h>
+#include <Helium/internal/_GraphicsDevice.h>
+#include <Helium/Window.h>
 
 namespace ArtificialNature {
 
@@ -75,7 +75,7 @@ namespace ArtificialNature {
 		GLenum result = glewInit();
 		if (result != GLEW_OK)
 		{
-			printf("Failed to initialize GLEW\n");
+			MessageBox(NULL, L"Failed to initialize GLEW\n", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 			return S_FALSE;
 		}
 

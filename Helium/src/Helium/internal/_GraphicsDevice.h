@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Helium\GraphicsDevice.h>
+#include <Helium/GraphicsDevice.h>
 
 namespace ArtificialNature {
 

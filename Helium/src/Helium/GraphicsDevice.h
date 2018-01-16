@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Helium\HeliumCommon.h>
+#include <Helium/HeliumCommon.h>
 
 namespace ArtificialNature {
 
