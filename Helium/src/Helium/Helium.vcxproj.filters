@@ -16,6 +16,10 @@
     <ClInclude Include="internal\_GraphicsDevice.h">
       <Filter>internal</Filter>
     </ClInclude>
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="internal\_Scene.h">
+      <Filter>internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -28,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="internal\_GraphicsDevice.cpp">
+      <Filter>internal</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\_Scene.cpp">
       <Filter>internal</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,7 +15,7 @@ namespace ArtificialNature {
 		virtual HRESULT Initialize(HWND hWnd);
 		virtual void Terminate();
 
-		virtual void Clear(float r = 0.0f, float g = 0.125f, float b = 0.3f, float a = 1.0f);
+		virtual void Clear(float r = 0.3f, float g = 0.5f, float b = 0.7f, float a = 1.0f);
 		virtual void Present();
 
 		virtual void Resize(int width, int height);

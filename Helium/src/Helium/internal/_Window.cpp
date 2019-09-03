@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <Helium/internal/_Window.h>
+#include <Helium/internal/_Scene.h>
 #include <Helium/internal/_GraphicsDevice.h>
 
 namespace ArtificialNature {
@@ -133,7 +134,7 @@ namespace ArtificialNature {
 
 	LRESULT _Window::InstanceWndProc(UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		cout << m_hWnd << endl;
+		//cout << m_hWnd << endl;
 
 		switch (message)
 		{
@@ -159,14 +160,25 @@ namespace ArtificialNature {
 	{
 		if(m_pGraphicsDevice) m_pGraphicsDevice->Clear();
 
-		//for (auto& kvp : m_sceneMap)
-		//{
-		//	if (kvp.second)
-		//	{
-		//		kvp.second->Render(pGraphicsDevice);
-		//	}
-		//}
+		for (auto& kvp : m_scenes)
+		{
+			if (kvp.second)
+			{
+				kvp.second->Render(m_pGraphicsDevice);
+			}
+		}
 
 		if (m_pGraphicsDevice) m_pGraphicsDevice->Present();
+	}
+
+	Scene* _Window::CreateScene(const string& name)
+	{
+		if (m_scenes.count(name) != 0)
+			return m_scenes[name];
+	
+		auto pScene = new _Scene;
+		m_scenes[name] = pScene;
+
+		return pScene;
 	}
 }

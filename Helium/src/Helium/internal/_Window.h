@@ -2,6 +2,7 @@
 
 #include <Helium/Helium.h>
 #include <Helium/Window.h>
+#include <Helium/Scene.h>
 
 namespace ArtificialNature {
 
@@ -24,6 +25,8 @@ namespace ArtificialNature {
 		virtual inline HWND GetWindowHandle() { return m_hWnd; }
 		virtual void Frame();
 
+		virtual Scene* CreateScene(const string& name);
+
 	private:
 		static map<HWND, Window*> s_windowTable;
 		static int s_windowCreateRequestCount;
@@ -37,6 +40,8 @@ namespace ArtificialNature {
 		int m_height;
 
 		GraphicsDevice* m_pGraphicsDevice = nullptr;
+
+		map<string, Scene*> m_scenes;
 
 		void CreateNewWindow();
 	};
