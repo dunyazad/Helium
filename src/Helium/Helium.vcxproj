@@ -80,8 +80,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="glad.c" />
+    <ClCompile Include="HeID.cpp" />
+    <ClCompile Include="HeObject.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HeID.h" />
+    <ClInclude Include="Helium.h" />
+    <ClInclude Include="HeliumCommon.h" />
+    <ClInclude Include="HeObject.h" />
+    <ClInclude Include="HeScene.h" />
+    <ClInclude Include="HeSceneNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
