@@ -4,6 +4,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="HeObject.cpp" />
     <ClCompile Include="HeID.cpp" />
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="HeSceneNode.cpp" />
+    <ClCompile Include="HeScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />

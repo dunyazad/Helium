@@ -80,8 +80,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="glad.c" />
     <ClCompile Include="HeID.cpp" />
     <ClCompile Include="HeObject.cpp" />
+    <ClCompile Include="HeScene.cpp" />
+    <ClCompile Include="HeSceneNode.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

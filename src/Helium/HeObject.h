@@ -10,8 +10,13 @@ namespace ArtificialNature {
 		HeObject();
 		~HeObject();
 
-	private:
+		inline long GetInstanceID() { return instanceID; }
+	protected:
+		long NewID();
 
+	private:
+		static long instancCount;
+		long instanceID = -1;
 	};
 
 }

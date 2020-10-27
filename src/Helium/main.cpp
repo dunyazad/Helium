@@ -2,7 +2,6 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <bullet/btBulletDynamicsCommon.h>
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -15,9 +14,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-// Standard Headers
-#include <cstdio>
-#include <cstdlib>
+//// Standard Headers
+//#include <cstdio>
+//#include <cstdlib>
 
 const int mWidth = 1280;
 const int mHeight = 800;
