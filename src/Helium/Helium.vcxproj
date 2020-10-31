@@ -82,18 +82,22 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="HeID.cpp" />
+    <ClCompile Include="HeMesh.cpp" />
     <ClCompile Include="HeObject.cpp" />
     <ClCompile Include="HeScene.cpp" />
     <ClCompile Include="HeSceneNode.cpp" />
+    <ClCompile Include="HeShader.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeID.h" />
     <ClInclude Include="Helium.h" />
     <ClInclude Include="HeliumCommon.h" />
+    <ClInclude Include="HeMesh.h" />
     <ClInclude Include="HeObject.h" />
     <ClInclude Include="HeScene.h" />
     <ClInclude Include="HeSceneNode.h" />
+    <ClInclude Include="HeShader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

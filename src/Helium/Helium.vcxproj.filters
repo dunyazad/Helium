@@ -7,6 +7,8 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="HeSceneNode.cpp" />
     <ClCompile Include="HeScene.cpp" />
+    <ClCompile Include="HeShader.cpp" />
+    <ClCompile Include="HeMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -15,5 +17,7 @@
     <ClInclude Include="HeSceneNode.h" />
     <ClInclude Include="HeObject.h" />
     <ClInclude Include="HeID.h" />
+    <ClInclude Include="HeShader.h" />
+    <ClInclude Include="HeMesh.h" />
   </ItemGroup>
 </Project>
