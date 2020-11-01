@@ -9,6 +9,12 @@
     <ClCompile Include="HeScene.cpp" />
     <ClCompile Include="HeShader.cpp" />
     <ClCompile Include="HeMesh.cpp" />
+    <ClCompile Include="HeModel.cpp" />
+    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="HeGeometry.cpp" />
+    <ClCompile Include="HeVertexArrayObject.cpp" />
+    <ClCompile Include="HeVertexBufferObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -19,5 +25,10 @@
     <ClInclude Include="HeID.h" />
     <ClInclude Include="HeShader.h" />
     <ClInclude Include="HeMesh.h" />
+    <ClInclude Include="HeModel.h" />
+    <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="HeGeometry.h" />
+    <ClInclude Include="HeVertexArrayObject.h" />
+    <ClInclude Include="HeVertexBufferObject.h" />
   </ItemGroup>
 </Project>
