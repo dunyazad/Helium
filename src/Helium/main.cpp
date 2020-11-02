@@ -7,6 +7,13 @@
 
 #include "HeShader.h"
 
+#include "HeScene.h"
+#include "HeSceneNode.h"
+
+#include "HeGeometry.h"
+
+using namespace ArtificialNature;
+
 // Reference: https://github.com/nothings/stb/blob/master/stb_image.h#L4
 // To use stb_image, add this in *one* C++ source file.
 //     #define STB_IMAGE_IMPLEMENTATION
@@ -45,6 +52,21 @@ int main(int argc, char* argv[]) {
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
+    HeScene scene;
+
+    HeSceneNode node(&scene);
+    scene.GetRootNode()->AddChild(&node);
+
+    HeGeometry geometry;
+    geometry.AddVertex(glm::vec3(-5, 0, 0));
+    geometry.AddVertex(glm::vec3( 5, 0, 0));
+    geometry.AddVertex(glm::vec3( 0, 5, 0));
+
+    geometry.AddIndex(0);
+    geometry.AddIndex(1);
+    geometry.AddIndex(2);
+
+
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
         if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -53,6 +75,9 @@ int main(int argc, char* argv[]) {
         // Background Fill Color
         glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        scene.Update(0);
+        scene.Render();
 
         // Flip Buffers and Draw
         glfwSwapBuffers(mWindow);

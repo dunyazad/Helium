@@ -18,9 +18,19 @@ namespace ArtificialNature {
 		void Bind();
 		void Unbind();
 
-		inline int Size() { return 0; }
+		inline size_t Size() { return indices.size(); }
+
+		void AddIndex(unsigned int index)
+		{
+			indices.push_back(index);
+		}
 
 		void SetData(const vector<unsigned int>& indices)
+		{
+			copy(indices.begin(), indices.end(), this->indices.begin());
+		}
+
+		void Upload()
 		{
 			Bind();
 			
@@ -29,6 +39,7 @@ namespace ArtificialNature {
 
 	private:
 		unsigned int id;
+		vector<unsigned int> indices;
 	};
 
 }

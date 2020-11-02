@@ -18,6 +18,11 @@ namespace ArtificialNature {
 		void Initialize();
 		void Terminate();
 
+		void AddVertex(const glm::vec3& vertex);
+		void AddIndex(unsigned int index);
+
+		void Upload();
+
 		void Draw();
 
 	protected:

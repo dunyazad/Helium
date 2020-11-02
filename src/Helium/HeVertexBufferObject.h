@@ -18,16 +18,26 @@ namespace ArtificialNature {
 		void Bind();
 		void Unbind();
 
-		template<typename T>
-		void SetData(const vector<T>& vertices)
+		void AddVertex(const glm::vec3& vertex)
+		{
+			vertices.push_back(vertex);
+		}
+
+		void SetData(const vector<glm::vec3>& vertices)
+		{
+			copy(vertices.begin(), vertices.end(), this->vertices.begin());
+		}
+
+		void Upload()
 		{
 			Bind();
-			
-			glBufferData(GL_ARRAY_BUFFER, vertices.size * sizeof(T), &vertices[0], GL_STATIC_DRAW);
+
+			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 		}
 
 	private:
 		unsigned int id;
+		vector<glm::vec3> vertices;
 	};
 
 }
