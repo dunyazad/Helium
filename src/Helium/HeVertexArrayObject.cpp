@@ -4,10 +4,18 @@ namespace ArtificialNature {
 
 	HeVertexArrayObject::HeVertexArrayObject()
 	{
-		glGenVertexArrays(1, &id);
 	}
 
 	HeVertexArrayObject::~HeVertexArrayObject()
+	{
+	}
+
+	void HeVertexArrayObject::Initialize()
+	{
+		glGenVertexArrays(1, &id);
+	}
+
+	void HeVertexArrayObject::Terminate()
 	{
 		glDeleteVertexArrays(1, &id);
 	}

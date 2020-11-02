@@ -1,5 +1,6 @@
 #include "HeSceneNode.h"
 #include "HeScene.h"
+#include "HeGeometry.h"
 
 namespace ArtificialNature {
 
@@ -42,6 +43,11 @@ namespace ArtificialNature {
 
 	void HeSceneNode::Render()
 	{
+		if (geometry != nullptr)
+		{
+			geometry->Draw();
+		}
+
 		for (auto& child : childNodes)
 		{
 			child->Render();

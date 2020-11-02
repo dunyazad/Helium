@@ -4,10 +4,18 @@ namespace ArtificialNature {
 
 	HeIndexBufferObject::HeIndexBufferObject()
 	{
-		glGenBuffers(1, &id);
 	}
 
 	HeIndexBufferObject::~HeIndexBufferObject()
+	{
+	}
+
+	void HeIndexBufferObject::Initialize()
+	{
+		glGenBuffers(1, &id);
+	}
+
+	void HeIndexBufferObject::Terminate()
 	{
 		glDeleteBuffers(1, &id);
 	}

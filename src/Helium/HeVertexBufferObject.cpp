@@ -4,10 +4,18 @@ namespace ArtificialNature {
 
 	HeVertexBufferObject::HeVertexBufferObject()
 	{
-		glGenBuffers(1, &id);
 	}
 
 	HeVertexBufferObject::~HeVertexBufferObject()
+	{
+	}
+
+	void HeVertexBufferObject::Initialize()
+	{
+		glGenBuffers(1, &id);
+	}
+	
+	void HeVertexBufferObject::Terminate()
 	{
 		glDeleteBuffers(1, &id);
 	}

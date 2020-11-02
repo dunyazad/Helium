@@ -12,8 +12,13 @@ namespace ArtificialNature {
 
 		inline unsigned int ID() { return id; }
 
+		void Initialize();
+		void Terminate();
+
 		void Bind();
 		void Unbind();
+
+		inline int Size() { return 0; }
 
 		void SetData(const vector<unsigned int>& indices)
 		{

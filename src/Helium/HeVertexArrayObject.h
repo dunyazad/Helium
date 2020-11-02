@@ -12,11 +12,13 @@ namespace ArtificialNature {
 
 		inline unsigned int ID() { return id; }
 
+		void Initialize();
+		void Terminate();
 		void Bind();
 		void Unbind();
 
 	protected:
-		unsigned int id;
+		unsigned int id = -1;
 	};
 
 }

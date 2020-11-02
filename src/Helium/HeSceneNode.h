@@ -6,6 +6,7 @@
 namespace ArtificialNature {
 
 	class HeScene;
+	class HeGeometry;
 
 	class HeSceneNode : public HeObject
 	{
@@ -21,11 +22,14 @@ namespace ArtificialNature {
 		void Update(float dt);
 		void Render();
 
+		inline void SetGeometry(HeGeometry* geometry) { this->geometry = geometry; }
+
 	protected:
 		HeScene* scene = nullptr;
 		HeSceneNode* parentNode = nullptr;
 		set<HeSceneNode*> childNodes;
 
+		HeGeometry* geometry;
 	private:
 
 	};
