@@ -22,3 +22,11 @@ using namespace std;
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+
+
+
+
+
+
+void _CheckGLError(const char* file, int line);
+#define CheckGLError() _CheckGLError(__FILE__, __LINE__)

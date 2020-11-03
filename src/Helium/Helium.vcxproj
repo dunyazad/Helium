@@ -87,8 +87,7 @@
     <ClCompile Include="HeGeometry.cpp" />
     <ClCompile Include="HeID.cpp" />
     <ClCompile Include="HeIndexBufferObject.cpp" />
-    <ClCompile Include="HeMesh.cpp" />
-    <ClCompile Include="HeModel.cpp" />
+    <ClCompile Include="HeliumCommon.cpp" />
     <ClCompile Include="HeObject.cpp" />
     <ClCompile Include="HeScene.cpp" />
     <ClCompile Include="HeSceneNode.cpp" />
@@ -105,8 +104,6 @@
     <ClInclude Include="HeIndexBufferObject.h" />
     <ClInclude Include="Helium.h" />
     <ClInclude Include="HeliumCommon.h" />
-    <ClInclude Include="HeMesh.h" />
-    <ClInclude Include="HeModel.h" />
     <ClInclude Include="HeObject.h" />
     <ClInclude Include="HeScene.h" />
     <ClInclude Include="HeSceneNode.h" />

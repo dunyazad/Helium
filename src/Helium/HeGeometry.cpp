@@ -1,4 +1,5 @@
 #include "HeGeometry.h"
+#include "HeShader.h"
 
 namespace ArtificialNature {
 
@@ -25,11 +26,13 @@ namespace ArtificialNature {
 	{
 		vao.Bind();
 
+		vbo.Unbind();
 		vbo.Terminate();
 
+		ibo.Unbind();
 		ibo.Terminate();
-		vao.Unbind();
 
+		vao.Unbind();
 		vao.Terminate();
 	}
 
@@ -49,20 +52,27 @@ namespace ArtificialNature {
 		
 		vbo.Bind();
 		vbo.Upload();
-		vbo.Unbind();
+		//vbo.Unbind();
 
 		ibo.Bind();
 		ibo.Upload();
-		ibo.Unbind();
+		//ibo.Unbind();
 
 		vao.Unbind();
 	}
 
 	void HeGeometry::Draw()
 	{
+		if (shader == nullptr)
+			return;
+
+		shader->Use();
+
 		vao.Bind();
 
-		glDrawElements(GL_TRIANGLES, (int)ibo.Size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
+
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		vao.Unbind();
 	}

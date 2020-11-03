@@ -58,14 +58,25 @@ int main(int argc, char* argv[]) {
     scene.GetRootNode()->AddChild(&node);
 
     HeGeometry geometry;
-    geometry.AddVertex(glm::vec3(-5, 0, 0));
-    geometry.AddVertex(glm::vec3( 5, 0, 0));
-    geometry.AddVertex(glm::vec3( 0, 5, 0));
+    geometry.Initialize();
+    node.SetGeometry(&geometry);
+    geometry.AddVertex(glm::vec3( 0.5f,  0.5f, 0.0f));
+    geometry.AddVertex(glm::vec3( 0.5f, -0.5f, 0.0f));
+    geometry.AddVertex(glm::vec3(-0.5f, -0.5f, 0.0f));
+    geometry.AddVertex(glm::vec3(-0.5f,  0.5f, 0.0f));
 
     geometry.AddIndex(0);
     geometry.AddIndex(1);
-    geometry.AddIndex(2);
+    geometry.AddIndex(3);
 
+    geometry.AddIndex(1);
+    geometry.AddIndex(2);
+    geometry.AddIndex(3);
+
+    geometry.Upload();
+
+    HeShader shader;
+    geometry.SetShader(&shader);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {

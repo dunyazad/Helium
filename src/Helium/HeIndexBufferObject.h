@@ -25,16 +25,16 @@ namespace ArtificialNature {
 			indices.push_back(index);
 		}
 
-		void SetData(const vector<unsigned int>& indices)
-		{
-			copy(indices.begin(), indices.end(), this->indices.begin());
-		}
+		//void SetData(const vector<unsigned int>& indices)
+		//{
+		//	copy(indices.begin(), indices.end(), this->indices.begin());
+		//}
 
 		void Upload()
 		{
 			Bind();
 			
-			glBufferData(GL_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 		}
 
 	private:

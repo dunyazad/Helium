@@ -23,16 +23,18 @@ namespace ArtificialNature {
 			vertices.push_back(vertex);
 		}
 
-		void SetData(const vector<glm::vec3>& vertices)
-		{
-			copy(vertices.begin(), vertices.end(), this->vertices.begin());
-		}
+		//void SetData(const vector<glm::vec3>& vertices)
+		//{
+		//	copy(vertices.begin(), vertices.end(), this->vertices.begin());
+		//}
 
 		void Upload()
 		{
 			Bind();
 
-			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size() * 3, &vertices[0], GL_STATIC_DRAW);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+			glEnableVertexAttribArray(0);
 		}
 
 	private:

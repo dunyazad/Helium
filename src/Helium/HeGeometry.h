@@ -9,6 +9,8 @@
 
 namespace ArtificialNature {
 
+	class HeShader;
+
 	class HeGeometry : public HeObject
 	{
 	public:
@@ -25,7 +27,10 @@ namespace ArtificialNature {
 
 		void Draw();
 
+		inline void SetShader(HeShader* shader) { this->shader = shader; }
+
 	protected:
+		HeShader* shader = nullptr;
 		HeVertexArrayObject vao;
 		HeVertexBufferObject vbo;
 		HeIndexBufferObject ibo;
