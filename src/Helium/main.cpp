@@ -11,6 +11,8 @@
 #include "HeSceneNode.h"
 
 #include "HeGeometry.h"
+#include "HeImage.h"
+#include "HeTexture.h"
 
 using namespace ArtificialNature;
 
@@ -77,6 +79,10 @@ int main(int argc, char* argv[]) {
 
     HeShader shader;
     geometry.SetShader(&shader);
+
+    HeImage image("../../res/img/awesomeface.png");
+    HeTexture texture;
+    texture.Initialize(&image);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {

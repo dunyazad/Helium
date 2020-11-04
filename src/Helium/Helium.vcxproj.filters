@@ -15,6 +15,9 @@
     <ClCompile Include="HeVertexBufferObject.cpp" />
     <ClCompile Include="HeIndexBufferObject.cpp" />
     <ClCompile Include="HeliumCommon.cpp" />
+    <ClCompile Include="HeCamera.cpp" />
+    <ClCompile Include="HeTexture.cpp" />
+    <ClCompile Include="HeImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -29,5 +32,8 @@
     <ClInclude Include="HeVertexArrayObject.h" />
     <ClInclude Include="HeVertexBufferObject.h" />
     <ClInclude Include="HeIndexBufferObject.h" />
+    <ClInclude Include="HeCamera.h" />
+    <ClInclude Include="HeTexture.h" />
+    <ClInclude Include="HeImage.h" />
   </ItemGroup>
 </Project>

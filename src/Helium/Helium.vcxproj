@@ -84,14 +84,17 @@
   <ItemGroup>
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="HeCamera.cpp" />
     <ClCompile Include="HeGeometry.cpp" />
     <ClCompile Include="HeID.cpp" />
+    <ClCompile Include="HeImage.cpp" />
     <ClCompile Include="HeIndexBufferObject.cpp" />
     <ClCompile Include="HeliumCommon.cpp" />
     <ClCompile Include="HeObject.cpp" />
     <ClCompile Include="HeScene.cpp" />
     <ClCompile Include="HeSceneNode.cpp" />
     <ClCompile Include="HeShader.cpp" />
+    <ClCompile Include="HeTexture.cpp" />
     <ClCompile Include="HeVertexArrayObject.cpp" />
     <ClCompile Include="HeVertexBufferObject.cpp" />
     <ClCompile Include="main.cpp" />
@@ -99,8 +102,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="HeCamera.h" />
     <ClInclude Include="HeGeometry.h" />
     <ClInclude Include="HeID.h" />
+    <ClInclude Include="HeImage.h" />
     <ClInclude Include="HeIndexBufferObject.h" />
     <ClInclude Include="Helium.h" />
     <ClInclude Include="HeliumCommon.h" />
@@ -108,6 +113,7 @@
     <ClInclude Include="HeScene.h" />
     <ClInclude Include="HeSceneNode.h" />
     <ClInclude Include="HeShader.h" />
+    <ClInclude Include="HeTexture.h" />
     <ClInclude Include="HeVertexArrayObject.h" />
     <ClInclude Include="HeVertexBufferObject.h" />
   </ItemGroup>
