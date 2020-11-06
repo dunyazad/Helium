@@ -75,15 +75,28 @@ int main(int argc, char* argv[]) {
     geometry.AddIndex(2);
     geometry.AddIndex(3);
 
+    geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    geometry.AddUV(glm::vec2(1.0f, 1.0f));
+    geometry.AddUV(glm::vec2(1.0f, 0.0f));
+    geometry.AddUV(glm::vec2(0.0f, 0.0f));
+    geometry.AddUV(glm::vec2(0.0f, 1.0f));
+
     geometry.Upload();
 
-    HeShader shader("../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+    HeShader shader("../../res/shader/texture.vs", "../../res/shader/texture.fs");
     //HeShader shader;
     geometry.SetShader(&shader);
 
     HeImage image("../../res/img/awesomeface.png");
     HeTexture texture;
     texture.Initialize(&image);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {

@@ -44,6 +44,8 @@ namespace ArtificialNature {
 
 		void Use();
 
+		inline GLuint GetProgram() { return shaderProgram; }
+
 	private:
 		string vertexShaderFileName;
 		string fragmentShaderFileName;
@@ -51,9 +53,9 @@ namespace ArtificialNature {
 		string vertexShaderSource;
 		string fragmentShaderSource;
 
-		unsigned int vertexShader;
-		unsigned int fragmentShader;
-		unsigned int shaderProgram;
+		GLuint vertexShader;
+		GLuint fragmentShader;
+		GLuint shaderProgram;
 	};
 
 }

@@ -26,7 +26,7 @@ namespace ArtificialNature {
 
 		if (image->Data() != nullptr)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->Width(), image->Height(), 0, GL_RGB, GL_UNSIGNED_BYTE, image->Data());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->Width(), image->Height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image->Data());
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 	}

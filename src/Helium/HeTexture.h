@@ -15,6 +15,12 @@ namespace ArtificialNature {
 		void Initialize(HeImage* image);
 		void Terminate();
 
+		void Bind(GLenum textureSlot, GLenum textureTarget)
+		{
+			glActiveTexture(textureSlot);
+			glBindTexture(textureTarget, id);
+		}
+
 	protected:
 		unsigned int id;
 	};

@@ -96,7 +96,6 @@
     <ClCompile Include="HeShader.cpp" />
     <ClCompile Include="HeTexture.cpp" />
     <ClCompile Include="HeVertexArrayObject.cpp" />
-    <ClCompile Include="HeVertexBufferObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
@@ -115,7 +114,7 @@
     <ClInclude Include="HeShader.h" />
     <ClInclude Include="HeTexture.h" />
     <ClInclude Include="HeVertexArrayObject.h" />
-    <ClInclude Include="HeVertexBufferObject.h" />
+    <ClInclude Include="HeVertexBufferObject.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,12 +4,13 @@
 #include "HeObject.h"
 
 #include "HeVertexArrayObject.h"
-#include "HeVertexBufferObject.h"
+#include "HeVertexBufferObject.hpp"
 #include "HeIndexBufferObject.h"
 
 namespace ArtificialNature {
 
 	class HeShader;
+	class HeTexture;
 
 	class HeGeometry : public HeObject
 	{
@@ -21,7 +22,9 @@ namespace ArtificialNature {
 		void Terminate();
 
 		void AddVertex(const glm::vec3& vertex);
-		void AddIndex(unsigned int index);
+		void AddIndex(GLuint index);
+		void AddColor(const glm::vec4& color);
+		void AddUV(const glm::vec2& uv);
 
 		void Upload();
 
@@ -32,8 +35,11 @@ namespace ArtificialNature {
 	protected:
 		HeShader* shader = nullptr;
 		HeVertexArrayObject vao;
-		HeVertexBufferObject vbo;
-		HeIndexBufferObject ibo;
+		HeVertexBufferObject<glm::vec3> vbo;
+		HeVertexBufferObject<GLuint> ibo;
+		HeVertexBufferObject<glm::vec4> cbo;
+		HeVertexBufferObject<glm::vec2> uvbo;
+		HeTexture* texture;
 	};
 
 }

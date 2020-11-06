@@ -1,9 +1,14 @@
 #include "HeGeometry.h"
 #include "HeShader.h"
+#include "HeTexture.h"
 
 namespace ArtificialNature {
 
-	HeGeometry::HeGeometry()
+	HeGeometry::HeGeometry() :
+		vbo(HeVertexBufferObject<glm::vec3>::BufferType::VERTEX_BUFFER),
+		ibo(HeVertexBufferObject<GLuint>::BufferType::INDEX_BUFFER),
+		cbo(HeVertexBufferObject<glm::vec4>::BufferType::COLOR_BUFFER),
+		uvbo(HeVertexBufferObject<glm::vec2>::BufferType::UV_BUFFER)
 	{
 	}
 
@@ -19,6 +24,11 @@ namespace ArtificialNature {
 		vbo.Initialize();
 
 		ibo.Initialize();
+
+		cbo.Initialize();
+
+		uvbo.Initialize();
+
 		vao.Unbind();
 	}
 
@@ -32,31 +42,47 @@ namespace ArtificialNature {
 		ibo.Unbind();
 		ibo.Terminate();
 
+		cbo.Unbind();
+		cbo.Terminate();
+
+		uvbo.Unbind();
+		uvbo.Terminate();
+
 		vao.Unbind();
 		vao.Terminate();
 	}
 
 	void HeGeometry::AddVertex(const glm::vec3& vertex)
 	{
-		vbo.AddVertex(vertex);
+		vbo.AddElement(vertex);
 	}
 
-	void HeGeometry::AddIndex(unsigned int index)
+	void HeGeometry::AddIndex(GLuint index)
 	{
-		ibo.AddIndex(index);
+		ibo.AddElement(index);
+	}
+
+	void HeGeometry::AddColor(const glm::vec4& color)
+	{
+		cbo.AddElement(color);
+	}
+
+	void HeGeometry::AddUV(const glm::vec2& uv)
+	{
+		uvbo.AddElement(uv);
 	}
 
 	void HeGeometry::Upload()
 	{
 		vao.Bind();
 		
-		vbo.Bind();
-		vbo.Upload();
-		//vbo.Unbind();
+		vbo.Upload(0);
 
-		ibo.Bind();
-		ibo.Upload();
-		//ibo.Unbind();
+		ibo.Upload(-1);
+
+		cbo.Upload(1);
+
+		uvbo.Upload(2);
 
 		vao.Unbind();
 	}
@@ -68,9 +94,28 @@ namespace ArtificialNature {
 
 		shader->Use();
 
+		glUniform1i(glGetUniformLocation(shader->GetProgram(), "texture1"), 0); // set it manually
+
+		if (texture)
+		{
+			texture->Bind(GL_TEXTURE0, GL_TEXTURE_2D);
+		}
+
 		vao.Bind();
 
+		vbo.Bind();
+		cbo.Bind();
+		uvbo.Bind();
+
+		CheckGLError();
+
+		//glEnableVertexAttribArray(0);
+		//glEnableVertexAttribArray(1);
+		//glEnableVertexAttribArray(2);
+
 		glDrawElements(GL_TRIANGLES, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
+
+		CheckGLError();
 
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
