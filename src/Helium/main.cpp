@@ -77,7 +77,8 @@ int main(int argc, char* argv[]) {
 
     geometry.Upload();
 
-    HeShader shader;
+    HeShader shader("../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+    //HeShader shader;
     geometry.SetShader(&shader);
 
     HeImage image("../../res/img/awesomeface.png");
