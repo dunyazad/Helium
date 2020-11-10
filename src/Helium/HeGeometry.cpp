@@ -113,7 +113,7 @@ namespace ArtificialNature {
 		//glEnableVertexAttribArray(1);
 		//glEnableVertexAttribArray(2);
 
-		glDrawElements(GL_TRIANGLES, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(drawingMode, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
 
 		CheckGLError();
 

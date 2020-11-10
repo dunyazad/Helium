@@ -30,6 +30,12 @@ namespace ArtificialNature {
 		set<HeSceneNode*> childNodes;
 
 		HeGeometry* geometry;
+
+		glm::quat localRotation;
+		glm::vec3 localPosition;
+		
+		glm::quat absoluteRotation;
+		glm::vec3 absolutePosition;
 	private:
 
 	};

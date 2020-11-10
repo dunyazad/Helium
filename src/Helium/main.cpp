@@ -54,6 +54,10 @@ int main(int argc, char* argv[]) {
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
     HeScene scene;
 
     HeSceneNode node(&scene);
@@ -62,6 +66,9 @@ int main(int argc, char* argv[]) {
     HeGeometry geometry;
     geometry.Initialize();
     node.SetGeometry(&geometry);
+
+    //geometry.SetDrawingMode(HeGeometry::DrawingMode::Triangles);
+
     geometry.AddVertex(glm::vec3( 0.5f,  0.5f, 0.0f));
     geometry.AddVertex(glm::vec3( 0.5f, -0.5f, 0.0f));
     geometry.AddVertex(glm::vec3(-0.5f, -0.5f, 0.0f));

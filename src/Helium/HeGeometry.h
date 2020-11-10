@@ -15,6 +15,9 @@ namespace ArtificialNature {
 	class HeGeometry : public HeObject
 	{
 	public:
+		enum DrawingMode { Points = GL_POINTS, Lines = GL_LINES, Triangles = GL_TRIANGLES, Quads = GL_QUADS };
+
+	public:
 		HeGeometry();
 		~HeGeometry();
 
@@ -31,8 +34,11 @@ namespace ArtificialNature {
 		void Draw();
 
 		inline void SetShader(HeShader* shader) { this->shader = shader; }
+		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
 
 	protected:
+		DrawingMode drawingMode = DrawingMode::Triangles;
+
 		HeShader* shader = nullptr;
 		HeVertexArrayObject vao;
 		HeVertexBufferObject<glm::vec3> vbo;

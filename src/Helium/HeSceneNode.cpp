@@ -35,6 +35,17 @@ namespace ArtificialNature {
 
 	void HeSceneNode::Update(float dt)
 	{
+		if (parentNode != nullptr)
+		{
+			absoluteRotation = parentNode->absoluteRotation * localRotation;
+			absolutePosition = parentNode->absolutePosition + localRotation * localPosition;
+		}
+		else
+		{
+			absoluteRotation = localRotation;
+			absolutePosition = localRotation * localPosition;
+		}
+
 		for (auto& child : childNodes)
 		{
 			child->Update(dt);
