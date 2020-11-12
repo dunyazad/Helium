@@ -9,8 +9,7 @@
 
 namespace ArtificialNature {
 
-	class HeShader;
-	class HeTexture;
+	class HeMaterial;
 
 	class HeGeometry : public HeObject
 	{
@@ -33,19 +32,18 @@ namespace ArtificialNature {
 
 		void Draw();
 
-		inline void SetShader(HeShader* shader) { this->shader = shader; }
+		inline void SetHeMaterial(HeMaterial* material) { this->material = material; }
 		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
 
 	protected:
 		DrawingMode drawingMode = DrawingMode::Triangles;
 
-		HeShader* shader = nullptr;
+		HeMaterial* material = nullptr;
 		HeVertexArrayObject vao;
 		HeVertexBufferObject<glm::vec3> vbo;
 		HeVertexBufferObject<GLuint> ibo;
 		HeVertexBufferObject<glm::vec4> cbo;
 		HeVertexBufferObject<glm::vec2> uvbo;
-		HeTexture* texture;
 	};
 
 }

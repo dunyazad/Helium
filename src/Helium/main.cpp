@@ -13,6 +13,7 @@
 #include "HeGeometry.h"
 #include "HeImage.h"
 #include "HeTexture.h"
+#include "HeMaterial.h"
 
 using namespace ArtificialNature;
 
@@ -94,13 +95,19 @@ int main(int argc, char* argv[]) {
 
     geometry.Upload();
 
+    HeMaterial material;
+
     HeShader shader("../../res/shader/texture.vs", "../../res/shader/texture.fs");
     //HeShader shader;
-    geometry.SetShader(&shader);
+    material.SetShader(&shader);
 
     HeImage image("../../res/img/awesomeface.png");
     HeTexture texture;
     texture.Initialize(&image);
+
+    material.SetTexture(&texture);
+
+    geometry.SetHeMaterial(&material);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

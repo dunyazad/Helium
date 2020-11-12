@@ -1,6 +1,5 @@
 #include "HeGeometry.h"
-#include "HeShader.h"
-#include "HeTexture.h"
+#include "HeMaterial.h"
 
 namespace ArtificialNature {
 
@@ -89,17 +88,10 @@ namespace ArtificialNature {
 
 	void HeGeometry::Draw()
 	{
-		if (shader == nullptr)
+		if (material == nullptr)
 			return;
 
-		shader->Use();
-
-		glUniform1i(glGetUniformLocation(shader->GetProgram(), "texture1"), 0); // set it manually
-
-		if (texture)
-		{
-			texture->Bind(GL_TEXTURE0, GL_TEXTURE_2D);
-		}
+		material->Use();
 
 		vao.Bind();
 

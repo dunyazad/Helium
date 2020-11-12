@@ -90,6 +90,7 @@
     <ClCompile Include="HeImage.cpp" />
     <ClCompile Include="HeIndexBufferObject.cpp" />
     <ClCompile Include="HeliumCommon.cpp" />
+    <ClCompile Include="HeMaterial.cpp" />
     <ClCompile Include="HeObject.cpp" />
     <ClCompile Include="HeScene.cpp" />
     <ClCompile Include="HeSceneNode.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="HeIndexBufferObject.h" />
     <ClInclude Include="Helium.h" />
     <ClInclude Include="HeliumCommon.h" />
+    <ClInclude Include="HeMaterial.h" />
     <ClInclude Include="HeObject.h" />
     <ClInclude Include="HeScene.h" />
     <ClInclude Include="HeSceneNode.h" />
