@@ -110,10 +110,10 @@ namespace ArtificialNature {
 
 		vao.Bind();
 
-		vbo.Bind();
-		ibo.Bind();
-		cbo.Bind();
-		uvbo.Bind();
+		if(vbo.Size() > 0) vbo.Bind();
+		if(ibo.Size() > 0) ibo.Bind();
+		if(cbo.Size() > 0) cbo.Bind();
+		if(uvbo.Size() > 0) uvbo.Bind();
 
 		CheckGLError();
 
@@ -121,7 +121,17 @@ namespace ArtificialNature {
 		//glEnableVertexAttribArray(1);
 		//glEnableVertexAttribArray(2);
 
+		if (drawingMode == GL_LINES)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+
 		glDrawElements(drawingMode, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
+
+		if (drawingMode == GL_LINES)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 
 		CheckGLError();
 

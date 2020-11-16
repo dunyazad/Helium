@@ -54,9 +54,12 @@ namespace ArtificialNature {
 
 	void HeSceneNode::Render()
 	{
-		if (geometry != nullptr)
+		for (auto& geometry : geometries)
 		{
-			geometry->Draw();
+			if (geometry != nullptr)
+			{
+				geometry->Draw();
+			}
 		}
 
 		for (auto& child : childNodes)

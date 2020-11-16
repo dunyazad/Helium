@@ -22,14 +22,15 @@ namespace ArtificialNature {
 		void Update(float dt);
 		void Render();
 
-		inline void SetGeometry(HeGeometry* geometry) { this->geometry = geometry; }
+		inline void AddGeometry(HeGeometry* geometry) { this->geometries.insert(geometry); }
+		inline void RemoveGeometry(HeGeometry* geometry) { this->geometries.erase(geometry); }
 
 	protected:
 		HeScene* scene = nullptr;
 		HeSceneNode* parentNode = nullptr;
 		set<HeSceneNode*> childNodes;
 
-		HeGeometry* geometry;
+		set<HeGeometry*> geometries;
 
 		glm::quat localRotation;
 		glm::vec3 localPosition;
