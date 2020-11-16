@@ -5,7 +5,6 @@
 
 #include "HeVertexArrayObject.h"
 #include "HeVertexBufferObject.hpp"
-#include "HeIndexBufferObject.h"
 
 namespace ArtificialNature {
 
@@ -28,14 +27,14 @@ namespace ArtificialNature {
 		void AddColor(const glm::vec4& color);
 		void AddUV(const glm::vec2& uv);
 
-		void Upload();
-
 		void Draw();
 
 		inline void SetHeMaterial(HeMaterial* material) { this->material = material; }
 		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
 
 	protected:
+		bool dirty = true;
+
 		DrawingMode drawingMode = DrawingMode::Triangles;
 
 		HeMaterial* material = nullptr;
@@ -44,6 +43,8 @@ namespace ArtificialNature {
 		HeVertexBufferObject<GLuint> ibo;
 		HeVertexBufferObject<glm::vec4> cbo;
 		HeVertexBufferObject<glm::vec2> uvbo;
+
+		void Upload();
 	};
 
 }

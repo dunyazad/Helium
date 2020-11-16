@@ -22,8 +22,10 @@ namespace ArtificialNature {
 
 		inline unsigned int ID() { return id; }
 
-		void Initialize()
+		void Initialize(unsigned int attributeIndex)
 		{
+			this->attributeIndex = attributeIndex;
+
 			glGenBuffers(1, &id);
 
 			CheckGLError();
@@ -47,6 +49,12 @@ namespace ArtificialNature {
 				glBindBuffer(GL_ARRAY_BUFFER, id);
 			}
 
+			if (dirty)
+			{
+				Upload();
+
+				dirty = false;
+			}
 			CheckGLError();
 		}
 
@@ -69,14 +77,14 @@ namespace ArtificialNature {
 		void AddElement(const T& element)
 		{
 			elements.push_back(element);
+
+			dirty = true;
 		}
 
-		void Upload(unsigned int attributeIndex)
+		void Upload()
 		{
 			if (elements.size() == 0)
 				return;
-
-			Bind();
 
 			if (bufferType == VERTEX_BUFFER)
 			{
@@ -120,6 +128,8 @@ namespace ArtificialNature {
 		}
 
 	private:
+		bool dirty = true;
+
 		BufferType bufferType;
 		unsigned int id;
 		unsigned int attributeIndex;

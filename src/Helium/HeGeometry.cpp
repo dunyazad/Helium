@@ -20,13 +20,13 @@ namespace ArtificialNature {
 		vao.Initialize();
 		vao.Bind();
 
-		vbo.Initialize();
+		vbo.Initialize(0);
 
-		ibo.Initialize();
+		ibo.Initialize(-1);
 
-		cbo.Initialize();
+		cbo.Initialize(1);
 
-		uvbo.Initialize();
+		uvbo.Initialize(2);
 
 		vao.Unbind();
 	}
@@ -54,36 +54,44 @@ namespace ArtificialNature {
 	void HeGeometry::AddVertex(const glm::vec3& vertex)
 	{
 		vbo.AddElement(vertex);
+
+		dirty = true;
 	}
 
 	void HeGeometry::AddIndex(GLuint index)
 	{
 		ibo.AddElement(index);
+
+		dirty = true;
 	}
 
 	void HeGeometry::AddColor(const glm::vec4& color)
 	{
 		cbo.AddElement(color);
+
+		dirty = true;
 	}
 
 	void HeGeometry::AddUV(const glm::vec2& uv)
 	{
 		uvbo.AddElement(uv);
+
+		dirty = true;
 	}
 
 	void HeGeometry::Upload()
 	{
-		vao.Bind();
-		
-		vbo.Upload(0);
+		//vao.Bind();
+		//
+		//vbo.Upload(0);
 
-		ibo.Upload(-1);
+		//ibo.Upload(-1);
 
-		cbo.Upload(1);
+		//cbo.Upload(1);
 
-		uvbo.Upload(2);
+		//uvbo.Upload(2);
 
-		vao.Unbind();
+		//vao.Unbind();
 	}
 
 	void HeGeometry::Draw()
@@ -91,11 +99,19 @@ namespace ArtificialNature {
 		if (material == nullptr)
 			return;
 
+		if (dirty)
+		{
+			Upload();
+
+			dirty = false;
+		}
+
 		material->Use();
 
 		vao.Bind();
 
 		vbo.Bind();
+		ibo.Bind();
 		cbo.Bind();
 		uvbo.Bind();
 

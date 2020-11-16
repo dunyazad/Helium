@@ -93,8 +93,6 @@ int main(int argc, char* argv[]) {
     geometry.AddUV(glm::vec2(0.0f, 0.0f));
     geometry.AddUV(glm::vec2(0.0f, 1.0f));
 
-    geometry.Upload();
-
     HeMaterial material;
 
     HeShader shader("../../res/shader/texture.vs", "../../res/shader/texture.fs");
