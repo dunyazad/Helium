@@ -23,9 +23,16 @@ namespace ArtificialNature {
 		void Terminate();
 
 		void AddVertex(const glm::vec3& vertex);
+		void SetVertex(int index, const glm::vec3& vertex);
+
 		void AddIndex(GLuint index);
+		void SetIndex(int index, GLuint vertexIndex);
+
 		void AddColor(const glm::vec4& color);
+		void SetColor(int index, const glm::vec4& color);
+
 		void AddUV(const glm::vec2& uv);
+		void SetUV(int index, const glm::vec2& uv);
 
 		void Draw();
 

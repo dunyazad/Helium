@@ -81,6 +81,18 @@ namespace ArtificialNature {
 			dirty = true;
 		}
 
+		bool SetElement(int index, const T& element)
+		{
+			if (index >= elements.size())
+				return false;
+
+			elements[index] = element;
+
+			dirty = true;
+
+			return true;
+		}
+
 		void Upload()
 		{
 			if (elements.size() == 0)

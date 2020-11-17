@@ -58,11 +58,23 @@ namespace ArtificialNature {
 		dirty = true;
 	}
 
+	void HeGeometry::SetVertex(int index, const glm::vec3& vertex)
+	{
+		if(vbo.SetElement(index, vertex) == true)
+			dirty = true;
+	}
+
 	void HeGeometry::AddIndex(GLuint index)
 	{
 		ibo.AddElement(index);
 
 		dirty = true;
+	}
+
+	void HeGeometry::SetIndex(int index, GLuint vertexIndex)
+	{
+		if (ibo.SetElement(index, vertexIndex) == true)
+			dirty = true;
 	}
 
 	void HeGeometry::AddColor(const glm::vec4& color)
@@ -72,11 +84,23 @@ namespace ArtificialNature {
 		dirty = true;
 	}
 
+	void HeGeometry::SetColor(int index, const glm::vec4& color)
+	{
+		if (cbo.SetElement(index, color) == true)
+			dirty = true;
+	}
+
 	void HeGeometry::AddUV(const glm::vec2& uv)
 	{
 		uvbo.AddElement(uv);
 
 		dirty = true;
+	}
+
+	void HeGeometry::SetUV(int index, const glm::vec2& uv)
+	{
+		if (uvbo.SetElement(index, uv) == true)
+			dirty = true;
 	}
 
 	void HeGeometry::Upload()
