@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     scene.GetRootNode()->AddChild(&camera);
     scene.SetMainCamera(&camera);
 
-    camera.SetPosition(glm::vec3(0.5f, 0, 0));
+    ////////////////////////////////////////////camera.SetPosition(glm::vec3(0.5f, 0, 0));
 
     HeSceneNode node(&scene);
     scene.GetRootNode()->AddChild(&node);
@@ -174,6 +174,8 @@ int main(int argc, char* argv[]) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+    framebuffer_size_callback(mWindow, mWidth, mHeight);
+
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
         if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -196,6 +198,10 @@ int main(int argc, char* argv[]) {
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+
+    pCamera->SetAspectRatio((float)width / (float)height);
+
+    printf("Aspect Ratio : %f\n", (float)width / (float)height);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

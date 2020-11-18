@@ -27,7 +27,14 @@ namespace ArtificialNature {
 		viewMatrix = glm::identity<glm::mat4>();
 		viewMatrix = glm::translate(viewMatrix, -position);
 
-		projectionMatrix = glm::ortho(-width * 0.5f / zoomFactor, width * 0.5f / zoomFactor, -height * 0.5f / zoomFactor, height * 0.5f / zoomFactor, -depth * 0.5f, depth * 0.5f);
+		if (aspectRatio > 1)
+		{
+			projectionMatrix = glm::ortho(aspectRatio * -width * 0.5f / zoomFactor, aspectRatio * width * 0.5f / zoomFactor, -height * 0.5f / zoomFactor, height * 0.5f / zoomFactor, -depth * 0.5f, depth * 0.5f);
+		}
+		else
+		{
+			projectionMatrix = glm::ortho(-width * 0.5f / zoomFactor, width * 0.5f / zoomFactor, 1 / aspectRatio * -height * 0.5f / zoomFactor, 1 / aspectRatio * height * 0.5f / zoomFactor, -depth * 0.5f, depth * 0.5f);
+		}
 
 		//if (projectionMode == Perspective)
 		//{

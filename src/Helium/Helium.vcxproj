@@ -82,7 +82,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="HeThickLines.cpp" />
     <ClCompile Include="HeCamera.cpp" />
@@ -101,7 +100,6 @@
     <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="HeThickLines.h" />
     <ClInclude Include="HeCamera.h" />
     <ClInclude Include="HeGeometry.h" />

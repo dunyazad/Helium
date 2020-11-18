@@ -56,11 +56,15 @@ namespace ArtificialNature {
 		inline float GetZoomFactor() { return zoomFactor; }
 		inline void SetZoomFactor(float zoomFactor) { this->zoomFactor = zoomFactor; if (this->zoomFactor <= glm::epsilon<float>()) this->zoomFactor = glm::epsilon<float>(); }
 
+		inline float GetAspectRatio() { return aspectRatio; }
+		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
+
 	protected:
 		glm::vec3 position;
 		float width = 1;
 		float height = 1;
 		float depth = 1;
+		float aspectRatio = 1;
 		float zoomFactor = 1;
 	};
 

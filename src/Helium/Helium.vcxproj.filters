@@ -9,7 +9,6 @@
     <ClCompile Include="HeScene.cpp" />
     <ClCompile Include="HeShader.cpp" />
     <ClCompile Include="stb_image.cpp" />
-    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="HeGeometry.cpp" />
     <ClCompile Include="HeVertexArrayObject.cpp" />
     <ClCompile Include="HeliumCommon.cpp" />
@@ -27,7 +26,6 @@
     <ClInclude Include="HeObject.h" />
     <ClInclude Include="HeID.h" />
     <ClInclude Include="HeShader.h" />
-    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="HeGeometry.h" />
     <ClInclude Include="HeVertexArrayObject.h" />
     <ClInclude Include="HeCamera.h" />
