@@ -22,6 +22,9 @@ namespace ArtificialNature {
 		float thickness = 0.1f;
 
 		vector<glm::vec2> points;
+
+		float lastIndexP0;
+		float lastUVP0;
 	};
 
 }

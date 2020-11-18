@@ -68,7 +68,24 @@ namespace ArtificialNature {
 		}
 		else
 		{
+			points.push_back(point);
+			auto ip = points.size() - 1;
+			auto il = points.size() - 2;
 
+			auto p0 = glm::vec3(points[il].x, points[il].y, 0);
+			auto p1 = glm::vec3(points[ip].x, points[ip].y, 0);
+
+			auto direction = glm::normalize(p1 - p0);
+			auto up = glm::normalize(glm::vec3(0, 0, 1));
+			auto cross = glm::cross(up, direction);
+
+			auto v0 = p0 + cross * thickness * 0.5f;
+			auto v1 = p0 - cross * thickness * 0.5f;
+			auto v2 = p1 + cross * thickness * 0.5f;
+			auto v3 = p1 - cross * thickness * 0.5f;
+
+			AddVertex(v2);
+			AddVertex(v3);
 		}
 	}
 

@@ -12,6 +12,8 @@
 #include "HeCamera.h"
 
 #include "HeGeometry.h"
+#include "HeThickLines.h"
+
 #include "HeImage.h"
 #include "HeTexture.h"
 #include "HeMaterial.h"
@@ -82,88 +84,77 @@ int main(int argc, char* argv[]) {
 
     ////////////////////////////////////////////camera.SetPosition(glm::vec3(0.5f, 0, 0));
 
+
+    HeMaterial material;
+
+    HeShader shader("../../res/shader/texture.vs", "../../res/shader/texture.fs");
+    //HeShader shader;
+    material.SetShader(&shader);
+
+    HeImage image("../../res/img/awesomeface.png");
+    HeTexture texture;
+    texture.Initialize(&image);
+
+    material.SetTexture(&texture);
+
+
+
+
     HeSceneNode node(&scene);
     scene.GetRootNode()->AddChild(&node);
 
-	HeGeometry geometry;
-	geometry.Initialize();
-    geometry.SetDrawingMode(HeGeometry::DrawingMode::Triangles);
-	node.AddGeometry(&geometry);
+	//////////////////////////////////HeGeometry geometry;
+	//////////////////////////////////geometry.Initialize();
+    //////////////////////////////////geometry.SetDrawingMode(HeGeometry::DrawingMode::Triangles);
+	//////////////////////////////////node.AddGeometry(&geometry);
 
-	//geometry.SetDrawingMode(HeGeometry::DrawingMode::Triangles);
+	////////////////////////////////////geometry.SetDrawingMode(HeGeometry::DrawingMode::Triangles);
 
-	geometry.AddVertex(glm::vec3(0.5f, 0.5f, 0.0f));
-	geometry.AddVertex(glm::vec3(0.5f, -0.5f, 0.0f));
-	geometry.AddVertex(glm::vec3(-0.5f, -0.5f, 0.0f));
-	geometry.AddVertex(glm::vec3(-0.5f, 0.5f, 0.0f));
+	//////////////////////////////////geometry.AddVertex(glm::vec3(0.5f, 0.5f, 0.0f));
+	//////////////////////////////////geometry.AddVertex(glm::vec3(0.5f, -0.5f, 0.0f));
+	//////////////////////////////////geometry.AddVertex(glm::vec3(-0.5f, -0.5f, 0.0f));
+	//////////////////////////////////geometry.AddVertex(glm::vec3(-0.5f, 0.5f, 0.0f));
 
-	geometry.AddIndex(0);
-	geometry.AddIndex(1);
-	geometry.AddIndex(3);
+	//////////////////////////////////geometry.AddIndex(0);
+	//////////////////////////////////geometry.AddIndex(1);
+	//////////////////////////////////geometry.AddIndex(3);
 
-	geometry.AddIndex(1);
-	geometry.AddIndex(2);
-	geometry.AddIndex(3);
+	//////////////////////////////////geometry.AddIndex(1);
+	//////////////////////////////////geometry.AddIndex(2);
+	//////////////////////////////////geometry.AddIndex(3);
 
-	geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	geometry.AddUV(glm::vec2(1.0f, 1.0f));
-	geometry.AddUV(glm::vec2(1.0f, 0.0f));
-	geometry.AddUV(glm::vec2(0.0f, 0.0f));
-	geometry.AddUV(glm::vec2(0.0f, 1.0f));
+	//////////////////////////////////geometry.AddUV(glm::vec2(1.0f, 1.0f));
+	//////////////////////////////////geometry.AddUV(glm::vec2(1.0f, 0.0f));
+	//////////////////////////////////geometry.AddUV(glm::vec2(0.0f, 0.0f));
+	//////////////////////////////////geometry.AddUV(glm::vec2(0.0f, 1.0f));
 
-	HeMaterial material;
-
-	HeShader shader("../../res/shader/texture.vs", "../../res/shader/texture.fs");
-	//HeShader shader;
-	material.SetShader(&shader);
-
-	HeImage image("../../res/img/awesomeface.png");
-	HeTexture texture;
-	texture.Initialize(&image);
-
-	material.SetTexture(&texture);
-
-	geometry.SetHeMaterial(&material);
+    //////////////////////////////////geometry.SetHeMaterial(&material);
 
 
 
 
 
 
-    //HeGeometry geometryLine;
-    //geometryLine.Initialize();
-    //geometryLine.SetDrawingMode(HeGeometry::DrawingMode::Wireframe);
-    //node.AddGeometry(&geometryLine);
+    HeThickLines geometryLine;
+    geometryLine.Initialize();
+    geometryLine.SetThickness(0.01f);
+    node.AddGeometry(&geometryLine);
 
-    //geometryLine.AddVertex(glm::vec3(0.5f, 0.5f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(0.5f, -0.5f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(-0.5f, -0.5f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(-0.5f, 0.5f, 0.0f));
+    geometryLine.AddPoint(glm::vec2(-0.25f, -0.25f));
+    geometryLine.AddPoint(glm::vec2(0.0f, 0.0f));
+    geometryLine.AddPoint(glm::vec2(0.25f, 0.25f));
+    HeMaterial materialLine;
 
-    //geometryLine.AddIndex(0);
-    //geometryLine.AddIndex(1);
-    //geometryLine.AddIndex(3);
+    HeShader shaderLine("../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+    //HeShader shader;
+    materialLine.SetShader(&shaderLine);
 
-    //geometryLine.AddIndex(1);
-    //geometryLine.AddIndex(2);
-    //geometryLine.AddIndex(3);
-
-    //geometryLine.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    //geometryLine.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    //geometryLine.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    //geometryLine.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-    //HeMaterial materialLine;
-
-    //HeShader shaderLine("../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
-    ////HeShader shader;
-    //materialLine.SetShader(&shaderLine);
-
-    //geometryLine.SetHeMaterial(&materialLine);
+    geometryLine.SetHeMaterial(&materialLine);
 
 
 
