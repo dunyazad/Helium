@@ -81,6 +81,11 @@ namespace ArtificialNature {
 			dirty = true;
 		}
 
+		const T& GetElement(int index)
+		{
+			return elements[index];
+		}
+
 		bool SetElement(int index, const T& element)
 		{
 			if (index >= elements.size())

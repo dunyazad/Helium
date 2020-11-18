@@ -65,6 +65,11 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
+	const glm::vec3& HeGeometry::GetVertex(int index)
+	{
+		return vbo.GetElement(index);
+	}
+
 	void HeGeometry::AddIndex(GLuint index)
 	{
 		ibo.AddElement(index);
@@ -125,7 +130,7 @@ namespace ArtificialNature {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 
-		glDrawElements(drawingMode, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
 
 		if (drawingMode == GL_LINES)
 		{

@@ -38,6 +38,7 @@ const int mHeight = 800;
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
@@ -65,6 +66,7 @@ int main(int argc, char* argv[]) {
     glfwMakeContextCurrent(mWindow);
 
     glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
+    glfwSetKeyCallback(mWindow, key_callback);
     glfwSetCursorPosCallback(mWindow, mouse_callback);
     glfwSetScrollCallback(mWindow, scroll_callback);
 
@@ -143,10 +145,12 @@ int main(int argc, char* argv[]) {
     HeThickLines geometryLine;
     geometryLine.Initialize();
     geometryLine.SetThickness(0.01f);
+    //geometryLine.SetDrawingMode(HeGeometry::Lines);
     node.AddGeometry(&geometryLine);
 
     geometryLine.AddPoint(glm::vec2(-0.25f, -0.25f));
     geometryLine.AddPoint(glm::vec2(0.0f, 0.0f));
+    geometryLine.AddPoint(glm::vec2(0.25f, 0.0f));
     geometryLine.AddPoint(glm::vec2(0.25f, 0.25f));
     HeMaterial materialLine;
 
@@ -169,9 +173,6 @@ int main(int argc, char* argv[]) {
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
-        if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(mWindow, true);
-
         // Background Fill Color
         glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -193,6 +194,18 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     pCamera->SetAspectRatio((float)width / (float)height);
 
     printf("Aspect Ratio : %f\n", (float)width / (float)height);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

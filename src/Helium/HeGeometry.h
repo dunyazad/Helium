@@ -25,6 +25,7 @@ namespace ArtificialNature {
 
 		void AddVertex(const glm::vec3& vertex);
 		void SetVertex(int index, const glm::vec3& vertex);
+		const glm::vec3& GetVertex(int index);
 
 		void AddIndex(GLuint index);
 		void SetIndex(int index, GLuint vertexIndex);
