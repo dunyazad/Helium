@@ -1,5 +1,6 @@
 #include "HeGeometry.h"
 #include "HeMaterial.h"
+#include "HeCamera.h"
 
 namespace ArtificialNature {
 
@@ -103,34 +104,12 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
-	void HeGeometry::Upload()
-	{
-		//vao.Bind();
-		//
-		//vbo.Upload(0);
-
-		//ibo.Upload(-1);
-
-		//cbo.Upload(1);
-
-		//uvbo.Upload(2);
-
-		//vao.Unbind();
-	}
-
-	void HeGeometry::Draw()
+	void HeGeometry::Draw(HeCamera* camera)
 	{
 		if (material == nullptr)
 			return;
 
-		if (dirty)
-		{
-			Upload();
-
-			dirty = false;
-		}
-
-		material->Use();
+		material->Use(camera);
 
 		vao.Bind();
 
@@ -140,10 +119,6 @@ namespace ArtificialNature {
 		if(uvbo.Size() > 0) uvbo.Bind();
 
 		CheckGLError();
-
-		//glEnableVertexAttribArray(0);
-		//glEnableVertexAttribArray(1);
-		//glEnableVertexAttribArray(2);
 
 		if (drawingMode == GL_LINES)
 		{
@@ -158,8 +133,6 @@ namespace ArtificialNature {
 		}
 
 		CheckGLError();
-
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		vao.Unbind();
 	}

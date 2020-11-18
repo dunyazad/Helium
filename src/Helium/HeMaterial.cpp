@@ -1,6 +1,7 @@
 #include "HeMaterial.h"
 #include "HeShader.h"
 #include "HeTexture.h"
+#include "HeCamera.h"
 
 namespace ArtificialNature {
 
@@ -12,12 +13,18 @@ namespace ArtificialNature {
 	{
 	}
 
-	void HeMaterial::Use()
+	void HeMaterial::Use(HeCamera* camera)
 	{
 		if (shader == nullptr)
 			return;
 
 		shader->Use();
+
+		if (camera != nullptr)
+		{
+			shader->SetUniformMat4("view", camera->GetViewMatrix());
+			shader->SetUniformMat4("projection", camera->GetProjectionMatrix());
+		}
 
 		if (texture)
 		{

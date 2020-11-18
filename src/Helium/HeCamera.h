@@ -31,14 +31,21 @@ namespace ArtificialNature {
 		HeCamera(HeScene* scene);
 		~HeCamera();
 
-		void Update(float dt);
-		void Render();
+		virtual void Update(float dt);
+		virtual void Render();
+
+		inline void SetProjectionMode(ProjectionMode projectionMode) { this->projectionMode = projectionMode; }
+
+		inline const glm::mat4 GetViewMatrix() { return viewMatrix; }
+		inline const glm::mat4 GetProjectionMatrix() { return projectionMatrix; }
 
 	protected:
 		int viewportX;
 		int viewportY;
 		int viewportWidth;
 		int viewportHeight;
+
+		ProjectionMode projectionMode = Perspective;
 
 
 		glm::mat4 viewMatrix;

@@ -52,19 +52,19 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeSceneNode::Render()
+	void HeSceneNode::Render(HeCamera* camera)
 	{
 		for (auto& geometry : geometries)
 		{
 			if (geometry != nullptr)
 			{
-				geometry->Draw();
+				geometry->Draw(camera);
 			}
 		}
 
 		for (auto& child : childNodes)
 		{
-			child->Render();
+			child->Render(camera);
 		}
 	}
 

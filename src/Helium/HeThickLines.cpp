@@ -72,8 +72,4 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeThickLines::Upload()
-	{
-		HeGeometry::Upload();
-	}
 }

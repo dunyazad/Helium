@@ -15,6 +15,14 @@ namespace ArtificialNature {
 
 	void HeCamera::Update(float dt)
 	{
+		viewMatrix = glm::identity<glm::mat4>();
+
+		if (projectionMode == Orthogonal)
+		{
+
+			projectionMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+		}
+
 		//if (projectionMode == Perspective)
 		//{
 		//	float x = sinf(glm::radians(90 - m_currentState.rotationV)) * sinf(glm::radians(180 - m_currentState.rotationH));

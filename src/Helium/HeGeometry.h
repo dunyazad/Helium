@@ -9,6 +9,7 @@
 namespace ArtificialNature {
 
 	class HeMaterial;
+	class HeCamera;
 
 	class HeGeometry : public HeObject
 	{
@@ -34,7 +35,7 @@ namespace ArtificialNature {
 		void AddUV(const glm::vec2& uv);
 		void SetUV(int index, const glm::vec2& uv);
 
-		void Draw();
+		void Draw(HeCamera* camera);
 
 		inline void SetHeMaterial(HeMaterial* material) { this->material = material; }
 		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
@@ -50,8 +51,6 @@ namespace ArtificialNature {
 		HeVertexBufferObject<GLuint> ibo;
 		HeVertexBufferObject<glm::vec4> cbo;
 		HeVertexBufferObject<glm::vec2> uvbo;
-
-		void Upload();
 	};
 
 }

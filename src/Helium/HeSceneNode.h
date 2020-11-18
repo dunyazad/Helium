@@ -7,6 +7,7 @@ namespace ArtificialNature {
 
 	class HeScene;
 	class HeGeometry;
+	class HeCamera;
 
 	class HeSceneNode : public HeObject
 	{
@@ -19,8 +20,8 @@ namespace ArtificialNature {
 		void AddChild(HeSceneNode* child);
 		void RemoveChild(HeSceneNode* child);
 
-		void Update(float dt);
-		void Render();
+		virtual void Update(float dt);
+		virtual void Render(HeCamera* camera);
 
 		inline void AddGeometry(HeGeometry* geometry) { this->geometries.insert(geometry); }
 		inline void RemoveGeometry(HeGeometry* geometry) { this->geometries.erase(geometry); }

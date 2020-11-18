@@ -9,6 +9,7 @@
 
 #include "HeScene.h"
 #include "HeSceneNode.h"
+#include "HeCamera.h"
 
 #include "HeGeometry.h"
 #include "HeImage.h"
@@ -30,7 +31,7 @@ using namespace ArtificialNature;
 //#include <cstdio>
 //#include <cstdlib>
 
-const int mWidth = 1280;
+const int mWidth = 800;
 const int mHeight = 800;
 
 
@@ -72,6 +73,11 @@ int main(int argc, char* argv[]) {
 
 
     HeScene scene;
+
+    HeCamera camera(&scene);
+    scene.GetRootNode()->AddChild(&camera);
+    camera.SetProjectionMode(HeCamera::Orthogonal);
+    scene.SetMainCamera(&camera);
 
     HeSceneNode node(&scene);
     scene.GetRootNode()->AddChild(&node);

@@ -19,7 +19,7 @@ namespace ArtificialNature {
 
 	void HeScene::Render()
 	{
-		rootNode->Render();
+		rootNode->Render(mainCamera);
 	}
 
 }

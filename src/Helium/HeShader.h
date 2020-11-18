@@ -12,7 +12,10 @@ namespace ArtificialNature {
 
 		void Use();
 
-		unsigned int GetVertexAttributeLocation(const std::string& attributeName);
+		GLint GetVertexAttributeLocation(const std::string& attributeName);
+		GLint GetUniformLocation(const string& uniformName);
+
+		void SetUniformMat4(const string& uniformName, const glm::mat4& mat);
 
 		inline GLuint GetProgram() { return shaderProgram; }
 
@@ -28,6 +31,7 @@ namespace ArtificialNature {
 		GLuint shaderProgram;
 
 		map<string, GLint> attributes;
+		map<string, GLint> uniforms;
 	};
 
 }

@@ -6,6 +6,7 @@ namespace ArtificialNature {
 
 	class HeShader;
 	class HeTexture;
+	class HeCamera;
 
 	class HeMaterial
 	{
@@ -13,7 +14,7 @@ namespace ArtificialNature {
 		HeMaterial();
 		~HeMaterial();
 
-		void Use();
+		void Use(HeCamera* camera);
 
 		inline HeShader* GetShader() { return shader; }
 		inline void SetShader(HeShader* shader) { this->shader = shader; }

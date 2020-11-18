@@ -5,6 +5,7 @@
 
 namespace ArtificialNature {
 	class HeSceneNode;
+	class HeCamera;
 
 	class HeScene : public HeObject
 	{
@@ -14,11 +15,15 @@ namespace ArtificialNature {
 
 		inline HeSceneNode* GetRootNode() { return rootNode; }
 
+		inline HeCamera* GetMainCamera() { return mainCamera; }
+		inline void SetMainCamera(HeCamera* camera) { mainCamera = camera; }
+
 		void Update(float dt);
 		void Render();
 
 	private:
-		HeSceneNode* rootNode;
+		HeSceneNode* rootNode = nullptr;
+		HeCamera* mainCamera = nullptr;
 	};
 
 }

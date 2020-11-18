@@ -80,7 +80,7 @@ namespace ArtificialNature {
 		CheckGLError();
 	}
 
-	unsigned int HeShader::GetVertexAttributeLocation(const std::string& attributeName)
+	GLint HeShader::GetVertexAttributeLocation(const std::string& attributeName)
 	{
 		auto i = attributes.find(attributeName);
 		if (i != attributes.end())
@@ -95,5 +95,29 @@ namespace ArtificialNature {
 		}
 
 		return location;
+	}
+
+	GLint HeShader::GetUniformLocation(const string& uniformName)
+	{
+		auto i = uniforms.find(uniformName);
+		if (i != uniforms.end())
+		{
+			return (*i).second;
+		}
+
+		int location = glGetUniformLocation(shaderProgram, uniformName.c_str());
+		if (-1 != location)
+		{
+			uniforms[uniformName] = location;
+		}
+
+		return location;
+	}
+
+	void HeShader::SetUniformMat4(const string& uniformName, const glm::mat4& mat)
+	{
+		glUniformMatrix4fv(GetUniformLocation(uniformName), 1, false, (const float*)glm::value_ptr(mat));
+
+		CheckGLError();
 	}
 }
