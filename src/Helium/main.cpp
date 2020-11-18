@@ -31,7 +31,7 @@ using namespace ArtificialNature;
 //#include <cstdio>
 //#include <cstdlib>
 
-const int mWidth = 800;
+const int mWidth = 1600;
 const int mHeight = 800;
 
 
@@ -40,6 +40,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
+HeOrthogonalCamera* pCamera = nullptr;
 
 int main(int argc, char* argv[]) {
 
@@ -74,10 +75,12 @@ int main(int argc, char* argv[]) {
 
     HeScene scene;
 
-    HeCamera camera(&scene);
+    HeOrthogonalCamera camera(&scene);
+    pCamera = &camera;
     scene.GetRootNode()->AddChild(&camera);
-    camera.SetProjectionMode(HeCamera::Orthogonal);
     scene.SetMainCamera(&camera);
+
+    camera.SetPosition(glm::vec3(0.5f, 0, 0));
 
     HeSceneNode node(&scene);
     scene.GetRootNode()->AddChild(&node);
@@ -233,9 +236,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    //fov -= (float)yoffset;
-    //if (fov < 1.0f)
-    //    fov = 1.0f;
-    //if (fov > 45.0f)
-    //    fov = 45.0f;
+    float zoomFactor = pCamera->GetZoomFactor();
+    zoomFactor += (float)yoffset * 0.01f;
+    pCamera->SetZoomFactor(zoomFactor);
 }

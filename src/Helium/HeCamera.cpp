@@ -5,23 +5,29 @@ namespace ArtificialNature {
 	HeCamera::HeCamera(HeScene* scene)
 		: HeSceneNode(scene)
 	{
-
 	}
 
 	HeCamera::~HeCamera()
 	{
+	}
+
+	HeOrthogonalCamera::HeOrthogonalCamera(HeScene* scene)
+		: HeCamera(scene)
+	{
 
 	}
 
-	void HeCamera::Update(float dt)
+	HeOrthogonalCamera::~HeOrthogonalCamera()
+	{
+
+	}
+
+	void HeOrthogonalCamera::Update(float dt)
 	{
 		viewMatrix = glm::identity<glm::mat4>();
+		viewMatrix = glm::translate(viewMatrix, -position);
 
-		if (projectionMode == Orthogonal)
-		{
-
-			projectionMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-		}
+		projectionMatrix = glm::ortho(-width * 0.5f / zoomFactor, width * 0.5f / zoomFactor, -height * 0.5f / zoomFactor, height * 0.5f / zoomFactor, -depth * 0.5f, depth * 0.5f);
 
 		//if (projectionMode == Perspective)
 		//{
@@ -41,7 +47,7 @@ namespace ArtificialNature {
 		//}
 	}
 
-	void HeCamera::Render()
+	void HeOrthogonalCamera::Render()
 	{
 
 	}
