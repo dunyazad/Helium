@@ -16,6 +16,7 @@
     <ClCompile Include="HeTexture.cpp" />
     <ClCompile Include="HeImage.cpp" />
     <ClCompile Include="HeMaterial.cpp" />
+    <ClCompile Include="HeThickLines1.cpp" />
     <ClCompile Include="HeThickLines.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +34,7 @@
     <ClInclude Include="HeImage.h" />
     <ClInclude Include="HeVertexBufferObject.hpp" />
     <ClInclude Include="HeMaterial.h" />
+    <ClInclude Include="HeThickLines1.h" />
     <ClInclude Include="HeThickLines.h" />
   </ItemGroup>
 </Project>

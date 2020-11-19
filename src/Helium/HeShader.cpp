@@ -78,6 +78,11 @@ namespace ArtificialNature {
 		glUseProgram(shaderProgram);
 
 		CheckGLError();
+
+		for (auto& callback : onUseCallbacks)
+		{
+			callback(this);
+		}
 	}
 
 	GLint HeShader::GetVertexAttributeLocation(const std::string& attributeName)
@@ -112,6 +117,20 @@ namespace ArtificialNature {
 		}
 
 		return location;
+	}
+
+	void HeShader::SetUniformFloat(const string& uniformName, float f)
+	{
+		glUniform1f(GetUniformLocation(uniformName), f);
+
+		CheckGLError();
+	}
+
+	void HeShader::SetUniformVec2(const string& uniformName, const glm::vec2& v)
+	{
+		glUniform2fv(GetUniformLocation(uniformName), 1, (const float*)glm::value_ptr(v));
+
+		CheckGLError();
 	}
 
 	void HeShader::SetUniformMat4(const string& uniformName, const glm::mat4& mat)

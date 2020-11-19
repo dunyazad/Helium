@@ -25,7 +25,7 @@ namespace ArtificialNature {
 	class HeCamera : public HeSceneNode
 	{
 	public:
-		HeCamera(HeScene* scene);
+		HeCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeCamera();
 
 		virtual void Update(float dt) = 0;
@@ -35,6 +35,11 @@ namespace ArtificialNature {
 		inline const glm::mat4 GetProjectionMatrix() { return projectionMatrix; }
 
 	protected:
+		float viewportX = 0;
+		float viewportY = 0;
+		float viewportWidth = 800;
+		float viewportHeight = 800;
+
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
 	};
@@ -45,7 +50,7 @@ namespace ArtificialNature {
 		enum ProjectionMode { Perspective, Orthogonal };
 
 	public:
-		HeOrthogonalCamera(HeScene* scene);
+		HeOrthogonalCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeOrthogonalCamera();
 
 		virtual void Update(float dt);

@@ -14,7 +14,7 @@ namespace ArtificialNature {
 	class HeGeometry : public HeObject
 	{
 	public:
-		enum DrawingMode { Points = GL_POINTS, Lines = GL_LINES, Triangles = GL_TRIANGLES, Quads = GL_QUADS };
+		enum FillMode { Fill, Wireframe };
 
 	public:
 		HeGeometry();
@@ -39,12 +39,13 @@ namespace ArtificialNature {
 		void Draw(HeCamera* camera);
 
 		inline void SetHeMaterial(HeMaterial* material) { this->material = material; }
-		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
+		inline void SetFillMode(FillMode fillMode) { this->fillMode = fillMode; }
 
 	protected:
 		bool dirty = true;
 
-		DrawingMode drawingMode = DrawingMode::Triangles;
+		FillMode fillMode = FillMode::Fill;
+		GLenum drawingMode = GL_TRIANGLES;
 
 		HeMaterial* material = nullptr;
 		HeVertexArrayObject vao;

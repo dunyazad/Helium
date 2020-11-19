@@ -2,8 +2,9 @@
 
 namespace ArtificialNature {
 
-	HeCamera::HeCamera(HeScene* scene)
-		: HeSceneNode(scene)
+	HeCamera::HeCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight)
+		: HeSceneNode(scene), viewportX(viewportX), viewportY(viewportY), viewportWidth(viewportWidth), viewportHeight(viewportHeight)
+		, viewMatrix(glm::identity<glm::mat4>()), projectionMatrix(glm::identity<glm::mat4>())
 	{
 	}
 
@@ -11,15 +12,13 @@ namespace ArtificialNature {
 	{
 	}
 
-	HeOrthogonalCamera::HeOrthogonalCamera(HeScene* scene)
-		: HeCamera(scene)
+	HeOrthogonalCamera::HeOrthogonalCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight)
+		: HeCamera(scene, viewportX, viewportY, viewportWidth, viewportHeight), position(glm::vec3()), width(1), height(1), depth(1), aspectRatio(1), zoomFactor(1)
 	{
-
 	}
 
 	HeOrthogonalCamera::~HeOrthogonalCamera()
 	{
-
 	}
 
 	void HeOrthogonalCamera::Update(float dt)

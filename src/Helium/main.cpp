@@ -74,12 +74,9 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
 
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-
     HeScene scene;
 
-    HeOrthogonalCamera camera(&scene);
+    HeOrthogonalCamera camera(&scene, 0, 0, mWidth, mHeight);
     pCamera = &camera;
     scene.GetRootNode()->AddChild(&camera);
     scene.SetMainCamera(&camera);
@@ -87,74 +84,39 @@ int main(int argc, char* argv[]) {
     ////////////////////////////////////////////camera.SetPosition(glm::vec3(0.5f, 0, 0));
 
 
-    HeMaterial material;
-
-    HeShader shader("../../res/shader/texture.vs", "../../res/shader/texture.fs");
-    //HeShader shader;
-    material.SetShader(&shader);
-
-    HeImage image("../../res/img/awesomeface.png");
-    HeTexture texture;
-    texture.Initialize(&image);
-
-    material.SetTexture(&texture);
-
-
-
-
     HeSceneNode node(&scene);
     scene.GetRootNode()->AddChild(&node);
-
-	//////////////////////////////////HeGeometry geometry;
-	//////////////////////////////////geometry.Initialize();
-    //////////////////////////////////geometry.SetDrawingMode(HeGeometry::DrawingMode::Triangles);
-	//////////////////////////////////node.AddGeometry(&geometry);
-
-	////////////////////////////////////geometry.SetDrawingMode(HeGeometry::DrawingMode::Triangles);
-
-	//////////////////////////////////geometry.AddVertex(glm::vec3(0.5f, 0.5f, 0.0f));
-	//////////////////////////////////geometry.AddVertex(glm::vec3(0.5f, -0.5f, 0.0f));
-	//////////////////////////////////geometry.AddVertex(glm::vec3(-0.5f, -0.5f, 0.0f));
-	//////////////////////////////////geometry.AddVertex(glm::vec3(-0.5f, 0.5f, 0.0f));
-
-	//////////////////////////////////geometry.AddIndex(0);
-	//////////////////////////////////geometry.AddIndex(1);
-	//////////////////////////////////geometry.AddIndex(3);
-
-	//////////////////////////////////geometry.AddIndex(1);
-	//////////////////////////////////geometry.AddIndex(2);
-	//////////////////////////////////geometry.AddIndex(3);
-
-	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	//////////////////////////////////geometry.AddColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-	//////////////////////////////////geometry.AddUV(glm::vec2(1.0f, 1.0f));
-	//////////////////////////////////geometry.AddUV(glm::vec2(1.0f, 0.0f));
-	//////////////////////////////////geometry.AddUV(glm::vec2(0.0f, 0.0f));
-	//////////////////////////////////geometry.AddUV(glm::vec2(0.0f, 1.0f));
-
-    //////////////////////////////////geometry.SetHeMaterial(&material);
-
-
-
-
 
 
     HeThickLines geometryLine;
     geometryLine.Initialize();
-    geometryLine.SetThickness(0.01f);
+    //geometryLine.SetThickness(0.001f);
     //geometryLine.SetDrawingMode(HeGeometry::Lines);
     node.AddGeometry(&geometryLine);
 
-    geometryLine.AddPoint(glm::vec2(-0.25f, -0.25f));
-    geometryLine.AddPoint(glm::vec2(0.0f, 0.0f));
-    geometryLine.AddPoint(glm::vec2(0.25f, 0.0f));
-    geometryLine.AddPoint(glm::vec2(0.25f, 0.25f));
+    geometryLine.AddVertex(glm::vec3(-0.25f, -0.25f, 0.0f));
+    geometryLine.AddVertex(glm::vec3(0.0f, 0.0f, 0.0f));
+    geometryLine.AddVertex(glm::vec3(0.25f, 0.0f, 0.0f));
+    geometryLine.AddVertex(glm::vec3(0.25f, 0.25f, 0.0f));
+
+    geometryLine.AddIndex(0);
+    geometryLine.AddIndex(1);
+    geometryLine.AddIndex(2);
+    geometryLine.AddIndex(3);
+
+    geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
+    geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
+    geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
+    geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
+
     HeMaterial materialLine;
 
-    HeShader shaderLine("../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+    HeShader shaderLine("../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+    shaderLine.AddOnUseCallback([](HeShader* shader) {
+        shader->SetUniformVec2("viewPort", glm::vec2(mWidth, mHeight));
+        shader->SetUniformFloat("lineWidth", 5);
+        shader->SetUniformFloat("blendFactor", 2.5);
+        });
     //HeShader shader;
     materialLine.SetShader(&shaderLine);
 
