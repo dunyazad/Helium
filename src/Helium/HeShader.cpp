@@ -11,11 +11,11 @@ namespace ArtificialNature {
 			fseek(fp, 0, SEEK_END);
 			auto length = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
-			
+
 			char* buffer = new char[length + 1];
 			memset(buffer, 0, length + 1);
 			fread_s(buffer, length, sizeof(char), length, fp);
-			
+
 			vertexShader = glCreateShader(GL_VERTEX_SHADER);
 			glShaderSource(vertexShader, 1, &buffer, nullptr);
 			glCompileShader(vertexShader);
@@ -29,6 +29,100 @@ namespace ArtificialNature {
 			{
 				glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 				std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+			}
+		}
+
+		{
+			FILE* fp;
+			fopen_s(&fp, fragmentShaderFileName.c_str(), "r");
+			fseek(fp, 0, SEEK_END);
+			auto length = ftell(fp);
+			fseek(fp, 0, SEEK_SET);
+
+			char* buffer = new char[length + 1];
+			memset(buffer, 0, length + 1);
+			fread_s(buffer, length, sizeof(char), length, fp);
+
+			fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fragmentShader, 1, &buffer, nullptr);
+			glCompileShader(fragmentShader);
+
+			delete buffer;
+
+			int success;
+			char infoLog[512];
+			glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+			if (!success)
+			{
+				glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+				std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+			}
+		}
+
+		shaderProgram = glCreateProgram();
+
+		glAttachShader(shaderProgram, vertexShader);
+		glAttachShader(shaderProgram, fragmentShader);
+		glLinkProgram(shaderProgram);
+
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+	}
+
+	HeShader::HeShader(string vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName)
+		: vertexShaderFileName(vertexShaderFileName), geometryShaderFileName(geometryShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
+	{
+		{
+			FILE* fp;
+			fopen_s(&fp, vertexShaderFileName.c_str(), "r");
+			fseek(fp, 0, SEEK_END);
+			auto length = ftell(fp);
+			fseek(fp, 0, SEEK_SET);
+
+			char* buffer = new char[length + 1];
+			memset(buffer, 0, length + 1);
+			fread_s(buffer, length, sizeof(char), length, fp);
+
+			vertexShader = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vertexShader, 1, &buffer, nullptr);
+			glCompileShader(vertexShader);
+
+			delete buffer;
+
+			int success;
+			char infoLog[512];
+			glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+			if (!success)
+			{
+				glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+				std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+			}
+		}
+
+		{
+			FILE* fp;
+			fopen_s(&fp, geometryShaderFileName.c_str(), "r");
+			fseek(fp, 0, SEEK_END);
+			auto length = ftell(fp);
+			fseek(fp, 0, SEEK_SET);
+
+			char* buffer = new char[length + 1];
+			memset(buffer, 0, length + 1);
+			fread_s(buffer, length, sizeof(char), length, fp);
+
+			geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+			glShaderSource(geometryShader, 1, &buffer, nullptr);
+			glCompileShader(geometryShader);
+
+			delete buffer;
+
+			int success;
+			char infoLog[512];
+			glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &success);
+			if (!success)
+			{
+				glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
+				std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
 			}
 		}
 

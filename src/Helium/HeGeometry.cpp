@@ -125,14 +125,14 @@ namespace ArtificialNature {
 
 		CheckGLError();
 
-		if (fillMode == GL_LINES)
+		if (fillMode == Wireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 
 		glDrawElements(drawingMode, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
 
-		if (fillMode == GL_LINES)
+		if (fillMode == Wireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}

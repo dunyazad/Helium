@@ -8,6 +8,7 @@ namespace ArtificialNature {
 	{
 	public:
 		HeShader(string vertexShaderFileName, string fragmentShaderFileName);
+		HeShader(string vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
 		~HeShader();
 
 		void Use();
@@ -25,12 +26,11 @@ namespace ArtificialNature {
 
 	private:
 		string vertexShaderFileName;
+		string geometryShaderFileName;
 		string fragmentShaderFileName;
 
-		string vertexShaderSource;
-		string fragmentShaderSource;
-
 		GLuint vertexShader;
+		GLuint geometryShader;
 		GLuint fragmentShader;
 		GLuint shaderProgram;
 

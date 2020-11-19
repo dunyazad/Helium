@@ -111,17 +111,19 @@ int main(int argc, char* argv[]) {
 
     HeMaterial materialLine;
 
-    HeShader shaderLine("../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+    HeShader shaderLine("../../res/shader/thick lines.vs", "../../res/shader/thick lines.gs", "../../res/shader/thick lines.fs");
     shaderLine.AddOnUseCallback([](HeShader* shader) {
         shader->SetUniformVec2("viewPort", glm::vec2(mWidth, mHeight));
-        shader->SetUniformFloat("lineWidth", 5);
-        shader->SetUniformFloat("blendFactor", 2.5);
+        shader->SetUniformFloat("lineWidth", 5.0f);
+        //shader->SetUniformFloat("blendFactor", 2.5f);
         });
     //HeShader shader;
     materialLine.SetShader(&shaderLine);
 
     geometryLine.SetHeMaterial(&materialLine);
 
+
+    //glLineWidth(5);
 
 
 
@@ -130,6 +132,7 @@ int main(int argc, char* argv[]) {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_LINE_SMOOTH);
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);
 
