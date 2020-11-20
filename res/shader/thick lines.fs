@@ -2,9 +2,9 @@
 
 out vec4 FragColor;
 
-in vec4 g_color;
+in vec4 v_color;
 
 void main(void)
 {
-    gl_FragColor = g_color;
+    gl_FragColor = v_color;
 };

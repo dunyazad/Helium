@@ -14,10 +14,10 @@ namespace ArtificialNature {
 		void Initialize();
 		void Terminate();
 
-		inline void SetThickness(float thickness) { this->thickness = thickness; }
+		void SetThickness(float thickness);
 
 	protected:
-		float thickness = 0.1f;
+		float thickness = 1.0f;
 	};
 
 }

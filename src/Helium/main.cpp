@@ -90,20 +90,18 @@ int main(int argc, char* argv[]) {
 
     HeThickLines geometryLine;
     geometryLine.Initialize();
-    //geometryLine.SetThickness(0.001f);
-    //geometryLine.SetDrawingMode(HeGeometry::Lines);
+    geometryLine.SetThickness(5);
     node.AddGeometry(&geometryLine);
 
     geometryLine.AddVertex(glm::vec3(-0.25f, -0.25f, 0.0f));
     geometryLine.AddVertex(glm::vec3(0.0f, 0.0f, 0.0f));
-    geometryLine.AddVertex(glm::vec3(0.25f, 0.0f, 0.0f));
+    geometryLine.AddVertex(glm::vec3(-0.25f, 0.0f, 0.0f));
     geometryLine.AddVertex(glm::vec3(0.25f, 0.25f, 0.0f));
+    geometryLine.AddVertex(glm::vec3(0.5f, 0.25f, 0.0f));
+    geometryLine.AddVertex(glm::vec3(0.5f, 0.5f, 0.0f));
 
-    geometryLine.AddIndex(0);
-    geometryLine.AddIndex(1);
-    geometryLine.AddIndex(2);
-    geometryLine.AddIndex(3);
-
+    geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
+    geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
     geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
     geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
     geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
@@ -111,28 +109,17 @@ int main(int argc, char* argv[]) {
 
     HeMaterial materialLine;
 
-    HeShader shaderLine("../../res/shader/thick lines.vs", "../../res/shader/thick lines.gs", "../../res/shader/thick lines.fs");
-    shaderLine.AddOnUseCallback([](HeShader* shader) {
-        shader->SetUniformVec2("viewPort", glm::vec2(mWidth, mHeight));
-        shader->SetUniformFloat("lineWidth", 5.0f);
-        //shader->SetUniformFloat("blendFactor", 2.5f);
-        });
-    //HeShader shader;
+    HeShader shaderLine("../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
     materialLine.SetShader(&shaderLine);
 
     geometryLine.SetHeMaterial(&materialLine);
 
 
-    //glLineWidth(5);
+    //glEnable(GL_LINE_SMOOTH);
+    //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-
-
-
-
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_LINE_SMOOTH);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);
 
@@ -157,8 +144,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 
     pCamera->SetAspectRatio((float)width / (float)height);
-
-    printf("Aspect Ratio : %f\n", (float)width / (float)height);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -212,6 +197,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     float zoomFactor = pCamera->GetZoomFactor();
-    zoomFactor += (float)yoffset * 0.01f;
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+        zoomFactor += (float)yoffset * zoomFactor * 0.1f;
+    else
+        zoomFactor += (float)yoffset * zoomFactor * 0.01f;
+
     pCamera->SetZoomFactor(zoomFactor);
 }
