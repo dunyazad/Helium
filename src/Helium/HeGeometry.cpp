@@ -109,6 +109,11 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
+	void HeGeometry::PreDraw(HeCamera* camera)
+	{
+
+	}
+
 	void HeGeometry::Draw(HeCamera* camera)
 	{
 		if (material == nullptr)
@@ -130,7 +135,14 @@ namespace ArtificialNature {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 
-		glDrawElements(drawingMode, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
+		if (ibo.Size() > 0)
+		{
+			glDrawElements(drawingMode, (GLsizei)ibo.Size(), GL_UNSIGNED_INT, 0);
+		}
+		else
+		{
+			glDrawArrays(drawingMode, 0, vbo.Size());
+		}
 
 		if (fillMode == Wireframe)
 		{
@@ -141,4 +153,10 @@ namespace ArtificialNature {
 
 		vao.Unbind();
 	}
+
+	void HeGeometry::PostDraw(HeCamera* camera)
+	{
+
+	}
+
 }

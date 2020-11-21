@@ -36,7 +36,9 @@ namespace ArtificialNature {
 		void AddUV(const glm::vec2& uv);
 		void SetUV(int index, const glm::vec2& uv);
 
-		void Draw(HeCamera* camera);
+		virtual void PreDraw(HeCamera* camera);
+		virtual void Draw(HeCamera* camera);
+		virtual void PostDraw(HeCamera* camera);
 
 		inline void SetHeMaterial(HeMaterial* material) { this->material = material; }
 		inline void SetFillMode(FillMode fillMode) { this->fillMode = fillMode; }
