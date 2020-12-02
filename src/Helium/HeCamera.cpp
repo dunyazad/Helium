@@ -3,8 +3,8 @@
 namespace ArtificialNature {
 
 	HeCamera::HeCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight)
-		: HeSceneNode(scene), viewportX(viewportX), viewportY(viewportY), viewportWidth(viewportWidth), viewportHeight(viewportHeight)
-		, viewMatrix(glm::identity<glm::mat4>()), projectionMatrix(glm::identity<glm::mat4>())
+		: HeSceneNode(scene), viewportX(viewportX), viewportY(viewportY), viewportWidth(viewportWidth), viewportHeight(viewportHeight), aspectRatio(1), zoomFactor(1)
+		, position(glm::vec3()), viewMatrix(glm::identity<glm::mat4>()), projectionMatrix(glm::identity<glm::mat4>())
 	{
 	}
 
@@ -13,7 +13,7 @@ namespace ArtificialNature {
 	}
 
 	HeOrthogonalCamera::HeOrthogonalCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight)
-		: HeCamera(scene, viewportX, viewportY, viewportWidth, viewportHeight), position(glm::vec3()), width(1), height(1), depth(1), aspectRatio(1), zoomFactor(1)
+		: HeCamera(scene, viewportX, viewportY, viewportWidth, viewportHeight), width(1), height(1), depth(1)
 	{
 	}
 
@@ -54,6 +54,28 @@ namespace ArtificialNature {
 	}
 
 	void HeOrthogonalCamera::Render()
+	{
+
+	}
+
+	HePerspectiveCamera::HePerspectiveCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight)
+		: HeCamera(scene, viewportX, viewportY, viewportWidth, viewportHeight), targetPosition(glm::vec3()), upDirection(glm::vec3(0, 1, 0))
+	{
+		position = glm::vec3(0, 0, 1);
+	}
+
+	HePerspectiveCamera::~HePerspectiveCamera()
+	{
+	}
+
+	void HePerspectiveCamera::Update(float dt)
+	{
+		viewMatrix = glm::lookAt(position, targetPosition, upDirection);
+
+		projectionMatrix = glm::perspective(60.0f, aspectRatio, 0.1f, 1000.0f);
+	}
+
+	void HePerspectiveCamera::Render()
 	{
 
 	}

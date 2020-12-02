@@ -43,7 +43,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
-HeOrthogonalCamera* pCamera = nullptr;
+HePerspectiveCamera* pCamera = nullptr;
 
 int main(int argc, char* argv[]) {
 
@@ -98,6 +98,9 @@ int main(int argc, char* argv[]) {
         // - Read 'docs/FONTS.md' for more instructions and details.
         // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
         //io.Fonts->AddFontDefault();
+        //io.Fonts->AddFontFromFileTTF("../../res/font/malgun.ttf", 16.0f);
+        auto font = io.Fonts->AddFontFromFileTTF("../../res/font/malgun.ttf", 16.0f, 0, io.Fonts->GetGlyphRangesKorean());
+        //ImGui::PushFont(font);
         //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
         //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
         //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
@@ -108,7 +111,8 @@ int main(int argc, char* argv[]) {
 
     HeScene scene;
 
-    HeOrthogonalCamera camera(&scene, 0, 0, mWidth, mHeight);
+    //HeOrthogonalCamera camera(&scene, 0, 0, mWidth, mHeight);
+    HePerspectiveCamera camera(&scene, 0, 0, mWidth, mHeight);
     pCamera = &camera;
     scene.GetRootNode()->AddChild(&camera);
     scene.SetMainCamera(&camera);
@@ -170,46 +174,46 @@ int main(int argc, char* argv[]) {
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        ////////////////ImGui_ImplOpenGL3_NewFrame();
+        ////////////////ImGui_ImplGlfw_NewFrame();
+        ////////////////ImGui::NewFrame();
 
-        ImGui::ShowDemoWindow(&show_demo_window);
+        ////////////////ImGui::ShowDemoWindow(&show_demo_window);
 
-        //{
-        //    static float f = 0.0f;
-        //    static int counter = 0;
+        ////////////////{
+        ////////////////    static float f = 0.0f;
+        ////////////////    static int counter = 0;
 
-        //    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+        ////////////////    ImGui::Begin("ÇÑ±Û·Î Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-        //    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        //    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        //    ImGui::Checkbox("Another Window", &show_another_window);
+        ////////////////    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+        ////////////////    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+        ////////////////    ImGui::Checkbox("Another Window", &show_another_window);
 
-        //    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        //    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+        ////////////////    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        ////////////////    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-        //    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-        //        counter++;
-        //    ImGui::SameLine();
-        //    ImGui::Text("counter = %d", counter);
+        ////////////////    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        ////////////////        counter++;
+        ////////////////    ImGui::SameLine();
+        ////////////////    ImGui::Text("counter = %d", counter);
 
-        //    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        //    ImGui::End();
-        //}
+        ////////////////    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ////////////////    ImGui::End();
+        ////////////////}
 
-        //// 3. Show another simple window.
-        //if (show_another_window)
-        //{
-        //    ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        //    ImGui::Text("Hello from another window!");
-        //    if (ImGui::Button("Close Me"))
-        //        show_another_window = false;
-        //    ImGui::End();
-        //}
+        //////////////////// 3. Show another simple window.
+        //////////////////if (show_another_window)
+        //////////////////{
+        //////////////////    ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+        //////////////////    ImGui::Text("Hello from another window!");
+        //////////////////    if (ImGui::Button("Close Me"))
+        //////////////////        show_another_window = false;
+        //////////////////    ImGui::End();
+        //////////////////}
 
-        // Rendering
-        ImGui::Render();
+        ////////////////// Rendering
+        ////////////////ImGui::Render();
 
 
         // Background Fill Color
@@ -221,7 +225,7 @@ int main(int argc, char* argv[]) {
 
 
 
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ////////////////ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 
 
@@ -255,6 +259,45 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
     if (key == GLFW_KEY_2 && action == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    {
+        auto& p = pCamera->GetPosition();
+        auto& t = pCamera->GetTargetPosition();
+
+        float dist = glm::distance(t, p);
+
+        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, 0, -1 * dist / 10));
+    }
+    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    {
+        auto& p = pCamera->GetPosition();
+        auto& t = pCamera->GetTargetPosition();
+
+        float dist = glm::distance(t, p);
+
+        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, 0, 1 * dist / 10));
+    }
+    if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    {
+        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(-0.1, 0, 0));
+        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(-0.1, 0, 0));
+    }
+    if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    {
+        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0.1, 0, 0));
+        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(0.1, 0, 0));
+    }
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+    {
+        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, -0.1, 0));
+        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(0, -0.1, 0));
+    }
+    if (key == GLFW_KEY_E && action == GLFW_PRESS)
+    {
+        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, 0.1, 0));
+        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(0, 0.1, 0));
+    }
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

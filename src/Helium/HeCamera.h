@@ -5,7 +5,7 @@
 
 namespace ArtificialNature {
 
-	struct HeCameraState
+	/*struct HeCameraState
 	{
 		enum ProjectionMode { ePerspective, eOrthogonal };
 		ProjectionMode projectionMode;
@@ -20,16 +20,28 @@ namespace ArtificialNature {
 		float rotationH;
 		float rotationV;
 		float distance;
-	};
+	};*/
 
 	class HeCamera : public HeSceneNode
 	{
+	public:
+		enum ProjectionMode { Perspective, Orthogonal };
+
 	public:
 		HeCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeCamera();
 
 		virtual void Update(float dt) = 0;
 		virtual void Render() = 0;
+
+		inline float GetZoomFactor() { return zoomFactor; }
+		inline void SetZoomFactor(float zoomFactor) { this->zoomFactor = zoomFactor; if (this->zoomFactor <= glm::epsilon<float>()) this->zoomFactor = glm::epsilon<float>(); }
+
+		inline float GetAspectRatio() { return aspectRatio; }
+		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
+
+		inline const glm::vec3& GetPosition() { return position; }
+		inline void SetPosition(const glm::vec3& position) { this->position = position; }
 
 		inline const glm::mat4 GetViewMatrix() { return viewMatrix; }
 		inline const glm::mat4 GetProjectionMatrix() { return projectionMatrix; }
@@ -40,6 +52,11 @@ namespace ArtificialNature {
 		float viewportWidth = 800;
 		float viewportHeight = 800;
 
+		float aspectRatio = 1;
+		float zoomFactor = 1;
+
+		glm::vec3 position;
+
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
 	};
@@ -47,30 +64,32 @@ namespace ArtificialNature {
 	class HeOrthogonalCamera : public HeCamera
 	{
 	public:
-		enum ProjectionMode { Perspective, Orthogonal };
-
-	public:
 		HeOrthogonalCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeOrthogonalCamera();
 
 		virtual void Update(float dt);
 		virtual void Render();
 
-		inline void SetPosition(const glm::vec3& position) { this->position = position; }
-
-		inline float GetZoomFactor() { return zoomFactor; }
-		inline void SetZoomFactor(float zoomFactor) { this->zoomFactor = zoomFactor; if (this->zoomFactor <= glm::epsilon<float>()) this->zoomFactor = glm::epsilon<float>(); }
-
-		inline float GetAspectRatio() { return aspectRatio; }
-		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
-
 	protected:
-		glm::vec3 position;
 		float width = 1;
 		float height = 1;
 		float depth = 1;
-		float aspectRatio = 1;
-		float zoomFactor = 1;
 	};
 
+	class HePerspectiveCamera : public HeCamera
+	{
+	public:
+		HePerspectiveCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
+		~HePerspectiveCamera();
+
+		virtual void Update(float dt);
+		virtual void Render();
+
+		inline const glm::vec3& GetTargetPosition() { return targetPosition; }
+		inline void SetTargetPosition(const glm::vec3& targetPosition) { this->targetPosition = targetPosition; }
+
+	protected:
+		glm::vec3 targetPosition;
+		glm::vec3 upDirection;
+	};
 }
