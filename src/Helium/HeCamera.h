@@ -43,6 +43,9 @@ namespace ArtificialNature {
 		inline const glm::vec3& GetPosition() { return position; }
 		inline void SetPosition(const glm::vec3& position) { this->position = position; }
 
+		inline const glm::vec3& GetTargetPosition() { return targetPosition; }
+		inline void SetTargetPosition(const glm::vec3& targetPosition) { this->targetPosition = targetPosition; }
+
 		inline const glm::mat4 GetViewMatrix() { return viewMatrix; }
 		inline const glm::mat4 GetProjectionMatrix() { return projectionMatrix; }
 
@@ -56,6 +59,8 @@ namespace ArtificialNature {
 		float zoomFactor = 1;
 
 		glm::vec3 position;
+		glm::vec3 targetPosition;
+		glm::vec3 upDirection;
 
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
@@ -84,12 +89,5 @@ namespace ArtificialNature {
 
 		virtual void Update(float dt);
 		virtual void Render();
-
-		inline const glm::vec3& GetTargetPosition() { return targetPosition; }
-		inline void SetTargetPosition(const glm::vec3& targetPosition) { this->targetPosition = targetPosition; }
-
-	protected:
-		glm::vec3 targetPosition;
-		glm::vec3 upDirection;
 	};
 }

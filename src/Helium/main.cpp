@@ -10,6 +10,7 @@
 #include "HeScene.h"
 #include "HeSceneNode.h"
 #include "HeCamera.h"
+#include "HeCameraManipulator.h"
 
 #include "HeGeometry.h"
 #include "HeThickLines.h"
@@ -25,9 +26,6 @@ using namespace ArtificialNature;
 //     #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-// System Headers
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 //// Standard Headers
 //#include <cstdio>
@@ -114,6 +112,8 @@ int main(int argc, char* argv[]) {
     //HeOrthogonalCamera camera(&scene, 0, 0, mWidth, mHeight);
     HePerspectiveCamera camera(&scene, 0, 0, mWidth, mHeight);
     pCamera = &camera;
+    HeCameraManipulatorObital manipulator(&camera);
+
     scene.GetRootNode()->AddChild(&camera);
     scene.SetMainCamera(&camera);
 
