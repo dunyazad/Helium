@@ -34,8 +34,8 @@ namespace ArtificialNature {
 		virtual void Update(float dt) = 0;
 		virtual void Render() = 0;
 
-		inline float GetZoomFactor() { return zoomFactor; }
-		inline void SetZoomFactor(float zoomFactor) { this->zoomFactor = zoomFactor; if (this->zoomFactor <= glm::epsilon<float>()) this->zoomFactor = glm::epsilon<float>(); }
+		virtual inline float GetZoomFactor() { return zoomFactor; }
+		virtual inline void SetZoomFactor(float zoomFactor) { this->zoomFactor = zoomFactor; if (this->zoomFactor <= glm::epsilon<float>()) this->zoomFactor = glm::epsilon<float>(); }
 
 		inline float GetAspectRatio() { return aspectRatio; }
 		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
@@ -89,5 +89,21 @@ namespace ArtificialNature {
 
 		virtual void Update(float dt);
 		virtual void Render();
+
+		virtual inline float GetZoomFactor()
+		{ 
+			return glm::distance(targetPosition, position);
+		}
+
+		virtual inline void SetZoomFactor(float zoomFactor)
+		{
+			this->zoomFactor = zoomFactor;
+			if (this->zoomFactor <= glm::epsilon<float>())
+				this->zoomFactor = glm::epsilon<float>();
+
+			auto dir = targetPosition - position;
+			dir = glm::normalize(dir);
+			SetPosition(targetPosition - dir * zoomFactor);
+		}
 	};
 }

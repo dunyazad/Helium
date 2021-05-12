@@ -42,6 +42,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 HePerspectiveCamera* pCamera = nullptr;
+HeCameraManipulatorObital* pCameraManipulator = nullptr;
 
 int main(int argc, char* argv[]) {
 
@@ -113,6 +114,7 @@ int main(int argc, char* argv[]) {
     HePerspectiveCamera camera(&scene, 0, 0, mWidth, mHeight);
     pCamera = &camera;
     HeCameraManipulatorObital manipulator(&camera);
+    pCameraManipulator = &manipulator;
 
     scene.GetRootNode()->AddChild(&camera);
     scene.SetMainCamera(&camera);
@@ -251,57 +253,13 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-
-    if (key == GLFW_KEY_1 && action == GLFW_PRESS)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    if (key == GLFW_KEY_2 && action == GLFW_PRESS)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    if (key == GLFW_KEY_W && action == GLFW_PRESS)
-    {
-        auto& p = pCamera->GetPosition();
-        auto& t = pCamera->GetTargetPosition();
-
-        float dist = glm::distance(t, p);
-
-        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, 0, -1 * dist / 10));
-    }
-    if (key == GLFW_KEY_S && action == GLFW_PRESS)
-    {
-        auto& p = pCamera->GetPosition();
-        auto& t = pCamera->GetTargetPosition();
-
-        float dist = glm::distance(t, p);
-
-        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, 0, 1 * dist / 10));
-    }
-    if (key == GLFW_KEY_A && action == GLFW_PRESS)
-    {
-        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(-0.1, 0, 0));
-        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(-0.1, 0, 0));
-    }
-    if (key == GLFW_KEY_D && action == GLFW_PRESS)
-    {
-        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0.1, 0, 0));
-        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(0.1, 0, 0));
-    }
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS)
-    {
-        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, -0.1, 0));
-        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(0, -0.1, 0));
-    }
-    if (key == GLFW_KEY_E && action == GLFW_PRESS)
-    {
-        pCamera->SetPosition(pCamera->GetPosition() + glm::vec3(0, 0.1, 0));
-        pCamera->SetTargetPosition(pCamera->GetTargetPosition() + glm::vec3(0, 0.1, 0));
-    }
+    pCameraManipulator->OnKey(window, key, scancode, action, mods);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    pCameraManipulator->OnMouse(window, xpos, ypos);
+
     //if (firstMouse)
     //{
     //    lastX = xpos;
@@ -338,11 +296,13 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    float zoomFactor = pCamera->GetZoomFactor();
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-        zoomFactor += (float)yoffset * zoomFactor * 0.1f;
-    else
-        zoomFactor += (float)yoffset * zoomFactor * 0.01f;
+    pCameraManipulator->OnWheel(window, xoffset, yoffset);
 
-    pCamera->SetZoomFactor(zoomFactor);
+    //float zoomFactor = pCamera->GetZoomFactor();
+    //if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+    //    zoomFactor += (float)yoffset * zoomFactor * 0.1f;
+    //else
+    //    zoomFactor += (float)yoffset * zoomFactor * 0.01f;
+
+    //pCamera->SetZoomFactor(zoomFactor);
 }
