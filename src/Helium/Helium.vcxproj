@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -82,65 +82,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="HeCameraManipulator.cpp" />
-    <ClCompile Include="HeThickLines.cpp" />
-    <ClCompile Include="HeThickLines1.cpp" />
-    <ClCompile Include="HeCamera.cpp" />
-    <ClCompile Include="HeGeometry.cpp" />
-    <ClCompile Include="HeID.cpp" />
-    <ClCompile Include="HeImage.cpp" />
-    <ClCompile Include="HeliumCommon.cpp" />
-    <ClCompile Include="HeMaterial.cpp" />
-    <ClCompile Include="HeObject.cpp" />
-    <ClCompile Include="HeScene.cpp" />
-    <ClCompile Include="HeSceneNode.cpp" />
-    <ClCompile Include="HeShader.cpp" />
-    <ClCompile Include="HeTexture.cpp" />
-    <ClCompile Include="HeVertexArrayObject.cpp" />
-    <ClCompile Include="imgui\imgui.cpp" />
-    <ClCompile Include="imgui\imgui_demo.cpp" />
-    <ClCompile Include="imgui\imgui_draw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="implot\implot.cpp" />
-    <ClCompile Include="implot\implot_demo.cpp" />
-    <ClCompile Include="implot\implot_items.cpp" />
+    <ClCompile Include="Core\glad.c" />
+    <ClCompile Include="Core\HeID.cpp" />
+    <ClCompile Include="Core\HeliumCommon.cpp" />
+    <ClCompile Include="Core\HeObject.cpp" />
+    <ClCompile Include="Graphics\HeGeometry.cpp" />
+    <ClCompile Include="Graphics\HeImage.cpp" />
+    <ClCompile Include="Graphics\HeIndexBufferObject.cpp" />
+    <ClCompile Include="Graphics\HeMaterial.cpp" />
+    <ClCompile Include="Graphics\HeShader.cpp" />
+    <ClCompile Include="Graphics\HeTexture.cpp" />
+    <ClCompile Include="Graphics\HeThickLines.cpp" />
+    <ClCompile Include="Graphics\HeThickLines1.cpp" />
+    <ClCompile Include="Graphics\HeVertexArrayObject.cpp" />
+    <ClCompile Include="Graphics\stb_image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="Scene\HeCamera.cpp" />
+    <ClCompile Include="Scene\HeCameraManipulator.cpp" />
+    <ClCompile Include="Scene\HeScene.cpp" />
+    <ClCompile Include="Scene\HeSceneNode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HeCameraManipulator.h" />
-    <ClInclude Include="HeThickLines.h" />
-    <ClInclude Include="HeThickLines1.h" />
-    <ClInclude Include="HeCamera.h" />
-    <ClInclude Include="HeGeometry.h" />
-    <ClInclude Include="HeID.h" />
-    <ClInclude Include="HeImage.h" />
+    <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Core\HeID.h" />
+    <ClInclude Include="Core\HeliumCommon.h" />
+    <ClInclude Include="Core\HeObject.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\HeGeometry.h" />
+    <ClInclude Include="Graphics\HeImage.h" />
+    <ClInclude Include="Graphics\HeIndexBufferObject.h" />
+    <ClInclude Include="Graphics\HeMaterial.h" />
+    <ClInclude Include="Graphics\HeShader.h" />
+    <ClInclude Include="Graphics\HeTexture.h" />
+    <ClInclude Include="Graphics\HeThickLines.h" />
+    <ClInclude Include="Graphics\HeThickLines1.h" />
+    <ClInclude Include="Graphics\HeVertexArrayObject.h" />
+    <ClInclude Include="Graphics\HeVertexBufferObject.hpp" />
     <ClInclude Include="Helium.h" />
-    <ClInclude Include="HeliumCommon.h" />
-    <ClInclude Include="HeMaterial.h" />
-    <ClInclude Include="HeObject.h" />
-    <ClInclude Include="HeScene.h" />
-    <ClInclude Include="HeSceneNode.h" />
-    <ClInclude Include="HeShader.h" />
-    <ClInclude Include="HeTexture.h" />
-    <ClInclude Include="HeVertexArrayObject.h" />
-    <ClInclude Include="HeVertexBufferObject.hpp" />
-    <ClInclude Include="imgui\imconfig.h" />
-    <ClInclude Include="imgui\imgui.h" />
-    <ClInclude Include="imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="imgui\imgui_internal.h" />
-    <ClInclude Include="imgui\imstb_rectpack.h" />
-    <ClInclude Include="imgui\imstb_textedit.h" />
-    <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="implot\implot.h" />
-    <ClInclude Include="implot\implot_internal.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="imgui\imgui.ini" />
+    <ClInclude Include="Scene\HeCamera.h" />
+    <ClInclude Include="Scene\HeCameraManipulator.h" />
+    <ClInclude Include="Scene\HeScene.h" />
+    <ClInclude Include="Scene\HeSceneNode.h" />
+    <ClInclude Include="Scene\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
