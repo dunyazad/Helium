@@ -11,3 +11,5 @@
 #include <Helium/Graphics/HeTexture.h>
 #include <Helium/Graphics/HeShader.h>
 #include <Helium/Graphics/HeMaterial.h>
+
+#include <Helium/Graphics/HeGraphics.h>

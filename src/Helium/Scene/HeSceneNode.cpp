@@ -7,7 +7,6 @@
 namespace ArtificialNature {
 
 	HeSceneNode::HeSceneNode(HeScene* rootNode)
-		: scene(scene)
 	{
 	}
 

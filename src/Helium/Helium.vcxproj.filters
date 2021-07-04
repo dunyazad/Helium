@@ -5,9 +5,6 @@
     <ClCompile Include="Core\glad.c">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\HeID.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\HeliumCommon.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -56,13 +53,14 @@
     <ClCompile Include="Scene\HeSceneNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\HeGraphics.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
     <ClInclude Include="Core\Core.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\HeID.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\HeliumCommon.h">
@@ -118,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="Scene\Scene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HeGraphics.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
