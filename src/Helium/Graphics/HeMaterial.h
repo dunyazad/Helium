@@ -6,7 +6,6 @@ namespace ArtificialNature {
 
 	class HeShader;
 	class HeTexture;
-	class HeCamera;
 
 	class HeMaterial
 	{
@@ -14,7 +13,8 @@ namespace ArtificialNature {
 		HeMaterial();
 		~HeMaterial();
 
-		void Use(HeCamera* camera);
+		void Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
+		void StopUse();
 
 		inline HeShader* GetShader() { return shader; }
 		inline void SetShader(HeShader* shader) { this->shader = shader; }

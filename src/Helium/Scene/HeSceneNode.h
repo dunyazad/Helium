@@ -32,11 +32,15 @@ namespace ArtificialNature {
 
 		set<HeGeometry*> geometries;
 
-		glm::quat localRotation;
-		glm::vec3 localPosition;
+		glm::quat localRotation = glm::identity<glm::quat>();
+		glm::vec3 localPosition = glm::vec3(0, 0, 0);
+		glm::vec3 localScale = glm::vec3(1, 1, 1);
 		
-		glm::quat absoluteRotation;
-		glm::vec3 absolutePosition;
+		glm::quat absoluteRotation = glm::identity<glm::quat>();
+		glm::vec3 absolutePosition = glm::vec3(0, 0, 0);
+		glm::vec3 absoluteScale = glm::vec3(1, 1, 1);
+
+		glm::mat4 absoluteTransform = glm::identity<glm::mat4>();
 	private:
 
 	};

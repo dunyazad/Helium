@@ -1,6 +1,7 @@
 #include <Helium/Scene/HeSceneNode.h>
 
 #include <Helium/Scene/HeScene.h>
+#include <Helium/Scene/HeCamera.h>
 
 #include <Helium/Graphics/HeGeometry.h>
 
@@ -34,18 +35,32 @@ namespace ArtificialNature {
 		scene->GetRootNode()->AddChild(child);
 	}
 
+	float angle = 0.0f;
 	void HeSceneNode::Update(float dt)
 	{
-		if (parentNode != nullptr)
-		{
+		angle += 0.01f;
+		localRotation = glm::angleAxis(angle, glm::vec3(0, 1, 0));
+
+		if (parentNode != nullptr) {
+			absolutePosition = parentNode->absolutePosition + parentNode->absoluteRotation * localPosition;
 			absoluteRotation = parentNode->absoluteRotation * localRotation;
-			absolutePosition = parentNode->absolutePosition + localRotation * localPosition;
+			absoluteScale = parentNode->absoluteScale * localScale;
 		}
-		else
-		{
+		else {
+			absolutePosition = localPosition;
 			absoluteRotation = localRotation;
-			absolutePosition = localRotation * localPosition;
+			absoluteScale = localScale;
 		}
+
+		glm::mat4 model = glm::toMat4(absoluteRotation);
+		model[3][0] = absolutePosition.x;
+		model[3][1] = absolutePosition.y;
+		model[3][2] = absolutePosition.z;
+		glm::mat4 scaleM = glm::identity<glm::mat4>();
+		scaleM[0][0] = absoluteScale.x;
+		scaleM[1][1] = absoluteScale.y;
+		scaleM[2][2] = absoluteScale.z;
+		absoluteTransform = model * scaleM;
 
 		for (auto& child : childNodes)
 		{
@@ -59,7 +74,7 @@ namespace ArtificialNature {
 		{
 			if (geometry != nullptr)
 			{
-				geometry->Draw(camera);
+				geometry->Draw(camera->GetProjectionMatrix(), camera->GetViewMatrix(), absoluteTransform);
 			}
 		}
 

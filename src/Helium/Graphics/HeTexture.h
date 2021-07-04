@@ -13,16 +13,22 @@ namespace ArtificialNature {
 		~HeTexture();
 
 		void Initialize(HeImage* image);
-		void Terminate();
+		bool Terminate();
 
-		void Bind(GLenum textureSlot, GLenum textureTarget)
-		{
-			glActiveTexture(textureSlot);
-			glBindTexture(textureTarget, id);
-		}
+		void Bind();
+		void Unbind();
+
+		inline GLuint GetTextureID() { return textureID; }
 
 	protected:
-		unsigned int id;
+		bool withAlpha = true;
+		GLuint textureID;
+		GLenum target = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES
+		GLenum format = GL_RGBA;
+		GLsizei width = 0;
+		GLsizei height = 0;
+		GLenum dataType = GL_UNSIGNED_BYTE;
+		unsigned char* textureData = nullptr;
 	};
 
 }

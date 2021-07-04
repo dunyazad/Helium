@@ -16,25 +16,32 @@ namespace ArtificialNature {
 	{
 	}
 
-	void HeMaterial::Use(HeCamera* camera)
+	void HeMaterial::Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
 	{
 		if (shader == nullptr)
 			return;
 
 		shader->Use();
 
-		if (camera != nullptr)
-		{
-			shader->SetUniformMat4("view", camera->GetViewMatrix());
-			shader->SetUniformMat4("projection", camera->GetProjectionMatrix());
-		}
+		shader->SetUniformMat4("projection", projection);
+		shader->SetUniformMat4("view", view);
+		shader->SetUniformMat4("model", model);
 
 		if (texture)
 		{
-			texture->Bind(GL_TEXTURE0, GL_TEXTURE_2D);
+			texture->Bind();
 			CheckGLError();
 
 			glUniform1i(glGetUniformLocation(shader->GetProgram(), "texture1"), 0);
+			CheckGLError();
+		}
+	}
+
+	void HeMaterial::StopUse()
+	{
+		if (texture)
+		{
+			texture->Unbind();
 			CheckGLError();
 		}
 	}

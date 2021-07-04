@@ -124,12 +124,12 @@ namespace ArtificialNature {
 
 	}
 
-	void HeGeometry::Draw(HeCamera* camera)
+	void HeGeometry::Draw(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
 	{
 		if (material == nullptr)
 			return;
 
-		material->Use(camera);
+		material->Use(projection, view, model);
 
 		vao->Bind();
 
@@ -160,6 +160,8 @@ namespace ArtificialNature {
 		}
 
 		CheckGLError();
+
+		material->StopUse();
 
 		vao->Unbind();
 	}
