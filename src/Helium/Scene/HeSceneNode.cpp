@@ -35,11 +35,12 @@ namespace ArtificialNature {
 		scene->GetRootNode()->AddChild(child);
 	}
 
-	float angle = 0.0f;
-	void HeSceneNode::Update(float dt)
+	void HeSceneNode::Update(double dt)
 	{
-		angle += 0.01f;
-		localRotation = glm::angleAxis(angle, glm::vec3(0, 1, 0));
+		for (auto& callback : onPreupdateEventHandlers)
+		{
+			callback->t(this, dt);
+		}
 
 		if (parentNode != nullptr) {
 			absolutePosition = parentNode->absolutePosition + parentNode->absoluteRotation * localPosition;
@@ -66,6 +67,11 @@ namespace ArtificialNature {
 		{
 			child->Update(dt);
 		}
+
+		for (auto& callback : onPostupdateEventHandlers)
+		{
+			callback->t(this, dt);
+		}
 	}
 
 	void HeSceneNode::Render(HeCamera* camera)
@@ -84,4 +90,41 @@ namespace ArtificialNature {
 		}
 	}
 
+	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPreupdate(function<void(HeSceneNode*, double)> handler)
+	{
+		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(handler);
+		onPreupdateEventHandlers.insert(pCallback);
+		return pCallback;
+	}
+
+	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPostupdate(function<void(HeSceneNode*, double)> handler)
+	{
+		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(handler);
+		onPostupdateEventHandlers.insert(pCallback);
+		return pCallback;
+	}
+
+	bool HeSceneNode::RemoveOnPreupdate(HeCallback<HeSceneNodeUpdateCallback>* handler)
+	{
+		if (onPreupdateEventHandlers.count(handler) != 0) {
+			onPreupdateEventHandlers.erase(handler);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool HeSceneNode::RemoveOnPostupdate(HeCallback<HeSceneNodeUpdateCallback>* handler)
+	{
+		if (onPostupdateEventHandlers.count(handler) != 0) {
+			onPostupdateEventHandlers.erase(handler);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

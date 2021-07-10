@@ -7,6 +7,9 @@ namespace ArtificialNature {
 	class HeScene;
 	class HeGeometry;
 	class HeCamera;
+	class HeSceneNode;
+
+	typedef function<void(HeSceneNode*, double)> HeSceneNodeUpdateCallback;
 
 	class HeSceneNode : public HeObject
 	{
@@ -19,11 +22,26 @@ namespace ArtificialNature {
 		void AddChild(HeSceneNode* child);
 		void RemoveChild(HeSceneNode* child);
 
-		virtual void Update(float dt);
+		virtual void Update(double dt);
 		virtual void Render(HeCamera* camera);
+
+		HeCallback<HeSceneNodeUpdateCallback>* AddOnPreupdate(function<void(HeSceneNode*, double)> handler);
+		HeCallback<HeSceneNodeUpdateCallback>* AddOnPostupdate(function<void(HeSceneNode*, double)> handler);
+		bool RemoveOnPreupdate(HeCallback<HeSceneNodeUpdateCallback>* handler);
+		bool RemoveOnPostupdate(HeCallback<HeSceneNodeUpdateCallback>* handler);
 
 		inline void AddGeometry(HeGeometry* geometry) { this->geometries.insert(geometry); }
 		inline void RemoveGeometry(HeGeometry* geometry) { this->geometries.erase(geometry); }
+
+		inline const glm::quat& GetLocalRotation() { return localRotation; }
+		inline const glm::vec3& GetLocalPosition() { return localPosition; }
+		inline const glm::vec3& GetLocalScale() { return localScale; }
+
+		inline void SetLocalRotation(const glm::quat& rotation) { localRotation = rotation; }
+		inline void SetLocalPosition(const glm::vec3& position) { localPosition = position; }
+		inline void SetLocalScale(const glm::vec3& scale) { localScale = scale; }
+
+		inline const glm::mat4& GetAbsoluteTransform() { return absoluteTransform; }
 
 	protected:
 		HeScene* scene = nullptr;
@@ -41,8 +59,10 @@ namespace ArtificialNature {
 		glm::vec3 absoluteScale = glm::vec3(1, 1, 1);
 
 		glm::mat4 absoluteTransform = glm::identity<glm::mat4>();
-	private:
 
+	private:
+		set<HeCallback<HeSceneNodeUpdateCallback>*> onPreupdateEventHandlers;
+		set<HeCallback<HeSceneNodeUpdateCallback>*> onPostupdateEventHandlers;
 	};
 
 }

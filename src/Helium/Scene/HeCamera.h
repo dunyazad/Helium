@@ -32,7 +32,7 @@ namespace ArtificialNature {
 		HeCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeCamera();
 
-		virtual void Update(float dt) = 0;
+		virtual void Update(double dt) = 0;
 		virtual void Render() = 0;
 
 		virtual inline float GetZoomFactor() { return zoomFactor; }
@@ -40,9 +40,6 @@ namespace ArtificialNature {
 
 		inline float GetAspectRatio() { return aspectRatio; }
 		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
-
-		inline const glm::vec3& GetPosition() { return position; }
-		inline void SetPosition(const glm::vec3& position) { this->position = position; }
 
 		inline const glm::vec3& GetTargetPosition() { return targetPosition; }
 		inline void SetTargetPosition(const glm::vec3& targetPosition) { this->targetPosition = targetPosition; }
@@ -59,7 +56,6 @@ namespace ArtificialNature {
 		float aspectRatio = 1;
 		float zoomFactor = 1;
 
-		glm::vec3 position;
 		glm::vec3 targetPosition;
 		glm::vec3 upDirection;
 
@@ -73,7 +69,7 @@ namespace ArtificialNature {
 		HeOrthogonalCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeOrthogonalCamera();
 
-		virtual void Update(float dt);
+		virtual void Update(double dt);
 		virtual void Render();
 
 	protected:
@@ -88,12 +84,12 @@ namespace ArtificialNature {
 		HePerspectiveCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HePerspectiveCamera();
 
-		virtual void Update(float dt);
+		virtual void Update(double dt);
 		virtual void Render();
 
 		virtual inline float GetZoomFactor()
 		{ 
-			return glm::distance(targetPosition, position);
+			return glm::distance(targetPosition, localPosition);
 		}
 
 		virtual inline void SetZoomFactor(float zoomFactor)
@@ -102,9 +98,9 @@ namespace ArtificialNature {
 			if (this->zoomFactor <= glm::epsilon<float>())
 				this->zoomFactor = glm::epsilon<float>();
 
-			auto dir = targetPosition - position;
+			auto dir = targetPosition - localPosition;
 			dir = glm::normalize(dir);
-			SetPosition(targetPosition - dir * zoomFactor);
+			SetLocalPosition(targetPosition - dir * zoomFactor);
 		}
 	};
 }

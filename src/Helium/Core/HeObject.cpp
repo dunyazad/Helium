@@ -17,4 +17,5 @@ namespace ArtificialNature {
 	{
 		return instancCount++;
 	}
+
 }

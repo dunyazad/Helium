@@ -17,7 +17,7 @@ namespace ArtificialNature {
 		inline HeCamera* GetMainCamera() { return mainCamera; }
 		inline void SetMainCamera(HeCamera* camera) { mainCamera = camera; }
 
-		void Update(float dt);
+		void Update(double dt);
 		void Render();
 
 	private:

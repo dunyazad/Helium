@@ -19,4 +19,15 @@ namespace ArtificialNature {
 		long instanceID = -1;
 	};
 
+	template<typename T>
+	class HeCallback
+	{
+	public:
+		HeCallback(T t)
+		{
+			this->t = t;
+		}
+
+		T t;
+	};
 }

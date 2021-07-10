@@ -151,7 +151,7 @@ namespace ArtificialNature {
 		}
 		else
 		{
-			glDrawArrays(drawingMode, 0, vbo->Size());
+			glDrawArrays(drawingMode, 0, (GLsizei)vbo->Size());
 		}
 
 		if (fillMode == Wireframe)

@@ -74,11 +74,18 @@ int main(int argc, char* argv[]) {
     scene.GetRootNode()->AddChild(&camera);
     scene.SetMainCamera(&camera);
 
-    camera.SetPosition(glm::vec3(0, 2.5, 2.5));
+    camera.SetLocalPosition(glm::vec3(0, 2.5, 2.5));
 
 
     HeSceneNode node(&scene);
     scene.GetRootNode()->AddChild(&node);
+
+    double angle = 0.0;
+    auto callback = node.AddOnPreupdate(
+        [&angle](HeSceneNode* pNode, double dt) {
+            angle += dt * 0.001f;
+            pNode->SetLocalRotation(glm::angleAxis((float)angle, glm::vec3(0, 1, 0)));
+        });
 
     HeGeometry geometry;
     node.AddGeometry(&geometry);
@@ -236,7 +243,7 @@ int main(int argc, char* argv[]) {
     #pragma endregion
 
     #pragma region [Cube Indices]
-    for (size_t i = 0; i < 36; i++)
+    for (GLuint i = 0; i < 36; i++)
     {
         geometry.AddIndex(i);
     }
@@ -300,14 +307,16 @@ int main(int argc, char* argv[]) {
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);
 
+    auto lastTime = HeTime::Now();
     while (glfwWindowShouldClose(mWindow) == false) {
+        auto delta = HeTime::DeltaMili(lastTime);
+        lastTime = HeTime::Now();
 
         glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        scene.Update(0);
+        scene.Update(delta);
         scene.Render();
-
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();

@@ -98,10 +98,10 @@ namespace ArtificialNature {
 			AddVertex(v2);
 			AddVertex(v3);
 
-			auto vi0 = vbo->Size() - 4;
-			auto vi1 = vbo->Size() - 3;
-			auto vi2 = vbo->Size() - 2;
-			auto vi3 = vbo->Size() - 1;
+			auto vi0 = (int)vbo->Size() - 4;
+			auto vi1 = (int)vbo->Size() - 3;
+			auto vi2 = (int)vbo->Size() - 2;
+			auto vi3 = (int)vbo->Size() - 1;
 
 			SetVertex(vi0, v0);
 			SetVertex(vi1, v1);

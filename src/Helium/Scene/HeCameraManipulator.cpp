@@ -27,40 +27,40 @@ namespace ArtificialNature {
 
 		if (key == GLFW_KEY_W && action == GLFW_PRESS)
 		{
-			auto& p = camera->GetPosition();
+			auto& p = camera->GetLocalPosition();
 			auto& t = camera->GetTargetPosition();
 
 			float dist = glm::distance(t, p);
 
-			camera->SetPosition(camera->GetPosition() + glm::vec3(0, 0, -1 * dist / 10));
+			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, 0, -1 * dist / 10));
 		}
 		if (key == GLFW_KEY_S && action == GLFW_PRESS)
 		{
-			auto& p = camera->GetPosition();
+			auto& p = camera->GetLocalPosition();
 			auto& t = camera->GetTargetPosition();
 
 			float dist = glm::distance(t, p);
 
-			camera->SetPosition(camera->GetPosition() + glm::vec3(0, 0, 1 * dist / 10));
+			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, 0, 1 * dist / 10));
 		}
 		if (key == GLFW_KEY_A && action == GLFW_PRESS)
 		{
-			camera->SetPosition(camera->GetPosition() + glm::vec3(-0.1, 0, 0));
+			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(-0.1, 0, 0));
 			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(-0.1, 0, 0));
 		}
 		if (key == GLFW_KEY_D && action == GLFW_PRESS)
 		{
-			camera->SetPosition(camera->GetPosition() + glm::vec3(0.1, 0, 0));
+			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0.1, 0, 0));
 			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(0.1, 0, 0));
 		}
 		if (key == GLFW_KEY_Q && action == GLFW_PRESS)
 		{
-			camera->SetPosition(camera->GetPosition() + glm::vec3(0, -0.1, 0));
+			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, -0.1, 0));
 			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(0, -0.1, 0));
 		}
 		if (key == GLFW_KEY_E && action == GLFW_PRESS)
 		{
-			camera->SetPosition(camera->GetPosition() + glm::vec3(0, 0.1, 0));
+			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, 0.1, 0));
 			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(0, 0.1, 0));
 		}
 	}
@@ -103,9 +103,9 @@ namespace ArtificialNature {
 	{
 		float zoomFactor = camera->GetZoomFactor();
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-			zoomFactor -= (float)yoffset * zoomFactor * 0.1f;
+			zoomFactor -= (float)yoffset * zoomFactor * 0.5f;
 		else
-			zoomFactor -= (float)yoffset * zoomFactor * 0.01f;
+			zoomFactor -= (float)yoffset * zoomFactor * 0.05f;
 
 		camera->SetZoomFactor(zoomFactor);
 	}
