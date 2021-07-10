@@ -28,5 +28,11 @@ namespace ArtificialNature {
 		void OnMouse(GLFWwindow* window, double xpos, double ypos);
 		void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
 
+	protected:
+		double lastMousePositionX = 0.0;
+		double lastMousePositionY = 0.0;
+
+		double rotationH = 0.0f;
+		double rotationV = 0.0f;
 	};
 }
