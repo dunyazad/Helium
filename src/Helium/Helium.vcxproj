@@ -101,6 +101,7 @@
     <ClCompile Include="Graphics\Texture\HeTexture.cpp" />
     <ClCompile Include="Helium.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="nanovg.c" />
     <ClCompile Include="Scene\HeCamera.cpp" />
     <ClCompile Include="Scene\HeCameraManipulator.cpp" />
     <ClCompile Include="Scene\HeScene.cpp" />

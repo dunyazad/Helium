@@ -9,6 +9,12 @@
 
 using namespace ArtificialNature;
 
+#include <NanoVG/nanovg.h>
+#define NANOVG_GL3_IMPLEMENTATION
+#include <NanoVG/nanovg_gl.h>
+
+//#pragma comment(lib, "nanovg.lib")
+
 // Reference: https://github.com/nothings/stb/blob/master/stb_image.h#L4
 // To use stb_image, add this in *one* C++ source file.
 //     #define STB_IMAGE_IMPLEMENTATION
@@ -65,8 +71,6 @@ int main(int argc, char* argv[]) {
 
 
     Helium helium("helium");
-
-
     glEnable(GL_DEPTH_TEST);
 
     auto pScene = helium.GetScene("Default Scene");
@@ -325,27 +329,87 @@ int main(int argc, char* argv[]) {
         auto pShader = helium.GetGraphics()->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
         pMaterial->SetShader(pShader);
 
-        //auto pImage = helium.GetGraphics()->GetImage("owl image", "../../res/img/Owl.jpg");
-        auto pImage = helium.GetGraphics()->GetCanvasImage("Canvas Image", 512, 512);
+        auto pImage = helium.GetGraphics()->GetImage("owl image", "../../res/img/Owl.jpg");
+        //auto pImage = helium.GetGraphics()->GetCanvasImage("Canvas Image", 512, 512);
         pImage->Initialize();
      
-        auto pTexture = helium.GetGraphics()->GetCanvasTexture("Canvas Texture", pImage);
+        auto pTexture = helium.GetGraphics()->GetTexture("Owl Texture", pImage);
         pTexture->Initialize();
         pMaterial->SetTexture(pTexture);
+
+        //auto pTexture = helium.GetGraphics()->GetCanvasTexture("Canvas Texture", pImage);
+        //pTexture->Initialize();
+        //pMaterial->SetTexture(pTexture);
     }
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);
+
+
+
+
+#pragma region [NanoVG]
+    NVGcontext* vg = NULL;
+    //vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_DEBUG);
+    vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+
+    int fbWidth, fbHeight;
+    glfwGetFramebufferSize(mWindow, &fbWidth, &fbHeight);
+    float pxRatio = (float)fbWidth / (float)fbHeight;
+
+    nvgCreateFont(vg, "sans", "../../res/font/Roboto-Regular.ttf");
+    nvgCreateFont(vg, "sans-bold", "../../res/font/Roboto-Bold.ttf");
+    nvgCreateFont(vg, "malgun", "../../res/font/malgun.ttf");
+#pragma endregion
 
     auto lastTime = HeTime::Now();
     while (glfwWindowShouldClose(mWindow) == false) {
         auto delta = HeTime::DeltaMili(lastTime);
         lastTime = HeTime::Now();
 
+        glEnable(GL_DEPTH_TEST);
+
         glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         pScene->Update((float)delta);
         pScene->Render();
+
+
+#pragma region [NanoVG]
+        glViewport(0, 0, fbWidth, fbHeight);
+
+        glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        nvgBeginFrame(vg, mWidth, mHeight, pxRatio);
+
+       
+        float x = 20;
+        float y = 20;
+        float w = 200;
+        float h = 35;
+
+        nvgBeginPath(vg);
+        nvgRect(vg, x, y, w, h);
+        nvgFillColor(vg, nvgRGBA(0, 0, 0, 128));
+        nvgFill(vg);
+
+        nvgLineTo(vg, x + w, y + h);
+        nvgFillColor(vg, nvgRGBA(255, 192, 0, 128));
+        nvgFill(vg);
+
+        nvgFontFace(vg, "malgun");
+
+        char str[64];
+
+        nvgFontSize(vg, 15.0f);
+        nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
+        nvgFillColor(vg, nvgRGBA(240, 240, 240, 255));
+        sprintf(str, "%.6f Miliseconds", delta);
+        nvgText(vg, x + w - 3, y + 3, str, NULL);
+
+        nvgEndFrame(vg);
+#pragma endregion
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();

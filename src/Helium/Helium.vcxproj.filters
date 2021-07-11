@@ -66,6 +66,7 @@
     <ClCompile Include="Graphics\Image\HeCanvasImage.cpp">
       <Filter>Graphics\Image</Filter>
     </ClCompile>
+    <ClCompile Include="nanovg.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />

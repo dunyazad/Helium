@@ -17,9 +17,6 @@ namespace ArtificialNature {
 		HeCanvasImage(const string& name, int width, int height);
 		~HeCanvasImage();
 
-		BLImage* image = nullptr;
-		BLContext* context = nullptr;
-
 	public:
 		friend class HeGraphics;
 	};
