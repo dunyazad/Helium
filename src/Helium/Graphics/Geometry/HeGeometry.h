@@ -16,9 +16,6 @@ namespace ArtificialNature {
 		enum DrawingMode { Points = GL_POINTS, Lines = GL_LINES, LineLoop = GL_LINE_LOOP, LineStrip = GL_LINE_STRIP, Triangles = GL_TRIANGLES, TriangleStrip = GL_TRIANGLE_STRIP, TriangleFan = GL_TRIANGLE_FAN, Quads = GL_QUADS };
 
 	public:
-		HeGeometry();
-		~HeGeometry();
-
 		void Initialize();
 		void Terminate();
 
@@ -48,6 +45,9 @@ namespace ArtificialNature {
 		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
 
 	protected:
+		HeGeometry(const string& name);
+		~HeGeometry();
+
 		bool dirty = true;
 
 		FillMode fillMode = FillMode::Fill;
@@ -59,6 +59,9 @@ namespace ArtificialNature {
 		HeVertexBufferObject<GLuint>* ibo;
 		HeVertexBufferObject<glm::vec4>* cbo;
 		HeVertexBufferObject<glm::vec2>* uvbo;
+
+	public:
+		friend class HeGraphics;
 	};
 
 }

@@ -9,13 +9,21 @@ namespace ArtificialNature {
 	class HePlane : public HeGeometry
 	{
 	public:
-		HePlane();
-		~HePlane();
-
 		void Initialize();
 		void Terminate();
 
 	protected:
+		HePlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
+		~HePlane();
+
+		float columnLength = 1.0f;
+		float rowLength = 1.0f;
+		unsigned int columns = 1;
+		unsigned int rows = 1;
+		HePlaneType type = XZ;
+
+	public:
+		friend class HeGraphics;
 	};
 
 }

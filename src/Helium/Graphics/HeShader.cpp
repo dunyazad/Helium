@@ -3,7 +3,7 @@
 namespace ArtificialNature {
 
 	HeShader::HeShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName)
-		: name(name), vertexShaderFileName(vertexShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
+		: HeObject(name), vertexShaderFileName(vertexShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
 	{
 		{
 			FILE* fp;
@@ -70,7 +70,7 @@ namespace ArtificialNature {
 	}
 
 	HeShader::HeShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName)
-		: name(name), vertexShaderFileName(vertexShaderFileName), geometryShaderFileName(geometryShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
+		: HeObject(name), vertexShaderFileName(vertexShaderFileName), geometryShaderFileName(geometryShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
 	{
 		{
 			FILE* fp;

@@ -14,9 +14,6 @@ namespace ArtificialNature {
 	class HeSceneNode : public HeObject
 	{
 	public:
-		HeSceneNode(HeScene* scene);
-		~HeSceneNode();
-
 		inline HeSceneNode* GetParentNode() { return parentNode; }
 
 		void AddChild(HeSceneNode* child);
@@ -44,6 +41,9 @@ namespace ArtificialNature {
 		inline const glm::mat4& GetAbsoluteTransform() { return absoluteTransform; }
 
 	protected:
+		HeSceneNode(const string& name, HeScene* scene);
+		~HeSceneNode();
+
 		HeScene* scene = nullptr;
 		HeSceneNode* parentNode = nullptr;
 		set<HeSceneNode*> childNodes;
@@ -63,6 +63,9 @@ namespace ArtificialNature {
 	private:
 		set<HeCallback<HeSceneNodeUpdateCallback>*> onPreupdateCallbacks;
 		set<HeCallback<HeSceneNodeUpdateCallback>*> onPostupdateCallbacks;
+
+	public:
+		friend class HeScene;
 	};
 
 }

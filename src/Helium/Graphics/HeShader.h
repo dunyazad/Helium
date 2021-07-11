@@ -4,13 +4,9 @@
 
 namespace ArtificialNature {
 
-	class HeShader
+	class HeShader : public HeObject
 	{
 	public:
-		HeShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);
-		HeShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
-		~HeShader();
-
 		void Use();
 
 		GLint GetVertexAttributeLocation(const std::string& attributeName);
@@ -24,9 +20,12 @@ namespace ArtificialNature {
 
 		inline void AddOnUseCallback(function<void(HeShader*)> callback) { onUseCallbacks.push_back(callback); }
 
-	private:
-		string name;
+	protected:
+		HeShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);
+		HeShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
+		~HeShader();
 
+	private:
 		string vertexShaderFileName;
 		string geometryShaderFileName;
 		string fragmentShaderFileName;
@@ -40,6 +39,9 @@ namespace ArtificialNature {
 		map<string, GLint> uniforms;
 
 		vector<function<void(HeShader*)>> onUseCallbacks;
+
+	public:
+		friend class HeGraphics;
 	};
 
 }

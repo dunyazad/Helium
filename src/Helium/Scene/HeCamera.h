@@ -29,9 +29,6 @@ namespace ArtificialNature {
 		enum ProjectionMode { Perspective, Orthogonal };
 
 	public:
-		HeCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
-		~HeCamera();
-
 		virtual void Update(float dt) = 0;
 		virtual void Render() = 0;
 
@@ -45,6 +42,9 @@ namespace ArtificialNature {
 		inline const glm::mat4 GetProjectionMatrix() { return projectionMatrix; }
 
 	protected:
+		HeCamera(const string& name, HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
+		~HeCamera(); 
+		
 		float viewportX = 0;
 		float viewportY = 0;
 		float viewportWidth = 800;
@@ -58,30 +58,39 @@ namespace ArtificialNature {
 
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
+
+	public:
+		friend class HeScene;
 	};
 
 	class HeOrthogonalCamera : public HeCamera
 	{
 	public:
-		HeOrthogonalCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
-		~HeOrthogonalCamera();
-
 		virtual void Update(float dt);
 		virtual void Render();
 
 	protected:
+		HeOrthogonalCamera(const string& name, HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
+		~HeOrthogonalCamera(); 
+		
 		float width = 1;
 		float height = 1;
 		float depth = 1;
+
+	public:
+		friend class HeScene;
 	};
 
 	class HePerspectiveCamera : public HeCamera
 	{
 	public:
-		HePerspectiveCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
-		~HePerspectiveCamera();
-
 		virtual void Update(float dt);
 		virtual void Render();
+	protected:
+		HePerspectiveCamera(const string& name, HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
+		~HePerspectiveCamera();
+
+	public:
+		friend class HeScene;
 	};
 }

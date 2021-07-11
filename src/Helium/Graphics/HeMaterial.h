@@ -7,10 +7,10 @@ namespace ArtificialNature {
 	class HeShader;
 	class HeTexture;
 
-	class HeMaterial
+	class HeMaterial : public HeObject
 	{
 	public:
-		HeMaterial();
+		HeMaterial(const string& name);
 		~HeMaterial();
 
 		void Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);

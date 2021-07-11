@@ -43,3 +43,6 @@ void _CheckGLError(const char* file, int line);
 #define CheckGLError() _CheckGLError(__FILE__, __LINE__)
 
 #define HeDelete(x) if(x != nullptr) { delete x; x = nullptr; }
+
+
+enum HePlaneType { XY, YX, YZ, ZY, XZ, ZX };

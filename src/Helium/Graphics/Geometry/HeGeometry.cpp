@@ -8,7 +8,8 @@
 
 namespace ArtificialNature {
 
-	HeGeometry::HeGeometry()
+	HeGeometry::HeGeometry(const string& name)
+		: HeObject(name)
 	{
 		vao = new HeVertexArrayObject();
 		vbo = new HeVertexBufferObject<glm::vec3>(HeVertexBufferObject<glm::vec3>::BufferType::VERTEX_BUFFER);

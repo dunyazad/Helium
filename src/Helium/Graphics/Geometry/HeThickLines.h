@@ -9,16 +9,19 @@ namespace ArtificialNature {
 	class HeThickLines : public HeGeometry
 	{
 	public:
-		HeThickLines();
-		~HeThickLines();
-
 		void Initialize();
 		void Terminate();
 
 		void SetThickness(float thickness);
 
 	protected:
+		HeThickLines(const string& name);
+		~HeThickLines();
+
 		float thickness = 1.0f;
+
+	public:
+		friend class HeGraphics;
 	};
 
 }

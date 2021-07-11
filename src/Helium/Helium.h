@@ -6,17 +6,19 @@
 
 namespace ArtificialNature {
 
-	class Helium
+	class Helium : public HeObject
 	{
 	public:
-		Helium();
+		Helium(const string& name);
 		~Helium();
 
-		inline const HeGraphics* GetGraphics() const { return graphics; }
-		inline const list<HeScene*> GetScenes() const { return scenes; }
+		HeScene* GetScene(const string& sceneName);
+
+		inline HeGraphics* GetGraphics() const { return graphics; }
+		inline const map<string, HeScene*> GetScenes() const { return scenes; }
 
 	private:
 		HeGraphics* graphics = nullptr;
-		list<HeScene*> scenes;
+		map<string, HeScene*> scenes;
 	};
 }

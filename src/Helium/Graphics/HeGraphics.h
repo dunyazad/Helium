@@ -1,16 +1,38 @@
 #pragma once
 
 #include <Helium/Core/HeliumCommon.h>
+#include <Helium/Core/HeObject.h>
 
 namespace ArtificialNature {
 
-	class HeGraphics
+	class HeGeometry;
+	class HePlane;
+	class HeThickLines;
+
+	class HeShader;
+	class HeMaterial;
+	class HeTexture;
+
+	class HeGraphics : public HeObject
 	{
 	public:
-		HeGraphics();
+		HeGraphics(const string& name);
 		~HeGraphics();
 
-	private:
+		HeGeometry* GetGeometry(const string& name);
+		HePlane* GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
+		HeThickLines* GetGeometryThickLines(const string& name);
 
+		HeShader* GetShader(const string& name);
+		HeShader* GetShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);
+		HeShader* GetShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
+
+		HeMaterial* GetMaterial(const string& name);
+
+	private:
+		map<string, HeGeometry*> geometries;
+		map<string, HeShader*> shaders;
+		map<string, HeMaterial*> materials;
+		map<string, HeTexture*> textures;
 	};
 }

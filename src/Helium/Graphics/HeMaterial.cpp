@@ -8,7 +8,8 @@
 
 namespace ArtificialNature {
 
-	HeMaterial::HeMaterial()
+	HeMaterial::HeMaterial(const string& name)
+		: HeObject(name)
 	{
 	}
 

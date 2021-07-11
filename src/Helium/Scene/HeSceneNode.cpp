@@ -3,16 +3,33 @@
 #include <Helium/Scene/HeScene.h>
 #include <Helium/Scene/HeCamera.h>
 
-#include <Helium/Graphics/HeGeometry.h>
+#include <Helium/Graphics/Geometry/Geometry.h>
 
 namespace ArtificialNature {
 
-	HeSceneNode::HeSceneNode(HeScene* rootNode)
+	HeSceneNode::HeSceneNode(const string& name, HeScene* rootNode)
+		: HeObject(name)
 	{
 	}
 
 	HeSceneNode::~HeSceneNode()
 	{
+		for (auto& callback : onPreupdateCallbacks)
+		{
+			if (callback != nullptr)
+			{
+				delete callback;
+			}
+		}
+
+		for (auto& callback : onPostupdateCallbacks)
+		{
+			if (callback != nullptr)
+			{
+				delete callback;
+			}
+		}
+
 		for (auto& child : childNodes)
 		{
 			delete child;

@@ -4,8 +4,8 @@ namespace ArtificialNature {
 
 	long HeObject::instancCount = 0;
 
-	HeObject::HeObject()
-		: instanceID(NewID())
+	HeObject::HeObject(const string& name)
+		: instanceID(NewID()), name(name)
 	{
 	}
 
