@@ -11,9 +11,6 @@
     <ClCompile Include="Core\HeObject.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\HeImage.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\HeIndexBufferObject.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -57,11 +54,11 @@
     <ClCompile Include="Graphics\Geometry\HePlane.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Texture\HeCanvasTexture.cpp">
-      <Filter>Graphics\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Texture\HeTexture.cpp">
       <Filter>Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Image\HeImage.cpp">
+      <Filter>Graphics\Image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,9 +73,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Graphics.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HeImage.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\HeIndexBufferObject.h">
@@ -132,11 +126,14 @@
     <ClInclude Include="Graphics\Texture\HeTexture.h">
       <Filter>Graphics\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Texture\HeCanvasTexture.h">
-      <Filter>Graphics\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Texture\Texture.h">
       <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Image\Image.h">
+      <Filter>Graphics\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Image\HeImage.h">
+      <Filter>Graphics\Image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +151,9 @@
     </Filter>
     <Filter Include="Graphics\Texture">
       <UniqueIdentifier>{b9992d5a-6e16-4906-83c5-b94db50e919d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Image">
+      <UniqueIdentifier>{14c5fd2c-898a-44ca-ab66-0d2361b7a9e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

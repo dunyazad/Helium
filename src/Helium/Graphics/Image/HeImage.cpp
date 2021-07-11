@@ -1,4 +1,4 @@
-#include <Helium/Graphics/HeImage.h>
+#include <Helium/Graphics/Image/Image.h>
 
 #include <stb/stb_image.h>
 
