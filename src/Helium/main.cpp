@@ -27,7 +27,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 HePerspectiveCamera* pCamera = nullptr;
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
     glfwSetKeyCallback(mWindow, key_callback);
     glfwSetCursorPosCallback(mWindow, mouse_position_callback);
     glfwSetMouseButtonCallback(mWindow, mouse_button_callback);
-    glfwSetScrollCallback(mWindow, scroll_callback);
+    glfwSetScrollCallback(mWindow, mouse_wheel_callback);
 
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
@@ -380,22 +380,9 @@ void mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
     pCameraManipulator->OnMouseButton(window, button, action, mods);
-
-    //if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-    //    popup_menu();
 }
 
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     pCameraManipulator->OnWheel(window, xoffset, yoffset);
-
-    //float zoomFactor = pCamera->GetZoomFactor();
-    //if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-    //    zoomFactor += (float)yoffset * zoomFactor * 0.1f;
-    //else
-    //    zoomFactor += (float)yoffset * zoomFactor * 0.01f;
-
-    //pCamera->SetZoomFactor(zoomFactor);
 }

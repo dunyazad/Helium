@@ -25,10 +25,10 @@ namespace ArtificialNature {
 		virtual void Update(float dt);
 		virtual void Render(HeCamera* camera);
 
-		HeCallback<HeSceneNodeUpdateCallback>* AddOnPreupdate(HeSceneNodeUpdateCallback handler);
-		HeCallback<HeSceneNodeUpdateCallback>* AddOnPostupdate(HeSceneNodeUpdateCallback handler);
-		bool RemoveOnPreupdate(HeCallback<HeSceneNodeUpdateCallback>* handler);
-		bool RemoveOnPostupdate(HeCallback<HeSceneNodeUpdateCallback>* handler);
+		HeCallback<HeSceneNodeUpdateCallback>* AddOnPreupdate(HeSceneNodeUpdateCallback callback);
+		HeCallback<HeSceneNodeUpdateCallback>* AddOnPostupdate(HeSceneNodeUpdateCallback callback);
+		bool RemoveOnPreupdate(HeCallback<HeSceneNodeUpdateCallback>* callback);
+		bool RemoveOnPostupdate(HeCallback<HeSceneNodeUpdateCallback>* callback);
 
 		inline void AddGeometry(HeGeometry* geometry) { this->geometries.insert(geometry); }
 		inline void RemoveGeometry(HeGeometry* geometry) { this->geometries.erase(geometry); }
@@ -61,8 +61,8 @@ namespace ArtificialNature {
 		glm::mat4 absoluteTransform = glm::identity<glm::mat4>();
 
 	private:
-		set<HeCallback<HeSceneNodeUpdateCallback>*> onPreupdateEventHandlers;
-		set<HeCallback<HeSceneNodeUpdateCallback>*> onPostupdateEventHandlers;
+		set<HeCallback<HeSceneNodeUpdateCallback>*> onPreupdateCallbacks;
+		set<HeCallback<HeSceneNodeUpdateCallback>*> onPostupdateCallbacks;
 	};
 
 }

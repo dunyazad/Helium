@@ -37,7 +37,7 @@ namespace ArtificialNature {
 
 	void HeSceneNode::Update(float dt)
 	{
-		for (auto& callback : onPreupdateEventHandlers)
+		for (auto& callback : onPreupdateCallbacks)
 		{
 			callback->t(this, dt);
 		}
@@ -68,7 +68,7 @@ namespace ArtificialNature {
 			child->Update(dt);
 		}
 
-		for (auto& callback : onPostupdateEventHandlers)
+		for (auto& callback : onPostupdateCallbacks)
 		{
 			callback->t(this, dt);
 		}
@@ -90,24 +90,24 @@ namespace ArtificialNature {
 		}
 	}
 
-	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPreupdate(HeSceneNodeUpdateCallback handler)
+	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPreupdate(HeSceneNodeUpdateCallback callback)
 	{
-		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(handler);
-		onPreupdateEventHandlers.insert(pCallback);
+		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(callback);
+		onPreupdateCallbacks.insert(pCallback);
 		return pCallback;
 	}
 
-	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPostupdate(HeSceneNodeUpdateCallback handler)
+	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPostupdate(HeSceneNodeUpdateCallback callback)
 	{
-		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(handler);
-		onPostupdateEventHandlers.insert(pCallback);
+		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(callback);
+		onPostupdateCallbacks.insert(pCallback);
 		return pCallback;
 	}
 
-	bool HeSceneNode::RemoveOnPreupdate(HeCallback<HeSceneNodeUpdateCallback>* handler)
+	bool HeSceneNode::RemoveOnPreupdate(HeCallback<HeSceneNodeUpdateCallback>* callback)
 	{
-		if (onPreupdateEventHandlers.count(handler) != 0) {
-			onPreupdateEventHandlers.erase(handler);
+		if (onPreupdateCallbacks.count(callback) != 0) {
+			onPreupdateCallbacks.erase(callback);
 			return true;
 		}
 		else
@@ -116,10 +116,10 @@ namespace ArtificialNature {
 		}
 	}
 
-	bool HeSceneNode::RemoveOnPostupdate(HeCallback<HeSceneNodeUpdateCallback>* handler)
+	bool HeSceneNode::RemoveOnPostupdate(HeCallback<HeSceneNodeUpdateCallback>* callback)
 	{
-		if (onPostupdateEventHandlers.count(handler) != 0) {
-			onPostupdateEventHandlers.erase(handler);
+		if (onPostupdateCallbacks.count(callback) != 0) {
+			onPostupdateCallbacks.erase(callback);
 			return true;
 		}
 		else
