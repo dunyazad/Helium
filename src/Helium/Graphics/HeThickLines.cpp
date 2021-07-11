@@ -5,7 +5,7 @@ namespace ArtificialNature {
 	HeThickLines::HeThickLines()
 		: HeGeometry()
 	{
-		drawingMode = GL_LINE_STRIP;
+		drawingMode = LineStrip;
 		//drawingMode = GL_LINE_STRIP_ADJACENCY;
 	}
 

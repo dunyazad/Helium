@@ -21,7 +21,7 @@ namespace ArtificialNature {
 	{
 	}
 
-	void HeOrthogonalCamera::Update(double dt)
+	void HeOrthogonalCamera::Update(float dt)
 	{
 		viewMatrix = glm::identity<glm::mat4>();
 		viewMatrix = glm::translate(viewMatrix, -localPosition);
@@ -68,7 +68,7 @@ namespace ArtificialNature {
 	{
 	}
 
-	void HePerspectiveCamera::Update(double dt)
+	void HePerspectiveCamera::Update(float dt)
 	{
 		viewMatrix = glm::lookAt(localPosition, targetPosition, upDirection);
 

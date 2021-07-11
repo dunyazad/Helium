@@ -25,7 +25,8 @@ const int mHeight = 800;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_position_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
@@ -55,7 +56,8 @@ int main(int argc, char* argv[]) {
 
     glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
     glfwSetKeyCallback(mWindow, key_callback);
-    glfwSetCursorPosCallback(mWindow, mouse_callback);
+    glfwSetCursorPosCallback(mWindow, mouse_position_callback);
+    glfwSetMouseButtonCallback(mWindow, mouse_button_callback);
     glfwSetScrollCallback(mWindow, scroll_callback);
 
     gladLoadGL();
@@ -80,9 +82,9 @@ int main(int argc, char* argv[]) {
     HeSceneNode node(&scene);
     scene.GetRootNode()->AddChild(&node);
 
-    double angle = 0.0;
+    float angle = 0.0;
     auto callback = node.AddOnPreupdate(
-        [&angle](HeSceneNode* pNode, double dt) {
+        [&angle](HeSceneNode* pNode, float dt) {
             angle += dt * 0.001f;
             pNode->SetLocalRotation(glm::angleAxis((float)angle, glm::vec3(0, 1, 0)));
         });
@@ -257,7 +259,7 @@ int main(int argc, char* argv[]) {
     //material.SetShader(&shader);
 
     // Textured
-    HeShader shader("../../res/shader/texture.vs", "../../res/shader/texture.fs");
+    HeShader shader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
     material.SetShader(&shader);
 
     HeImage image("../../res/img/dice.png");
@@ -266,43 +268,44 @@ int main(int argc, char* argv[]) {
 
     material.SetTexture(&texture);
 
-    geometry.SetHeMaterial(&material);
+    geometry.SetMaterial(&material);
     #pragma endregion
     #pragma endregion
 
     #pragma region [Lines]
-    //HeThickLines geometryLine;
-    //geometryLine.Initialize();
-    //geometryLine.SetThickness(5);
-    //node.AddGeometry(&geometryLine);
+    HeThickLines geometryLine;
+    geometryLine.Initialize();
+    geometryLine.SetThickness(1);
+    geometryLine.SetDrawingMode(HeGeometry::DrawingMode::Lines);
+    node.AddGeometry(&geometryLine);
 
-    //geometryLine.AddVertex(glm::vec3(-0.25f, -0.25f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(0.0f, 0.0f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(-0.25f, 0.0f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(0.25f, 0.25f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(0.5f, 0.25f, 0.0f));
-    //geometryLine.AddVertex(glm::vec3(0.5f, 0.5f, 0.0f));
+    geometryLine.AddVertex(glm::vec3(-100, 0, 0));
+    geometryLine.AddVertex(glm::vec3(100, 0, 0));
+    geometryLine.AddVertex(glm::vec3(0, -100, 0));
+    geometryLine.AddVertex(glm::vec3(0, 100, 0));
+    geometryLine.AddVertex(glm::vec3(0, 0, -100));
+    geometryLine.AddVertex(glm::vec3(0, 0, 100));
 
-    //geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
-    //geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
-    //geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
-    //geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
-    //geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
-    //geometryLine.AddColor(glm::vec4(1, 1, 1, 1));
+    geometryLine.AddColor(glm::vec4(1, 0, 0, 1));
+    geometryLine.AddColor(glm::vec4(1, 0, 0, 1));
+    geometryLine.AddColor(glm::vec4(0, 1, 0, 1));
+    geometryLine.AddColor(glm::vec4(0, 1, 0, 1));
+    geometryLine.AddColor(glm::vec4(0, 0, 1, 1));
+    geometryLine.AddColor(glm::vec4(0, 0, 1, 1));
 
-    //HeMaterial materialLine;
+    HeMaterial materialLine;
 
-    //HeShader shaderLine("../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-    //materialLine.SetShader(&shaderLine);
+    HeShader shaderLine("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+    materialLine.SetShader(&shaderLine);
 
-    //geometryLine.SetHeMaterial(&materialLine);
+    geometryLine.SetMaterial(&materialLine);
 
 
-    //glEnable(GL_LINE_SMOOTH);
-    //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glEnable(GL_LINE_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     #pragma endregion
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);
@@ -315,7 +318,7 @@ int main(int argc, char* argv[]) {
         glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        scene.Update(delta);
+        scene.Update((float)delta);
         scene.Render();
 
         glfwSwapBuffers(mWindow);
@@ -338,9 +341,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     pCameraManipulator->OnKey(window, key, scancode, action, mods);
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    pCameraManipulator->OnMouse(window, xpos, ypos);
+    pCameraManipulator->OnMousePosition(window, xpos, ypos);
 
     //if (firstMouse)
     //{
@@ -372,6 +375,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     //front.y = sin(glm::radians(pitch));
     //front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     //cameraFront = glm::normalize(front);
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    pCameraManipulator->OnMouseButton(window, button, action, mods);
+
+    //if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    //    popup_menu();
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called

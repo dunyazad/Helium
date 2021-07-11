@@ -13,6 +13,7 @@ namespace ArtificialNature {
 	{
 	public:
 		enum FillMode { Fill, Wireframe };
+		enum DrawingMode { Points = GL_POINTS, Lines = GL_LINES, LineLoop = GL_LINE_LOOP, LineStrip = GL_LINE_STRIP, Triangles = GL_TRIANGLES, TriangleStrip = GL_TRIANGLE_STRIP, TriangleFan = GL_TRIANGLE_FAN, Quads = GL_QUADS };
 
 	public:
 		HeGeometry();
@@ -38,14 +39,19 @@ namespace ArtificialNature {
 		virtual void Draw(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
 		virtual void PostDraw(HeCamera* camera);
 
-		inline void SetHeMaterial(HeMaterial* material) { this->material = material; }
+		inline void SetMaterial(HeMaterial* material) { this->material = material; }
+
+		inline FillMode GetFillMode() { return fillMode; }
 		inline void SetFillMode(FillMode fillMode) { this->fillMode = fillMode; }
+
+		inline DrawingMode GetDrawingMode() { return drawingMode; }
+		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
 
 	protected:
 		bool dirty = true;
 
 		FillMode fillMode = FillMode::Fill;
-		GLenum drawingMode = GL_TRIANGLES;
+		DrawingMode drawingMode = Triangles;
 
 		HeMaterial* material = nullptr;
 		HeVertexArrayObject* vao;

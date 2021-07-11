@@ -65,26 +65,99 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCameraManipulatorObital::OnMouse(GLFWwindow* window, double xpos, double ypos)
+	void HeCameraManipulatorObital::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 	{
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
+		if (mouseRightButtonDown)
 		{
-			auto offsetX = xpos - lastMousePositionX;
-			auto offsetY = ypos - lastMousePositionY;
-			lastMousePositionX = xpos;
-			lastMousePositionY = ypos;
+			auto offsetX = xpos - lastMouseRightPositionX;
+			auto offsetY = ypos - lastMouseRightPositionY;
+			lastMouseRightPositionX = xpos;
+			lastMouseRightPositionY = ypos;
+
+			rotationH -= (float)(offsetX * 0.005);
+			rotationV -= (float)(offsetY * 0.005);
+
+			if (rotationV <= -glm::radians<float>(89))
+			{
+				rotationV = -glm::radians<float>(89);
+			}
+
+			if (rotationV >= glm::radians<float>(89))
+			{
+				rotationV = glm::radians<float>(89);
+			}
+
+			auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
+			auto rv = glm::angleAxis(rotationV, rh * glm::vec3(1, 0, 0));
+			
+			auto& targetPosition = camera->GetTargetPosition();
+			auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
+			camera->SetLocalPosition(position);
+		}
+	}
+
+	void HeCameraManipulatorObital::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		{
+			mouseLeftButtonDown = true;
+
+			lastMouseLeftPositionX = xpos;
+			lastMouseLeftPositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+		{
+			mouseLeftButtonDown = false;
+		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+		{
+			mouseRightButtonDown = true;
+
+			lastMouseRightPositionX = xpos;
+			lastMouseRightPositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+		{
+			mouseRightButtonDown = false;
+		}
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+		{
+			mouseMiddleButtonDown = true;
+
+			lastMouseMiddlePositionX = xpos;
+			lastMouseMiddlePositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+		{
+			mouseMiddleButtonDown = false;
 		}
 	}
 
 	void HeCameraManipulatorObital::OnWheel(GLFWwindow* window, double xoffset, double yoffset)
 	{
-		float zoomFactor = camera->GetZoomFactor();
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-			zoomFactor -= (float)yoffset * zoomFactor * 0.5f;
+		{
+			distance -= (float)yoffset * 10;
+		}
 		else
-			zoomFactor -= (float)yoffset * zoomFactor * 0.05f;
+		{
+			distance -= (float)yoffset;
+		}
 
-		camera->SetZoomFactor(zoomFactor);
+		if (distance <= glm::epsilon<float>())
+		{
+			distance = glm::epsilon<float>();
+		}
+
+		auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
+		auto rv = glm::angleAxis(rotationV, rh * glm::vec3(1, 0, 0));
+
+		auto& targetPosition = camera->GetTargetPosition();
+		auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
+		camera->SetLocalPosition(position);
 	}
 
 }

@@ -7,8 +7,8 @@ namespace ArtificialNature {
 	class HeShader
 	{
 	public:
-		HeShader(string vertexShaderFileName, string fragmentShaderFileName);
-		HeShader(string vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
+		HeShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);
+		HeShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
 		~HeShader();
 
 		void Use();
@@ -25,6 +25,8 @@ namespace ArtificialNature {
 		inline void AddOnUseCallback(function<void(HeShader*)> callback) { onUseCallbacks.push_back(callback); }
 
 	private:
+		string name;
+
 		string vertexShaderFileName;
 		string geometryShaderFileName;
 		string fragmentShaderFileName;

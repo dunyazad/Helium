@@ -32,11 +32,8 @@ namespace ArtificialNature {
 		HeCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeCamera();
 
-		virtual void Update(double dt) = 0;
+		virtual void Update(float dt) = 0;
 		virtual void Render() = 0;
-
-		virtual inline float GetZoomFactor() { return zoomFactor; }
-		virtual inline void SetZoomFactor(float zoomFactor) { this->zoomFactor = zoomFactor; if (this->zoomFactor <= glm::epsilon<float>()) this->zoomFactor = glm::epsilon<float>(); }
 
 		inline float GetAspectRatio() { return aspectRatio; }
 		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
@@ -69,7 +66,7 @@ namespace ArtificialNature {
 		HeOrthogonalCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HeOrthogonalCamera();
 
-		virtual void Update(double dt);
+		virtual void Update(float dt);
 		virtual void Render();
 
 	protected:
@@ -84,23 +81,7 @@ namespace ArtificialNature {
 		HePerspectiveCamera(HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		~HePerspectiveCamera();
 
-		virtual void Update(double dt);
+		virtual void Update(float dt);
 		virtual void Render();
-
-		virtual inline float GetZoomFactor()
-		{ 
-			return glm::distance(targetPosition, localPosition);
-		}
-
-		virtual inline void SetZoomFactor(float zoomFactor)
-		{
-			this->zoomFactor = zoomFactor;
-			if (this->zoomFactor <= glm::epsilon<float>())
-				this->zoomFactor = glm::epsilon<float>();
-
-			auto dir = targetPosition - localPosition;
-			dir = glm::normalize(dir);
-			SetLocalPosition(targetPosition - dir * zoomFactor);
-		}
 	};
 }

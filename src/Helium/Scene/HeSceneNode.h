@@ -9,7 +9,7 @@ namespace ArtificialNature {
 	class HeCamera;
 	class HeSceneNode;
 
-	typedef function<void(HeSceneNode*, double)> HeSceneNodeUpdateCallback;
+	typedef function<void(HeSceneNode*, float)> HeSceneNodeUpdateCallback;
 
 	class HeSceneNode : public HeObject
 	{
@@ -22,11 +22,11 @@ namespace ArtificialNature {
 		void AddChild(HeSceneNode* child);
 		void RemoveChild(HeSceneNode* child);
 
-		virtual void Update(double dt);
+		virtual void Update(float dt);
 		virtual void Render(HeCamera* camera);
 
-		HeCallback<HeSceneNodeUpdateCallback>* AddOnPreupdate(function<void(HeSceneNode*, double)> handler);
-		HeCallback<HeSceneNodeUpdateCallback>* AddOnPostupdate(function<void(HeSceneNode*, double)> handler);
+		HeCallback<HeSceneNodeUpdateCallback>* AddOnPreupdate(HeSceneNodeUpdateCallback handler);
+		HeCallback<HeSceneNodeUpdateCallback>* AddOnPostupdate(HeSceneNodeUpdateCallback handler);
 		bool RemoveOnPreupdate(HeCallback<HeSceneNodeUpdateCallback>* handler);
 		bool RemoveOnPostupdate(HeCallback<HeSceneNodeUpdateCallback>* handler);
 

@@ -35,6 +35,7 @@ using namespace std;
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/intersect.hpp>
 
+#include <blend2d/blend2d.h>
 
 
 

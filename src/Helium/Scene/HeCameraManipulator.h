@@ -12,7 +12,8 @@ namespace ArtificialNature {
 		HeCameraManipulatorBase(HeCamera* camera);
 
 		virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods) = 0;
-		virtual void OnMouse(GLFWwindow* window, double xpos, double ypos) = 0;
+		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos) = 0;
+		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods) = 0;
 		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset) = 0;
 
 	protected:
@@ -25,14 +26,24 @@ namespace ArtificialNature {
 		HeCameraManipulatorObital(HeCamera* camera);
 
 		void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
-		void OnMouse(GLFWwindow* window, double xpos, double ypos);
+		void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
+		void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
 		void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
 
 	protected:
-		double lastMousePositionX = 0.0;
-		double lastMousePositionY = 0.0;
+		double lastMouseLeftPositionX = 0.0;
+		double lastMouseLeftPositionY = 0.0;
+		double lastMouseRightPositionX = 0.0;
+		double lastMouseRightPositionY = 0.0;
+		double lastMouseMiddlePositionX = 0.0;
+		double lastMouseMiddlePositionY = 0.0;
 
-		double rotationH = 0.0f;
-		double rotationV = 0.0f;
+		float distance = 10.0f;
+		float rotationH = 0.0f;
+		float rotationV = 0.0f;
+
+		bool mouseLeftButtonDown = false;
+		bool mouseRightButtonDown = false;
+		bool mouseMiddleButtonDown = false;
 	};
 }

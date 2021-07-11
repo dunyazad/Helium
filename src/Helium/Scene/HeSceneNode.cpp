@@ -35,7 +35,7 @@ namespace ArtificialNature {
 		scene->GetRootNode()->AddChild(child);
 	}
 
-	void HeSceneNode::Update(double dt)
+	void HeSceneNode::Update(float dt)
 	{
 		for (auto& callback : onPreupdateEventHandlers)
 		{
@@ -90,14 +90,14 @@ namespace ArtificialNature {
 		}
 	}
 
-	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPreupdate(function<void(HeSceneNode*, double)> handler)
+	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPreupdate(HeSceneNodeUpdateCallback handler)
 	{
 		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(handler);
 		onPreupdateEventHandlers.insert(pCallback);
 		return pCallback;
 	}
 
-	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPostupdate(function<void(HeSceneNode*, double)> handler)
+	HeCallback<HeSceneNodeUpdateCallback>* HeSceneNode::AddOnPostupdate(HeSceneNodeUpdateCallback handler)
 	{
 		auto pCallback = new HeCallback<HeSceneNodeUpdateCallback>(handler);
 		onPostupdateEventHandlers.insert(pCallback);

@@ -13,7 +13,7 @@ namespace ArtificialNature {
 	{
 	}
 
-	void HeScene::Update(double dt)
+	void HeScene::Update(float dt)
 	{
 		rootNode->Update(dt);
 	}

@@ -2,8 +2,8 @@
 
 namespace ArtificialNature {
 
-	HeShader::HeShader(string vertexShaderFileName, string fragmentShaderFileName)
-		: vertexShaderFileName(vertexShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
+	HeShader::HeShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName)
+		: name(name), vertexShaderFileName(vertexShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
 	{
 		{
 			FILE* fp;
@@ -69,8 +69,8 @@ namespace ArtificialNature {
 		glDeleteShader(fragmentShader);
 	}
 
-	HeShader::HeShader(string vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName)
-		: vertexShaderFileName(vertexShaderFileName), geometryShaderFileName(geometryShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
+	HeShader::HeShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName)
+		: name(name), vertexShaderFileName(vertexShaderFileName), geometryShaderFileName(geometryShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
 	{
 		{
 			FILE* fp;
