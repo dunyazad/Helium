@@ -23,9 +23,6 @@
     <ClCompile Include="Graphics\HeShader.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\HeTexture.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\HeVertexArrayObject.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -60,6 +57,12 @@
     <ClCompile Include="Graphics\Geometry\HePlane.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Texture\HeCanvasTexture.cpp">
+      <Filter>Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Texture\HeTexture.cpp">
+      <Filter>Graphics\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -85,9 +88,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\HeShader.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HeTexture.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\HeVertexArrayObject.h">
@@ -129,6 +129,15 @@
     <ClInclude Include="Graphics\Geometry\HePlane.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Texture\HeTexture.h">
+      <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture\HeCanvasTexture.h">
+      <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture\Texture.h">
+      <Filter>Graphics\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -142,6 +151,9 @@
     </Filter>
     <Filter Include="Graphics\Geometry">
       <UniqueIdentifier>{654b11fe-1c49-4e2b-8214-0f90d80b0011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Texture">
+      <UniqueIdentifier>{b9992d5a-6e16-4906-83c5-b94db50e919d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

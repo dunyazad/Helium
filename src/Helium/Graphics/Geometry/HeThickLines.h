@@ -9,8 +9,8 @@ namespace ArtificialNature {
 	class HeThickLines : public HeGeometry
 	{
 	public:
-		void Initialize();
-		void Terminate();
+		virtual void Initialize();
+		virtual void Terminate();
 
 		void SetThickness(float thickness);
 

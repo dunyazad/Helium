@@ -9,8 +9,8 @@ namespace ArtificialNature {
 	class HePlane : public HeGeometry
 	{
 	public:
-		void Initialize();
-		void Terminate();
+		virtual void Initialize();
+		virtual void Terminate();
 
 	protected:
 		HePlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);

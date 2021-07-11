@@ -2,7 +2,7 @@
 
 #include <Helium/Graphics/HeShader.h>
 #include <Helium/Graphics/HeShader.h>
-#include <Helium/Graphics/HeTexture.h>
+#include <Helium/Graphics/Texture/Texture.h>
 
 #include <Helium/Scene/HeCamera.h>
 

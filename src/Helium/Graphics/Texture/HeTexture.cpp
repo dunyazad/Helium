@@ -1,4 +1,4 @@
-#include <Helium/Graphics/HeTexture.h>
+#include <Helium/Graphics/Texture/HeTexture.h>
 
 #include <Helium/Graphics/HeImage.h>
 
@@ -63,7 +63,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	bool HeTexture::Terminate()
+	void HeTexture::Terminate()
 	{
 		glDeleteTextures(1, &textureID);
 
@@ -71,8 +71,6 @@ namespace ArtificialNature {
 			delete textureData;
 			textureData = nullptr;
 		}
-
-		return true;
 	}
 
 	void HeTexture::Bind() {

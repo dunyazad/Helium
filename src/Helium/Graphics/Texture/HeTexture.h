@@ -9,8 +9,8 @@ namespace ArtificialNature {
 	class HeTexture : public HeObject
 	{
 	public:
-		void Initialize();
-		bool Terminate();
+		virtual void Initialize();
+		virtual void Terminate();
 
 		void Bind();
 		void Unbind();

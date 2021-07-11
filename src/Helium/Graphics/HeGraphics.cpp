@@ -2,7 +2,7 @@
 #include <Helium/Graphics/Geometry/Geometry.h>
 #include <Helium/Graphics/HeShader.h>
 #include <Helium/Graphics/HeMaterial.h>
-#include <Helium/Graphics/HeTexture.h>
+#include <Helium/Graphics/Texture/Texture.h>
 #include <Helium/Graphics/HeImage.h>
 
 namespace ArtificialNature {
@@ -143,6 +143,16 @@ namespace ArtificialNature {
 		}
 
 		return textures[name];
+	}
+
+	HeCanvasTexture* HeGraphics::GetCanvasTexture(const string& name, HeImage* image)
+	{
+		if (textures.count(name) == 0)
+		{
+			textures[name] = new HeCanvasTexture(name, image);
+		}
+
+		return dynamic_cast<HeCanvasTexture*>(textures[name]);
 	}
 
 	HeImage* HeGraphics::GetImage(const string& name, const string& filePath)

@@ -94,9 +94,10 @@
     <ClCompile Include="Graphics\HeIndexBufferObject.cpp" />
     <ClCompile Include="Graphics\HeMaterial.cpp" />
     <ClCompile Include="Graphics\HeShader.cpp" />
-    <ClCompile Include="Graphics\HeTexture.cpp" />
     <ClCompile Include="Graphics\HeVertexArrayObject.cpp" />
     <ClCompile Include="Graphics\stb_image.cpp" />
+    <ClCompile Include="Graphics\Texture\HeCanvasTexture.cpp" />
+    <ClCompile Include="Graphics\Texture\HeTexture.cpp" />
     <ClCompile Include="Helium.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene\HeCamera.cpp" />
@@ -119,9 +120,11 @@
     <ClInclude Include="Graphics\HeIndexBufferObject.h" />
     <ClInclude Include="Graphics\HeMaterial.h" />
     <ClInclude Include="Graphics\HeShader.h" />
-    <ClInclude Include="Graphics\HeTexture.h" />
     <ClInclude Include="Graphics\HeVertexArrayObject.h" />
     <ClInclude Include="Graphics\HeVertexBufferObject.hpp" />
+    <ClInclude Include="Graphics\Texture\HeCanvasTexture.h" />
+    <ClInclude Include="Graphics\Texture\HeTexture.h" />
+    <ClInclude Include="Graphics\Texture\Texture.h" />
     <ClInclude Include="Helium.h" />
     <ClInclude Include="Scene\HeCamera.h" />
     <ClInclude Include="Scene\HeCameraManipulator.h" />
