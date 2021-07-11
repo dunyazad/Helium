@@ -60,6 +60,12 @@
     <ClCompile Include="Graphics\Image\HeImage.cpp">
       <Filter>Graphics\Image</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Texture\HeCanvasTexture.cpp">
+      <Filter>Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Image\HeCanvasImage.cpp">
+      <Filter>Graphics\Image</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -133,6 +139,12 @@
       <Filter>Graphics\Image</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Image\HeImage.h">
+      <Filter>Graphics\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture\HeCanvasTexture.h">
+      <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Image\HeCanvasImage.h">
       <Filter>Graphics\Image</Filter>
     </ClInclude>
   </ItemGroup>

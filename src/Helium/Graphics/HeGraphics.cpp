@@ -164,4 +164,14 @@ namespace ArtificialNature {
 
 		return images[name];
 	}
+
+	HeCanvasImage* HeGraphics::GetCanvasImage(const string& name, int width, int height)
+	{
+		if (images.count(name) == 0)
+		{
+			images[name] = new HeCanvasImage(name, width, height);
+		}
+
+		return dynamic_cast<HeCanvasImage*>(images[name]);
+	}
 }

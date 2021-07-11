@@ -1,6 +1,6 @@
 #include <Helium/Graphics/Texture/HeCanvasTexture.h>
 
-#include <Helium/Graphics/HeImage.h>
+#include <Helium/Graphics/Image/Image.h>
 
 namespace ArtificialNature {
 

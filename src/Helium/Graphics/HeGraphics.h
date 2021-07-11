@@ -14,6 +14,7 @@ namespace ArtificialNature {
 	class HeTexture;
 	class HeCanvasTexture;
 	class HeImage;
+	class HeCanvasImage;
 
 	class HeGraphics : public HeObject
 	{
@@ -35,6 +36,7 @@ namespace ArtificialNature {
 		HeCanvasTexture* GetCanvasTexture(const string& name, HeImage* image);
 
 		HeImage* GetImage(const string& name, const string& filePath);
+		HeCanvasImage* GetCanvasImage(const string& name, int width, int height);
 
 	private:
 		map<string, HeGeometry*> geometries;

@@ -261,6 +261,7 @@ int main(int argc, char* argv[]) {
         pMaterial->SetShader(pShader);
 
         auto pImage = helium.GetGraphics()->GetImage("dice image", "../../res/img/dice.png");
+        pImage->Initialize();
         auto pTexture = helium.GetGraphics()->GetTexture("dice texture", pImage);
         pTexture->Initialize();
 
@@ -324,9 +325,11 @@ int main(int argc, char* argv[]) {
         auto pShader = helium.GetGraphics()->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
         pMaterial->SetShader(pShader);
 
-        auto pImage = helium.GetGraphics()->GetImage("owl image", "../../res/img/Owl.jpg");
+        //auto pImage = helium.GetGraphics()->GetImage("owl image", "../../res/img/Owl.jpg");
+        auto pImage = helium.GetGraphics()->GetCanvasImage("Canvas Image", 512, 512);
+        pImage->Initialize();
      
-        auto pTexture = helium.GetGraphics()->GetTexture("owl texture", pImage);
+        auto pTexture = helium.GetGraphics()->GetCanvasTexture("Canvas Texture", pImage);
         pTexture->Initialize();
         pMaterial->SetTexture(pTexture);
     }

@@ -14,6 +14,9 @@ namespace ArtificialNature {
 
 		const unsigned char* Data() { return data; }
 
+		virtual void Initialize();
+		virtual void Terminate();
+
 	protected:
 		HeImage(const string& name, const string& filePath);
 		~HeImage();
