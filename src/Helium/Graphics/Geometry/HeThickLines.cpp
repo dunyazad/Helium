@@ -1,4 +1,4 @@
-#include <Helium/Graphics/HeThickLines.h>
+#include <Helium/Graphics/Geometry/HeThickLines.h>
 
 namespace ArtificialNature {
 

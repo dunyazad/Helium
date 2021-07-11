@@ -1,4 +1,4 @@
-#include <Helium/Graphics/HeGeometry.h>
+#include <Helium/Graphics/Geometry/HeGeometry.h>
 
 #include <Helium/Graphics/HeMaterial.h>
 #include <Helium/Graphics/HeVertexArrayObject.h>

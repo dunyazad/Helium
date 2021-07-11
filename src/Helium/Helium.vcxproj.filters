@@ -11,9 +11,6 @@
     <ClCompile Include="Core\HeObject.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\HeGeometry.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\HeImage.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -27,12 +24,6 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\HeTexture.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HeThickLines.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HeThickLines1.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\HeVertexArrayObject.cpp">
@@ -60,6 +51,15 @@
     <ClCompile Include="Core\HeTime.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Geometry\HeGeometry.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Geometry\HeThickLines.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Geometry\HePlane.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -75,9 +75,6 @@
     <ClInclude Include="Graphics\Graphics.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\HeGeometry.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\HeImage.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -91,12 +88,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\HeTexture.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HeThickLines.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HeThickLines1.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\HeVertexArrayObject.h">
@@ -126,6 +117,18 @@
     <ClInclude Include="Core\HeTime.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Geometry\Geometry.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Geometry\HeGeometry.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Geometry\HeThickLines.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Geometry\HePlane.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -136,6 +139,9 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{d562c83a-c326-4a1b-8c85-c6a27cbbb6f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Geometry">
+      <UniqueIdentifier>{654b11fe-1c49-4e2b-8214-0f90d80b0011}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
