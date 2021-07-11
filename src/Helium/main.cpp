@@ -31,7 +31,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 HePerspectiveCamera* pCamera = nullptr;
-HeCameraManipulatorObital* pCameraManipulator = nullptr;
+HeCameraManipulatorOrbital* pCameraManipulator = nullptr;
 
 int main(int argc, char* argv[]) {
 
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     //HeOrthogonalCamera camera(&scene, 0, 0, mWidth, mHeight);
     HePerspectiveCamera camera(&scene, 0, 0, mWidth, mHeight);
     pCamera = &camera;
-    HeCameraManipulatorObital manipulator(&camera);
+    HeCameraManipulatorOrbital manipulator(&camera);
     pCameraManipulator = &manipulator;
 
     scene.GetRootNode()->AddChild(&camera);

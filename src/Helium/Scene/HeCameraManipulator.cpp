@@ -9,12 +9,12 @@ namespace ArtificialNature {
 	{
 	}
 
-	HeCameraManipulatorObital::HeCameraManipulatorObital(HeCamera* camera)
+	HeCameraManipulatorOrbital::HeCameraManipulatorOrbital(HeCamera* camera)
 		: HeCameraManipulatorBase(camera)
 	{
 	}
 
-	void HeCameraManipulatorObital::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
+	void HeCameraManipulatorOrbital::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
@@ -65,7 +65,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCameraManipulatorObital::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
+	void HeCameraManipulatorOrbital::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 	{
 		if (mouseRightButtonDown)
 		{
@@ -96,7 +96,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCameraManipulatorObital::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
+	void HeCameraManipulatorOrbital::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 	{
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
@@ -136,7 +136,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCameraManipulatorObital::OnWheel(GLFWwindow* window, double xoffset, double yoffset)
+	void HeCameraManipulatorOrbital::OnWheel(GLFWwindow* window, double xoffset, double yoffset)
 	{
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
 		{
