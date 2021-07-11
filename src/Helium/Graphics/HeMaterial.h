@@ -20,7 +20,7 @@ namespace ArtificialNature {
 		inline void SetShader(HeShader* shader) { this->shader = shader; }
 
 		inline HeTexture* GetTexture() { return texture; }
-		inline void SetTexture(HeTexture* Texture) { this->texture = texture; }
+		inline void SetTexture(HeTexture* texture) { this->texture = texture; }
 
 	protected:
 		HeShader* shader = nullptr;

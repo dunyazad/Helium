@@ -8,9 +8,6 @@ namespace ArtificialNature {
 	class HeImage : public HeObject
 	{
 	public:
-		HeImage(const string& name, const string& filePath);
-		~HeImage();
-
 		inline int Width() { return width; }
 		inline int Height() { return height; }
 		inline int Channels() { return nrChannels; }
@@ -18,6 +15,9 @@ namespace ArtificialNature {
 		const unsigned char* Data() { return data; }
 
 	protected:
+		HeImage(const string& name, const string& filePath);
+		~HeImage();
+
 		string filePath;
 
 		int width;
@@ -25,6 +25,9 @@ namespace ArtificialNature {
 		int nrChannels;
 
 		unsigned char* data;
+
+	public:
+		friend class HeGraphics;
 	};
 
 }

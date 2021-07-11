@@ -77,9 +77,6 @@ int main(int argc, char* argv[]) {
     pCameraManipulator = &manipulator;
     pScene->SetMainCamera(pCamera);
 
-    pCamera->SetLocalPosition(glm::vec3(0, 2.5, 2.5));
-
-
     {
         auto pNode = pScene->CreateSceneNode("Cube Node");
 
@@ -263,11 +260,11 @@ int main(int argc, char* argv[]) {
         auto pShader = helium.GetGraphics()->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
         pMaterial->SetShader(pShader);
 
-        HeImage image("dice image", "../../res/img/dice.png");
-        HeTexture texture;
-        texture.Initialize(&image);
+        auto pImage = helium.GetGraphics()->GetImage("dice image", "../../res/img/dice.png");
+        auto pTexture = helium.GetGraphics()->GetTexture("dice texture", pImage);
+        pTexture->Initialize();
 
-        pMaterial->SetTexture(&texture);
+        pMaterial->SetTexture(pTexture);
 
         pGeometry->SetMaterial(pMaterial);
 #pragma endregion
@@ -277,10 +274,6 @@ int main(int argc, char* argv[]) {
     {
         auto pNode = pScene->CreateSceneNode("Gizmo Node");
         
-        auto pPlane = helium.GetGraphics()->GetGeometryPlane("Plane", 10, 10, 10, 10, HePlaneType::XZ);
-        pPlane->Initialize();
-        pNode->AddGeometry(pPlane);
-
         #pragma region [Lines]
         auto pLines = helium.GetGraphics()->GetGeometryThickLines("Gizmo");
         pLines->Initialize();
@@ -316,6 +309,26 @@ int main(int argc, char* argv[]) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         #pragma endregion
+    }
+
+    {
+        auto pNode = pScene->CreateSceneNode("Plane");
+        auto pGeometry = helium.GetGraphics()->GetGeometryPlane("Plane.Geometry", 100, 100, 100, 100, HePlaneType::XY);
+        //pGeometry->SetFillMode(HeGeometry::Wireframe);
+        pGeometry->Initialize();
+        pNode->AddGeometry(pGeometry);
+
+        auto pMaterial = helium.GetGraphics()->GetMaterial("Plane Material");
+        pGeometry->SetMaterial(pMaterial);
+
+        auto pShader = helium.GetGraphics()->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+        pMaterial->SetShader(pShader);
+
+        auto pImage = helium.GetGraphics()->GetImage("owl image", "../../res/img/Owl.jpg");
+     
+        auto pTexture = helium.GetGraphics()->GetTexture("owl texture", pImage);
+        pTexture->Initialize();
+        pMaterial->SetTexture(pTexture);
     }
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);

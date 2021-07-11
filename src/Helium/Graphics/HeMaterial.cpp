@@ -32,9 +32,6 @@ namespace ArtificialNature {
 		{
 			texture->Bind();
 			CheckGLError();
-
-			glUniform1i(glGetUniformLocation(shader->GetProgram(), "texture1"), 0);
-			CheckGLError();
 		}
 	}
 

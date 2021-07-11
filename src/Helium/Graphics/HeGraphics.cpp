@@ -3,6 +3,7 @@
 #include <Helium/Graphics/HeShader.h>
 #include <Helium/Graphics/HeMaterial.h>
 #include <Helium/Graphics/HeTexture.h>
+#include <Helium/Graphics/HeImage.h>
 
 namespace ArtificialNature {
 
@@ -31,7 +32,7 @@ namespace ArtificialNature {
 				kvp.second = nullptr;
 			}
 		}
-		geometries.clear();
+		materials.clear();
 
 		for (auto& kvp : textures)
 		{
@@ -41,7 +42,17 @@ namespace ArtificialNature {
 				kvp.second = nullptr;
 			}
 		}
-		geometries.clear();
+		textures.clear();
+
+		for (auto& kvp : images)
+		{
+			if (kvp.second != nullptr)
+			{
+				delete kvp.second;
+				kvp.second = nullptr;
+			}
+		}
+		images.clear();
 
 		for (auto& kvp : shaders)
 		{
@@ -122,5 +133,25 @@ namespace ArtificialNature {
 		}
 
 		return materials[name];
+	}
+
+	HeTexture* HeGraphics::GetTexture(const string& name, HeImage* image)
+	{
+		if (textures.count(name) == 0)
+		{
+			textures[name] = new HeTexture(name, image);
+		}
+
+		return textures[name];
+	}
+
+	HeImage* HeGraphics::GetImage(const string& name, const string& filePath)
+	{
+		if (images.count(name) == 0)
+		{
+			images[name] = new HeImage(name, filePath);
+		}
+
+		return images[name];
 	}
 }

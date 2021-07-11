@@ -12,6 +12,7 @@ namespace ArtificialNature {
 	class HeShader;
 	class HeMaterial;
 	class HeTexture;
+	class HeImage;
 
 	class HeGraphics : public HeObject
 	{
@@ -29,10 +30,15 @@ namespace ArtificialNature {
 
 		HeMaterial* GetMaterial(const string& name);
 
+		HeTexture* GetTexture(const string& name, HeImage* image);
+
+		HeImage* GetImage(const string& name, const string& filePath);
+
 	private:
 		map<string, HeGeometry*> geometries;
 		map<string, HeShader*> shaders;
 		map<string, HeMaterial*> materials;
 		map<string, HeTexture*> textures;
+		map<string, HeImage*> images;
 	};
 }

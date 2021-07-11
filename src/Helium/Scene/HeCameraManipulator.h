@@ -39,8 +39,8 @@ namespace ArtificialNature {
 		double lastMouseMiddlePositionY = 0.0;
 
 		float distance = 10.0f;
-		float rotationH = 0.0f;
-		float rotationV = 0.0f;
+		float rotationH = glm::radians<float>(45.0f);
+		float rotationV = glm::radians<float>(45.0f);
 
 		bool mouseLeftButtonDown = false;
 		bool mouseRightButtonDown = false;

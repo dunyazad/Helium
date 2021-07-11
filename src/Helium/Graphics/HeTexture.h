@@ -6,13 +6,10 @@ namespace ArtificialNature {
 
 	class HeImage;
 
-	class HeTexture
+	class HeTexture : public HeObject
 	{
 	public:
-		HeTexture();
-		~HeTexture();
-
-		void Initialize(HeImage* image);
+		void Initialize();
 		bool Terminate();
 
 		void Bind();
@@ -21,6 +18,11 @@ namespace ArtificialNature {
 		inline GLuint GetTextureID() { return textureID; }
 
 	protected:
+		HeTexture(const string& name, HeImage* image);
+		~HeTexture();
+
+		HeImage* image;
+
 		bool withAlpha = true;
 		GLuint textureID;
 		GLenum target = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES
@@ -29,6 +31,9 @@ namespace ArtificialNature {
 		GLsizei height = 0;
 		GLenum dataType = GL_UNSIGNED_BYTE;
 		unsigned char* textureData = nullptr;
+
+	public:
+		friend class HeGraphics;
 	};
 
 }

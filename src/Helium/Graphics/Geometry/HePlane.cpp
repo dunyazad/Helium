@@ -18,9 +18,9 @@ namespace ArtificialNature {
 		float halfColumnLength = columnLength * 0.5f;
 		float halfRowLength = rowLength * 0.5f;
 
-		for (GLuint r = 0; r < rows; r++)
+		for (GLuint r = 0; r <= rows; r++)
 		{
-			for (GLuint c = 0; c < columns; c++)
+			for (GLuint c = 0; c <= columns; c++)
 			{
 				float row = rowUnit * (float)r;
 				float column = columnUnit * (float)c;
@@ -28,38 +28,41 @@ namespace ArtificialNature {
 				switch (type)
 				{
 				case HePlaneType::XY:
-					AddVertex(glm::vec3(column, row, 0.0f));
+					AddVertex(glm::vec3(column - halfColumnLength, row - halfRowLength, 0.0f));
 					break;
 				case HePlaneType::YX:
-					AddVertex(glm::vec3(row, column, 0.0f));
+					AddVertex(glm::vec3(row - halfRowLength, column - halfColumnLength, 0.0f));
 					break;
 				case HePlaneType::YZ:
-					AddVertex(glm::vec3(0.0f, column, row));
+					AddVertex(glm::vec3(0.0f, column - halfColumnLength, row - halfRowLength));
 					break;
 				case HePlaneType::ZY:
-					AddVertex(glm::vec3(0.0f, row, column));
+					AddVertex(glm::vec3(0.0f, row - halfRowLength, column - halfColumnLength));
 					break;
 				case HePlaneType::XZ:
-					AddVertex(glm::vec3(column, 0.0f, row));
+					AddVertex(glm::vec3(column - halfColumnLength, 0.0f, row - halfRowLength));
 					break;
 				case HePlaneType::ZX:
-					AddVertex(glm::vec3(row, 0.0f, column));
+					AddVertex(glm::vec3(row - halfRowLength, 0.0f, column - halfColumnLength));
 					break;
 				default:
 					break;
 				}
 
-				AddIndex(r * columns + c);
-				AddIndex(r * columns + c + 1);
-				AddIndex((r + 1) * columns + c);
+				if (r < rows && c < columns)
+				{
+					AddIndex(r * (columns + 1) + c);
+					AddIndex(r * (columns + 1) + c + 1);
+					AddIndex((r + 1) * (columns + 1) + c);
 
-				AddIndex((r + 1) * columns + c);
-				AddIndex(r * columns + c + 1);
-				AddIndex((r + 1) * columns + c + 1);
+					AddIndex((r + 1) * (columns + 1) + c);
+					AddIndex(r * (columns + 1) + c + 1);
+					AddIndex((r + 1) * (columns + 1) + c + 1);
+				}
 
 				AddColor(glm::vec4(1, 1, 1, 1));
 
-				AddUV(glm::vec2((float)columns / (float)c, (float)rows / (float)r));
+				AddUV(glm::vec2((float)c / (float)columns, (float)r / (float)rows));
 			}
 		}
 

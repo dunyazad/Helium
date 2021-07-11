@@ -12,6 +12,12 @@ namespace ArtificialNature {
 	HeCameraManipulatorOrbital::HeCameraManipulatorOrbital(HeCamera* camera)
 		: HeCameraManipulatorBase(camera)
 	{
+		auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
+		auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));
+
+		auto& targetPosition = camera->GetTargetPosition();
+		auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
+		camera->SetLocalPosition(position);
 	}
 
 	void HeCameraManipulatorOrbital::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -75,7 +81,7 @@ namespace ArtificialNature {
 			lastMouseRightPositionY = ypos;
 
 			rotationH -= (float)(offsetX * 0.005);
-			rotationV -= (float)(offsetY * 0.005);
+			rotationV += (float)(offsetY * 0.005);
 
 			if (rotationV <= -glm::radians<float>(89))
 			{
@@ -88,7 +94,7 @@ namespace ArtificialNature {
 			}
 
 			auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
-			auto rv = glm::angleAxis(rotationV, rh * glm::vec3(1, 0, 0));
+			auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));
 			
 			auto& targetPosition = camera->GetTargetPosition();
 			auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
@@ -153,7 +159,7 @@ namespace ArtificialNature {
 		}
 
 		auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
-		auto rv = glm::angleAxis(rotationV, rh * glm::vec3(1, 0, 0));
+		auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));
 
 		auto& targetPosition = camera->GetTargetPosition();
 		auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
