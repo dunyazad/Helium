@@ -38,6 +38,7 @@ void processInput(GLFWwindow* window);
 
 HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorOrbital* pCameraManipulator = nullptr;
+HeSceneNode* pPlane = nullptr;
 
 int main(int argc, char* argv[]) {
 
@@ -83,7 +84,7 @@ int main(int argc, char* argv[]) {
 
     {
         auto pNode = pScene->CreateSceneNode("Cube Node");
-
+        
         float angle = 0.0;
         auto callback = pNode->AddOnPreupdate(
             [&angle](HeSceneNode* pNode, float dt) {
@@ -318,7 +319,8 @@ int main(int argc, char* argv[]) {
 
     {
         auto pNode = pScene->CreateSceneNode("Plane");
-        auto pGeometry = helium.GetGraphics()->GetGeometryPlane("Plane.Geometry", 100, 100, 100, 100, HePlaneType::XY);
+        pPlane = pNode;
+        auto pGeometry = helium.GetGraphics()->GetGeometryPlane("Plane.Geometry", mWidth, mHeight, 100, 100, HePlaneType::XY);
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
         pNode->AddGeometry(pGeometry);
@@ -341,6 +343,10 @@ int main(int argc, char* argv[]) {
         //pTexture->Initialize();
         //pMaterial->SetTexture(pTexture);
     }
+
+    auto pFrameBuffer = helium.GetGraphics()->GetFrameBuffer("FrameBuffer", mWidth, mHeight);
+    pFrameBuffer->Initialize();
+    (*pPlane->GetGeometries().begin())->GetMaterial()->SetTexture(pFrameBuffer->GetTargetTexture());
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);
 
@@ -366,14 +372,14 @@ int main(int argc, char* argv[]) {
         auto delta = HeTime::DeltaMili(lastTime);
         lastTime = HeTime::Now();
 
+        pFrameBuffer->Bind();
+
         glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_BLEND);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+        glClearColor(1, 1, 1, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        pScene->Update((float)delta);
-        pScene->Render();
-
 
 #pragma region [NanoVG]
         glViewport(0, 0, fbWidth, fbHeight);
@@ -383,7 +389,7 @@ int main(int argc, char* argv[]) {
         glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         nvgBeginFrame(vg, mWidth, mHeight, pxRatio);
 
-       
+
         float x = 20;
         float y = 20;
         float w = 200;
@@ -410,6 +416,18 @@ int main(int argc, char* argv[]) {
 
         nvgEndFrame(vg);
 #pragma endregion
+
+        pFrameBuffer->Unbind();
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        pScene->Update((float)delta);
+        pScene->Render();
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();

@@ -7,14 +7,14 @@ namespace ArtificialNature {
 
 	int count = 0;
 
-	HeFrameBufferObject::HeFrameBufferObject(HeGraphics* graphics, int width, int height)
-		: graphics(graphics), width(width), height(height)
+	HeFrameBufferObject::HeFrameBufferObject(const string& name, HeGraphics* graphics, int width, int height)
+		: HeObject(name), graphics(graphics), width(width), height(height)
 	{
 
 	}
 
-	HeFrameBufferObject::HeFrameBufferObject(HeGraphics* graphics, HeTexture* texture)
-		: graphics(graphics), targetTexture(texture)
+	HeFrameBufferObject::HeFrameBufferObject(const string& name, HeGraphics* graphics, HeTexture* texture)
+		: HeObject(name), graphics(graphics), targetTexture(texture)
 	{
 		if (targetTexture != nullptr)
 		{
@@ -29,27 +29,60 @@ namespace ArtificialNature {
 
 	void HeFrameBufferObject::Initialize()
 	{
+		glGenFramebuffers(1, &fboID);
+		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
+		glGenRenderbuffers(1, &depthBufferID);
+		glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBufferID);
+
 		if (targetTexture == nullptr)
 		{
 			stringstream ss;
 			ss << "FrameBufferObject Texture " << count;
 			targetTexture = graphics->GetTexture(ss.str(), width, height);
+			targetTexture->Initialize();
 		}
-		
 
+
+		targetTexture->Bind();
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, targetTexture->GetTextureID(), 0);
+
+		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+		if (status == GL_FRAMEBUFFER_COMPLETE)
+		{
+			printf("Framebuffer OK\n");
+		}
+		else
+		{
+			printf("Framebuffer NOT OK\n");
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void HeFrameBufferObject::Terminate()
 	{
+		if (depthBufferID != -1)
+		{
+			glDeleteRenderbuffers(1, &depthBufferID);
+		}
+		
+		if (fboID != -1)
+		{
+			glDeleteFramebuffers(1, &fboID);
+		}
 	}
 
 	void HeFrameBufferObject::Bind()
 	{
-
+		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
 	}
 
 	void HeFrameBufferObject::Unbind()
 	{
-
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }

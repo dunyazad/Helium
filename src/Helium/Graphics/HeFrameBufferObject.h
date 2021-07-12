@@ -7,7 +7,7 @@ namespace ArtificialNature {
 	class HeGraphics;
 	class HeTexture;
 
-	class HeFrameBufferObject
+	class HeFrameBufferObject : public HeObject
 	{
 	public:
 		virtual void Initialize();
@@ -15,16 +15,17 @@ namespace ArtificialNature {
 		void Bind();
 		void Unbind();
 
-		inline unsigned int ID() { return id; }
+		inline unsigned int GetFBOID() { return fboID; }
 		inline HeTexture* GetTargetTexture() { return targetTexture; }
 
 	protected:
-		HeFrameBufferObject(HeGraphics* graphics, int width, int height);
-		HeFrameBufferObject(HeGraphics* graphics, HeTexture* texture);
+		HeFrameBufferObject(const string& name, HeGraphics* graphics, int width, int height);
+		HeFrameBufferObject(const string& name, HeGraphics* graphics, HeTexture* texture);
 		~HeFrameBufferObject();
 
 		HeGraphics* graphics;
-		unsigned int id = -1;
+		GLuint fboID = -1;
+		GLuint depthBufferID = -1;
 		int width = 512;
 		int height = 512;
 		HeTexture* targetTexture = nullptr;

@@ -46,12 +46,19 @@ namespace ArtificialNature {
 		GLfloat borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		glTexParameterfv(target, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-		if (textureData != nullptr) {
-			if (withAlpha) {
-				glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-			}
-			else {
-				glTexImage2D(target, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+		if (image == nullptr)
+		{
+			glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		}
+		else
+		{
+			if (textureData != nullptr) {
+				if (withAlpha) {
+					glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+				}
+				else {
+					glTexImage2D(target, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+				}
 			}
 		}
 	}

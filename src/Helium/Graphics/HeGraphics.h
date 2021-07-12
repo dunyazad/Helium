@@ -15,6 +15,7 @@ namespace ArtificialNature {
 	class HeCanvasTexture;
 	class HeImage;
 	class HeCanvasImage;
+	class HeFrameBufferObject;
 
 	class HeGraphics : public HeObject
 	{
@@ -39,11 +40,15 @@ namespace ArtificialNature {
 		HeImage* GetImage(const string& name, const string& filePath);
 		HeCanvasImage* GetCanvasImage(const string& name, int width, int height);
 
+		HeFrameBufferObject* GetFrameBuffer(const string& name, HeTexture* texture);
+		HeFrameBufferObject* GetFrameBuffer(const string& name, int width, int height);
+
 	private:
 		map<string, HeGeometry*> geometries;
 		map<string, HeShader*> shaders;
 		map<string, HeMaterial*> materials;
 		map<string, HeTexture*> textures;
 		map<string, HeImage*> images;
+		map<string, HeFrameBufferObject*> frameBuffers;
 	};
 }

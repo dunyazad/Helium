@@ -30,6 +30,8 @@ namespace ArtificialNature {
 		inline void AddGeometry(HeGeometry* geometry) { this->geometries.insert(geometry); }
 		inline void RemoveGeometry(HeGeometry* geometry) { this->geometries.erase(geometry); }
 
+		inline const set<HeGeometry*>& GetGeometries() { return geometries; }
+
 		inline const glm::quat& GetLocalRotation() { return localRotation; }
 		inline const glm::vec3& GetLocalPosition() { return localPosition; }
 		inline const glm::vec3& GetLocalScale() { return localScale; }

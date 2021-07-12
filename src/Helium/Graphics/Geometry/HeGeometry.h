@@ -36,6 +36,7 @@ namespace ArtificialNature {
 		virtual void Draw(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
 		virtual void PostDraw(HeCamera* camera);
 
+		inline HeMaterial* GetMaterial() { return material; }
 		inline void SetMaterial(HeMaterial* material) { this->material = material; }
 
 		inline FillMode GetFillMode() { return fillMode; }

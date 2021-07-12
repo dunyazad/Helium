@@ -4,6 +4,7 @@
 #include <Helium/Graphics/HeMaterial.h>
 #include <Helium/Graphics/Texture/Texture.h>
 #include <Helium/Graphics/Image/Image.h>
+#include <Helium/Graphics/HeFrameBufferObject.h>
 
 namespace ArtificialNature {
 
@@ -53,6 +54,16 @@ namespace ArtificialNature {
 			}
 		}
 		images.clear();
+
+		for (auto& kvp : frameBuffers)
+		{
+			if (kvp.second != nullptr)
+			{
+				delete kvp.second;
+				kvp.second = nullptr;
+			}
+		}
+		frameBuffers.clear();
 
 		for (auto& kvp : shaders)
 		{
@@ -183,5 +194,25 @@ namespace ArtificialNature {
 		}
 
 		return dynamic_cast<HeCanvasImage*>(images[name]);
+	}
+
+	HeFrameBufferObject* HeGraphics::GetFrameBuffer(const string& name, HeTexture* texture)
+	{
+		if (frameBuffers.count(name) == 0)
+		{
+			frameBuffers[name] = new HeFrameBufferObject(name, this, texture);
+		}
+
+		return frameBuffers[name];
+	}
+
+	HeFrameBufferObject* HeGraphics::GetFrameBuffer(const string& name, int width, int height)
+	{
+		if (frameBuffers.count(name) == 0)
+		{
+			frameBuffers[name] = new HeFrameBufferObject(name, this, width, height);
+		}
+
+		return frameBuffers[name];
 	}
 }
