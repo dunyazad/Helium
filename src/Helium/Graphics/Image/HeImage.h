@@ -8,9 +8,9 @@ namespace ArtificialNature {
 	class HeImage : public HeObject
 	{
 	public:
-		inline int Width() { return width; }
-		inline int Height() { return height; }
-		inline int Channels() { return nrChannels; }
+		inline int GetWidth() { return width; }
+		inline int GetHeight() { return height; }
+		inline int GetChannels() { return nrChannels; }
 
 		const unsigned char* Data() { return data; }
 

@@ -67,6 +67,9 @@
       <Filter>Graphics\Image</Filter>
     </ClCompile>
     <ClCompile Include="nanovg.c" />
+    <ClCompile Include="Graphics\HeFrameBufferObject.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -147,6 +150,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Image\HeCanvasImage.h">
       <Filter>Graphics\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HeFrameBufferObject.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

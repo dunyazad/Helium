@@ -7,7 +7,11 @@ namespace ArtificialNature {
 	HeTexture::HeTexture(const string& name, HeImage* image)
 		: HeObject(name), image(image)
 	{
+	}
 
+	HeTexture::HeTexture(const string& name, int width, int height)
+		: HeObject(name), width(width), height(height)
+	{
 	}
 
 	HeTexture::~HeTexture()
@@ -16,29 +20,18 @@ namespace ArtificialNature {
 
 	void HeTexture::Initialize()
 	{
-		//glGenTextures(1, &id);
-		//glBindTexture(GL_TEXTURE_2D, id);
-		//
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		if (image != nullptr)
+		{
+			width = image->GetWidth();
+			height = image->GetHeight();
+			withAlpha = image->GetChannels() == 4;
 
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		//if (image->Data() != nullptr)
-		//{
-		//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->Width(), image->Height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image->Data());
-		//	glGenerateMipmap(GL_TEXTURE_2D);
-		//}
-
-		width = image->Width();
-		height = image->Height();
-		withAlpha = image->Channels() == 4;
-
-		if (width != 0 && height != 0) {
-			textureData = new unsigned char[width * height * image->Channels()];
-			memset(textureData, 255, width * height * image->Channels());
-			memcpy(textureData, image->Data(), width * height * image->Channels());
+			if (width != 0 && height != 0)
+			{
+				textureData = new unsigned char[width * height * image->GetChannels()];
+				memset(textureData, 255, width * height * image->GetChannels());
+				memcpy(textureData, image->Data(), width * height * image->GetChannels());
+			}
 		}
 
 		glGenTextures(1, &textureID);
@@ -65,7 +58,10 @@ namespace ArtificialNature {
 
 	void HeTexture::Terminate()
 	{
-		glDeleteTextures(1, &textureID);
+		if (textureID != -1)
+		{
+			glDeleteTextures(1, &textureID);
+		}
 
 		if (textureData != nullptr) {
 			delete textureData;

@@ -17,11 +17,15 @@ namespace ArtificialNature {
 
 		inline GLuint GetTextureID() { return textureID; }
 
+		inline GLsizei GetWidth() { return width; }
+		inline GLsizei GetHeight() { return height; }
+
 	protected:
 		HeTexture(const string& name, HeImage* image);
+		HeTexture(const string& name, int width, int height);
 		~HeTexture();
 
-		HeImage* image;
+		HeImage* image = nullptr;
 
 		bool withAlpha = true;
 		GLuint textureID;

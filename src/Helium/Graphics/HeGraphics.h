@@ -33,6 +33,7 @@ namespace ArtificialNature {
 		HeMaterial* GetMaterial(const string& name);
 
 		HeTexture* GetTexture(const string& name, HeImage* image);
+		HeTexture* GetTexture(const string& name, int width, int height);
 		HeCanvasTexture* GetCanvasTexture(const string& name, HeImage* image);
 
 		HeImage* GetImage(const string& name, const string& filePath);

@@ -3,6 +3,7 @@
 #include <Helium/Graphics/HeVertexBufferObject.hpp>
 #include <Helium/Graphics/HeIndexBufferObject.h>
 #include <Helium/Graphics/HeVertexArrayObject.h>
+#include <Helium/Graphics/HeFrameBufferObject.h>
 
 #include <Helium/Graphics/Geometry/Geometry.h>
 

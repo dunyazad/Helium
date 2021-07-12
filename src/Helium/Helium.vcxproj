@@ -89,6 +89,7 @@
     <ClCompile Include="Graphics\Geometry\HeGeometry.cpp" />
     <ClCompile Include="Graphics\Geometry\HePlane.cpp" />
     <ClCompile Include="Graphics\Geometry\HeThickLines.cpp" />
+    <ClCompile Include="Graphics\HeFrameBufferObject.cpp" />
     <ClCompile Include="Graphics\HeGraphics.cpp" />
     <ClCompile Include="Graphics\HeIndexBufferObject.cpp" />
     <ClCompile Include="Graphics\HeMaterial.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="Graphics\Geometry\HePlane.h" />
     <ClInclude Include="Graphics\Geometry\HeThickLines.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\HeFrameBufferObject.h" />
     <ClInclude Include="Graphics\HeGraphics.h" />
     <ClInclude Include="Graphics\HeIndexBufferObject.h" />
     <ClInclude Include="Graphics\HeMaterial.h" />

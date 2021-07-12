@@ -145,6 +145,16 @@ namespace ArtificialNature {
 		return textures[name];
 	}
 
+	HeTexture* HeGraphics::GetTexture(const string& name, int width, int height)
+	{
+		if (textures.count(name) == 0)
+		{
+			textures[name] = new HeTexture(name, width, height);
+		}
+
+		return textures[name];
+	}
+
 	HeCanvasTexture* HeGraphics::GetCanvasTexture(const string& name, HeImage* image)
 	{
 		if (textures.count(name) == 0)
