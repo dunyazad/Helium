@@ -36,6 +36,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
+HeGraphics* gGraphics = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorOrbital* pCameraManipulator = nullptr;
 HeSceneNode* pPlane = nullptr;
@@ -72,7 +73,7 @@ int main(int argc, char* argv[]) {
 
 
     Helium helium("helium");
-    glEnable(GL_DEPTH_TEST);
+    gGraphics = helium.GetGraphics();
 
     auto pScene = helium.GetScene("Default Scene");
 
@@ -92,7 +93,7 @@ int main(int argc, char* argv[]) {
                 pNode->SetLocalRotation(glm::angleAxis((float)angle, glm::vec3(0, 1, 0)));
             });
 
-        auto pGeometry = helium.GetGraphics()->GetGeometry("Cube");
+        auto pGeometry = gGraphics->GetGeometry("Cube");
         pNode->AddGeometry(pGeometry);
         pGeometry->Initialize();
 
@@ -255,19 +256,19 @@ int main(int argc, char* argv[]) {
 #pragma endregion
 
 #pragma region [Cube Material]
-        auto pMaterial = helium.GetGraphics()->GetMaterial("Cube Material");
+        auto pMaterial = gGraphics->GetMaterial("Cube Material");
 
         // Colored
         //HeShader shader("../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
         //material.SetShader(&shader);
 
         // Textured
-        auto pShader = helium.GetGraphics()->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+        auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
         pMaterial->SetShader(pShader);
 
-        auto pImage = helium.GetGraphics()->GetImage("dice image", "../../res/img/dice.png");
+        auto pImage = gGraphics->GetImage("dice image", "../../res/img/dice.png");
         pImage->Initialize();
-        auto pTexture = helium.GetGraphics()->GetTexture("dice texture", pImage);
+        auto pTexture = gGraphics->GetTexture("dice texture", pImage);
         pTexture->Initialize();
 
         pMaterial->SetTexture(pTexture);
@@ -281,7 +282,7 @@ int main(int argc, char* argv[]) {
         auto pNode = pScene->CreateSceneNode("Gizmo Node");
         
         #pragma region [Lines]
-        auto pLines = helium.GetGraphics()->GetGeometryThickLines("Gizmo");
+        auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
         pLines->Initialize();
         pLines->SetThickness(1);
         pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
@@ -301,9 +302,9 @@ int main(int argc, char* argv[]) {
         pLines->AddColor(glm::vec4(0, 0, 1, 1));
         pLines->AddColor(glm::vec4(0, 0, 1, 1));
 
-        auto pMaterial = helium.GetGraphics()->GetMaterial("Gizmo Materials");
+        auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
         
-        auto pShader = helium.GetGraphics()->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
         pMaterial->SetShader(pShader);
 
         pLines->SetMaterial(pMaterial);
@@ -320,31 +321,31 @@ int main(int argc, char* argv[]) {
     {
         auto pNode = pScene->CreateSceneNode("Plane");
         pPlane = pNode;
-        auto pGeometry = helium.GetGraphics()->GetGeometryPlane("Plane.Geometry", mWidth, mHeight, 100, 100, HePlaneType::XY);
+        auto pGeometry = gGraphics->GetGeometryPlane("Plane.Geometry", mWidth, mHeight, 100, 100, HePlaneType::XY);
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
         pNode->AddGeometry(pGeometry);
 
-        auto pMaterial = helium.GetGraphics()->GetMaterial("Plane Material");
+        auto pMaterial = gGraphics->GetMaterial("Plane Material");
         pGeometry->SetMaterial(pMaterial);
 
-        auto pShader = helium.GetGraphics()->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+        auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
         pMaterial->SetShader(pShader);
 
-        auto pImage = helium.GetGraphics()->GetImage("owl image", "../../res/img/Owl.jpg");
-        //auto pImage = helium.GetGraphics()->GetCanvasImage("Canvas Image", 512, 512);
+        auto pImage = gGraphics->GetImage("owl image", "../../res/img/Owl.jpg");
+        //auto pImage = gGraphics->GetCanvasImage("Canvas Image", 512, 512);
         pImage->Initialize();
      
-        auto pTexture = helium.GetGraphics()->GetTexture("Owl Texture", pImage);
+        auto pTexture = gGraphics->GetTexture("Owl Texture", pImage);
         pTexture->Initialize();
         pMaterial->SetTexture(pTexture);
 
-        //auto pTexture = helium.GetGraphics()->GetCanvasTexture("Canvas Texture", pImage);
+        //auto pTexture = gGraphics->GetCanvasTexture("Canvas Texture", pImage);
         //pTexture->Initialize();
         //pMaterial->SetTexture(pTexture);
     }
 
-    auto pFrameBuffer = helium.GetGraphics()->GetFrameBuffer("FrameBuffer", mWidth, mHeight);
+    auto pFrameBuffer = gGraphics->GetFrameBuffer("FrameBuffer", mWidth, mHeight);
     pFrameBuffer->Initialize();
     (*pPlane->GetGeometries().begin())->GetMaterial()->SetTexture(pFrameBuffer->GetTargetTexture());
 
@@ -382,7 +383,7 @@ int main(int argc, char* argv[]) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #pragma region [NanoVG]
-        glViewport(0, 0, fbWidth, fbHeight);
+        glViewport(0, 0, pFrameBuffer->GetWidth(), pFrameBuffer->GetHeight());
 
         glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -442,6 +443,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 
     pCamera->SetAspectRatio((float)width / (float)height);
+
+    gGraphics->GetFrameBuffer("FrameBuffer")->Resize(width, height);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

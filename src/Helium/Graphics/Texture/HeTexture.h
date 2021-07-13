@@ -15,6 +15,8 @@ namespace ArtificialNature {
 		void Bind();
 		void Unbind();
 
+		void Resize(int width, int height);
+
 		inline GLuint GetTextureID() { return textureID; }
 
 		inline GLsizei GetWidth() { return width; }

@@ -40,6 +40,7 @@ namespace ArtificialNature {
 		HeImage* GetImage(const string& name, const string& filePath);
 		HeCanvasImage* GetCanvasImage(const string& name, int width, int height);
 
+		HeFrameBufferObject* GetFrameBuffer(const string& name);
 		HeFrameBufferObject* GetFrameBuffer(const string& name, HeTexture* texture);
 		HeFrameBufferObject* GetFrameBuffer(const string& name, int width, int height);
 

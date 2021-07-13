@@ -15,8 +15,13 @@ namespace ArtificialNature {
 		void Bind();
 		void Unbind();
 
+		void Resize(int width, int height);
+
 		inline unsigned int GetFBOID() { return fboID; }
 		inline HeTexture* GetTargetTexture() { return targetTexture; }
+
+		inline int GetWidth() { return width; }
+		inline int GetHeight() { return height; }
 
 	protected:
 		HeFrameBufferObject(const string& name, HeGraphics* graphics, int width, int height);

@@ -39,7 +39,7 @@ namespace ArtificialNature {
 		if (targetTexture == nullptr)
 		{
 			stringstream ss;
-			ss << "FrameBufferObject Texture " << count;
+			ss << "FrameBufferObject Texture " << count++;
 			targetTexture = graphics->GetTexture(ss.str(), width, height);
 			targetTexture->Initialize();
 		}
@@ -49,16 +49,16 @@ namespace ArtificialNature {
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, targetTexture->GetTextureID(), 0);
 
-		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		//GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-		if (status == GL_FRAMEBUFFER_COMPLETE)
-		{
-			printf("Framebuffer OK\n");
-		}
-		else
-		{
-			printf("Framebuffer NOT OK\n");
-		}
+		//if (status == GL_FRAMEBUFFER_COMPLETE)
+		//{
+		//	printf("Framebuffer OK\n");
+		//}
+		//else
+		//{
+		//	printf("Framebuffer NOT OK\n");
+		//}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -84,5 +84,25 @@ namespace ArtificialNature {
 	void HeFrameBufferObject::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void HeFrameBufferObject::Resize(int width, int height)
+	{
+		this->width = width;
+		this->height = height;
+
+		targetTexture->Resize(width, height);
+		
+		if (depthBufferID != -1)
+		{
+			glDeleteRenderbuffers(1, &depthBufferID);
+		}
+
+		if (fboID != -1)
+		{
+			glDeleteFramebuffers(1, &fboID);
+		}
+
+		Initialize();
 	}
 }

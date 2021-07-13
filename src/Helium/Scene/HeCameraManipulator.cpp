@@ -12,12 +12,7 @@ namespace ArtificialNature {
 	HeCameraManipulatorOrbital::HeCameraManipulatorOrbital(HeCamera* camera)
 		: HeCameraManipulatorBase(camera)
 	{
-		auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
-		auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));
-
-		auto& targetPosition = camera->GetTargetPosition();
-		auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
-		camera->SetLocalPosition(position);
+		ApplyManipulation();
 	}
 
 	void HeCameraManipulatorOrbital::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -30,6 +25,14 @@ namespace ArtificialNature {
 
 		if (key == GLFW_KEY_2 && action == GLFW_PRESS)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		{
+			rotationH = 0;
+			rotationV = 0;
+
+			ApplyManipulation();
+		}
 
 		if (key == GLFW_KEY_W && action == GLFW_PRESS)
 		{
@@ -93,12 +96,7 @@ namespace ArtificialNature {
 				rotationV = glm::radians<float>(89);
 			}
 
-			auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
-			auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));
-			
-			auto& targetPosition = camera->GetTargetPosition();
-			auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
-			camera->SetLocalPosition(position);
+			ApplyManipulation();
 		}
 	}
 
@@ -158,6 +156,11 @@ namespace ArtificialNature {
 			distance = glm::epsilon<float>();
 		}
 
+		ApplyManipulation();
+	}
+
+	void HeCameraManipulatorOrbital::ApplyManipulation()
+	{
 		auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
 		auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));
 

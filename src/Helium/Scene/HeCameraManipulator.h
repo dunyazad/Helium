@@ -30,6 +30,8 @@ namespace ArtificialNature {
 		void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
 		void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
 
+		void ApplyManipulation();
+
 	protected:
 		double lastMouseLeftPositionX = 0.0;
 		double lastMouseLeftPositionY = 0.0;

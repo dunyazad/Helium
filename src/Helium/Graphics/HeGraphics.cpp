@@ -196,6 +196,15 @@ namespace ArtificialNature {
 		return dynamic_cast<HeCanvasImage*>(images[name]);
 	}
 
+	HeFrameBufferObject* HeGraphics::GetFrameBuffer(const string& name)
+	{
+		if (frameBuffers.count(name) != 0)
+		{
+			return frameBuffers[name];
+		}
+		return nullptr;
+	}
+
 	HeFrameBufferObject* HeGraphics::GetFrameBuffer(const string& name, HeTexture* texture)
 	{
 		if (frameBuffers.count(name) == 0)
