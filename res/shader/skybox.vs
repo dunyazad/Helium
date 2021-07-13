@@ -7,10 +7,10 @@ uniform mat4 view;
 uniform mat4 model;
 
 out vec4 ourColor;
-out vec2 TexCoords;
+out vec3 TexCoords;
 
 void main()
 {
-	gl_Position = projection * view * vec4(aPos, 1.0);
+	gl_Position = projection * view * model * vec4(aPos, 1.0);
 	TexCoords = aPos;
 }
