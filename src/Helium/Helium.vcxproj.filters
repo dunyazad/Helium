@@ -70,7 +70,10 @@
     <ClCompile Include="Graphics\HeFrameBufferObject.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Texture\HeCubeMapTexture.cpp">
+    <ClCompile Include="Graphics\Geometry\HeSkyboxGeometry.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Texture\HeCubemapTexture.cpp">
       <Filter>Graphics\Texture</Filter>
     </ClCompile>
   </ItemGroup>
@@ -157,7 +160,10 @@
     <ClInclude Include="Graphics\HeFrameBufferObject.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Texture\HeCubeMapTexture.h">
+    <ClInclude Include="Graphics\Geometry\HeSkyboxGeometry.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture\HeCubemapTexture.h">
       <Filter>Graphics\Texture</Filter>
     </ClInclude>
   </ItemGroup>

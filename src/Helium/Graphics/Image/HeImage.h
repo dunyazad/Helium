@@ -18,7 +18,7 @@ namespace ArtificialNature {
 		virtual void Terminate();
 
 	protected:
-		HeImage(const string& name, const string& filePath);
+		HeImage(const string& name, const string& filePath, bool verticalFlip = true);
 		~HeImage();
 
 		string filePath;
@@ -29,6 +29,7 @@ namespace ArtificialNature {
 
 		unsigned char* data;
 
+		bool verticalFlip = true;
 	public:
 		friend class HeGraphics;
 	};

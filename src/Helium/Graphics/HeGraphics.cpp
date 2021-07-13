@@ -96,6 +96,16 @@ namespace ArtificialNature {
 		return dynamic_cast<HePlaneGeometry*>(geometries[name]);
 	}
 
+	HeSkyboxGeometry* HeGraphics::GetSkyboxGeometry(const string& name)
+	{
+		if (geometries.count(name) == 0)
+		{
+			geometries[name] = new HeSkyboxGeometry(name);
+		}
+
+		return dynamic_cast<HeSkyboxGeometry*>(geometries[name]);
+	}
+
 	HeThickLines* HeGraphics::GetGeometryThickLines(const string& name)
 	{
 		if (geometries.count(name) == 0)
@@ -176,7 +186,7 @@ namespace ArtificialNature {
 		return dynamic_cast<HeCanvasTexture*>(textures[name]);
 	}
 
-	HeCubemapTexture* HeGraphics::GetCubemapTexture(const string& name, const vector<HeImage*>& image)
+	HeCubemapTexture* HeGraphics::GetCubemapTexture(const string& name, const vector<HeImage*>& images)
 	{
 		if (textures.count(name) == 0)
 		{
@@ -186,11 +196,11 @@ namespace ArtificialNature {
 		return dynamic_cast<HeCubemapTexture*>(textures[name]);
 	}
 
-	HeImage* HeGraphics::GetImage(const string& name, const string& filePath)
+	HeImage* HeGraphics::GetImage(const string& name, const string& filePath, bool verticalFlip)
 	{
 		if (images.count(name) == 0)
 		{
-			images[name] = new HeImage(name, filePath);
+			images[name] = new HeImage(name, filePath, verticalFlip);
 		}
 
 		return images[name];

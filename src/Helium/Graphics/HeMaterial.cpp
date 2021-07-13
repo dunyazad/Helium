@@ -32,6 +32,11 @@ namespace ArtificialNature {
 		{
 			texture->Bind();
 			CheckGLError();
+
+			if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
+			{
+				glDepthMask(GL_FALSE);
+			}
 		}
 	}
 
@@ -39,6 +44,11 @@ namespace ArtificialNature {
 	{
 		if (texture)
 		{
+			if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
+			{
+				glDepthMask(GL_TRUE);
+			}
+
 			texture->Unbind();
 			CheckGLError();
 		}

@@ -4,17 +4,17 @@
 
 namespace ArtificialNature {
 
-	HeCubeMapTexture::HeCubeMapTexture(const string& name, const vector<HeImage*>& images)
+	HeCubemapTexture::HeCubemapTexture(const string& name, const vector<HeImage*>& images)
 		: HeTexture(name, nullptr), images(images)
 	{
 		target = GL_TEXTURE_CUBE_MAP;
 	}
 
-	HeCubeMapTexture::~HeCubeMapTexture()
+	HeCubemapTexture::~HeCubemapTexture()
 	{
 	}
 
-	void HeCubeMapTexture::Initialize()
+	void HeCubemapTexture::Initialize()
 	{
 		glGenTextures(1, &textureID);
 
@@ -31,7 +31,12 @@ namespace ArtificialNature {
 		for (size_t i = 0; i < images.size(); i++)
 		{
 			auto& image = images[i];
-			if (image->GetChannels() == 4)
+
+			width = image->GetWidth();
+			height = image->GetHeight();
+		    withAlpha = image->GetChannels() == 4;
+
+			if (withAlpha)
 			{
 				glTexImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i), 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->Data());
 			}
@@ -42,7 +47,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCubeMapTexture::Terminate()
+	void HeCubemapTexture::Terminate()
 	{
 		HeTexture::Terminate();
 	}

@@ -5,15 +5,15 @@
 
 namespace ArtificialNature {
 
-	class HeCubeMapTexture : public HeTexture
+	class HeCubemapTexture : public HeTexture
 	{
 	public:
 		virtual void Initialize();
 		virtual void Terminate();
 
 	protected:
-		HeCubeMapTexture(const string& name, const vector<HeImage*>& images);
-		~HeCubeMapTexture();
+		HeCubemapTexture(const string& name, const vector<HeImage*>& images);
+		~HeCubemapTexture();
 
 		vector<HeImage*> images;
 

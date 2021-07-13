@@ -345,6 +345,42 @@ int main(int argc, char* argv[]) {
         //pMaterial->SetTexture(pTexture);
     }
 
+    {
+        auto pNode = pScene->CreateSceneNode("Skybox");
+        pNode->SetLocalScale(glm::vec3(1000, 1000, 1000));
+        auto pGeometry = gGraphics->GetSkyboxGeometry("Skybox.Geometry");
+        pGeometry->Initialize();
+        pNode->AddGeometry(pGeometry);
+
+        auto pMaterial = gGraphics->GetMaterial("Skybox Material");
+        pGeometry->SetMaterial(pMaterial);
+
+        auto pShader = gGraphics->GetShader("skybox", "../../res/shader/skybox.vs", "../../res/shader/skybox.fs");
+        pMaterial->SetShader(pShader);
+
+        auto pRight = gGraphics->GetImage("right", "../../res/img/skybox/right.jpg", false);
+        pRight->Initialize();
+
+        auto pLeft = gGraphics->GetImage("left", "../../res/img/skybox/left.jpg", false);
+        pLeft->Initialize();
+
+        auto pTop = gGraphics->GetImage("top", "../../res/img/skybox/top.jpg", false);
+        pTop->Initialize();
+
+        auto pBottom = gGraphics->GetImage("bottom", "../../res/img/skybox/bottom.jpg", false);
+        pBottom->Initialize();
+
+        auto pFront = gGraphics->GetImage("front", "../../res/img/skybox/front.jpg", false);
+        pFront->Initialize();
+
+        auto pBack = gGraphics->GetImage("back", "../../res/img/skybox/back.jpg", false);
+        pBack->Initialize();
+
+        auto pTexture = gGraphics->GetCubemapTexture("Skybox Texture", { pRight, pLeft, pTop, pBottom, pFront, pBack });
+        pTexture->Initialize();
+        pMaterial->SetTexture(pTexture);
+    }
+
     auto pFrameBuffer = gGraphics->GetFrameBuffer("FrameBuffer", mWidth, mHeight);
     pFrameBuffer->Initialize();
     (*pPlane->GetGeometries().begin())->GetMaterial()->SetTexture(pFrameBuffer->GetTargetTexture());
@@ -376,8 +412,8 @@ int main(int argc, char* argv[]) {
         pFrameBuffer->Bind();
 
         glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_BLEND);
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glClearColor(1, 1, 1, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

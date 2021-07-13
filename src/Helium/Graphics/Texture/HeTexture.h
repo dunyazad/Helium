@@ -17,6 +17,7 @@ namespace ArtificialNature {
 
 		void Resize(int width, int height);
 
+		inline GLenum GetTarget() { return target; }
 		inline GLuint GetTextureID() { return textureID; }
 
 		inline GLsizei GetWidth() { return width; }
@@ -30,7 +31,7 @@ namespace ArtificialNature {
 		HeImage* image = nullptr;
 
 		bool withAlpha = true;
-		GLuint textureID;
+		GLuint textureID = -1;
 		GLenum target = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_CUBE_MAP
 		GLenum format = GL_RGBA;
 		GLsizei width = 0;
