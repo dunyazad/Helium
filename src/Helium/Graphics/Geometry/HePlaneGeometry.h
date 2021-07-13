@@ -6,15 +6,15 @@
 
 namespace ArtificialNature {
 
-	class HePlane : public HeGeometry
+	class HePlaneGeometry : public HeGeometry
 	{
 	public:
 		virtual void Initialize();
 		virtual void Terminate();
 
 	protected:
-		HePlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
-		~HePlane();
+		HePlaneGeometry(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
+		~HePlaneGeometry();
 
 		float columnLength = 1.0f;
 		float rowLength = 1.0f;

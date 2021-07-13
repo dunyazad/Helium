@@ -6,13 +6,14 @@
 namespace ArtificialNature {
 
 	class HeGeometry;
-	class HePlane;
+	class HePlaneGeometry;
 	class HeThickLines;
 
 	class HeShader;
 	class HeMaterial;
 	class HeTexture;
 	class HeCanvasTexture;
+	class HeCubemapTexture;
 	class HeImage;
 	class HeCanvasImage;
 	class HeFrameBufferObject;
@@ -24,7 +25,7 @@ namespace ArtificialNature {
 		~HeGraphics();
 
 		HeGeometry* GetGeometry(const string& name);
-		HePlane* GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
+		HePlaneGeometry* GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
 		HeThickLines* GetGeometryThickLines(const string& name);
 
 		HeShader* GetShader(const string& name);
@@ -36,6 +37,7 @@ namespace ArtificialNature {
 		HeTexture* GetTexture(const string& name, HeImage* image);
 		HeTexture* GetTexture(const string& name, int width, int height);
 		HeCanvasTexture* GetCanvasTexture(const string& name, HeImage* image);
+		HeCubemapTexture* GetCubemapTexture(const string& name, const vector<HeImage*>& image);
 
 		HeImage* GetImage(const string& name, const string& filePath);
 		HeCanvasImage* GetCanvasImage(const string& name, int width, int height);

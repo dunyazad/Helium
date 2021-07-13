@@ -52,11 +52,14 @@ namespace ArtificialNature {
 		}
 		else
 		{
-			if (textureData != nullptr) {
-				if (withAlpha) {
+			if (textureData != nullptr)
+			{
+				if (withAlpha)
+				{
 					glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 				}
-				else {
+				else
+				{
 					glTexImage2D(target, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
 				}
 			}

@@ -1,17 +1,17 @@
-#include <Helium/Graphics/Geometry/HePlane.h>
+#include <Helium/Graphics/Geometry/HePlaneGeometry.h>
 
 namespace ArtificialNature {
 
-	HePlane::HePlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type)
+	HePlaneGeometry::HePlaneGeometry(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type)
 		: HeGeometry(name), columnLength(columnLength), rowLength(rowLength), columns(colomns), rows(rows), type(type)
 	{
 	}
 
-	HePlane::~HePlane()
+	HePlaneGeometry::~HePlaneGeometry()
 	{
 	}
 
-	void HePlane::Initialize()
+	void HePlaneGeometry::Initialize()
 	{
 		float columnUnit = columnLength / (float)columns;
 		float rowUnit = rowLength / (float)rows;
@@ -69,7 +69,7 @@ namespace ArtificialNature {
 		HeGeometry::Initialize();
 	}
 
-	void HePlane::Terminate()
+	void HePlaneGeometry::Terminate()
 	{
 		HeGeometry::Terminate();
 	}

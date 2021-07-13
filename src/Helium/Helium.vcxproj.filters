@@ -51,7 +51,7 @@
     <ClCompile Include="Graphics\Geometry\HeThickLines.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Geometry\HePlane.cpp">
+    <ClCompile Include="Graphics\Geometry\HePlaneGeometry.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Texture\HeTexture.cpp">
@@ -69,6 +69,9 @@
     <ClCompile Include="nanovg.c" />
     <ClCompile Include="Graphics\HeFrameBufferObject.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Texture\HeCubeMapTexture.cpp">
+      <Filter>Graphics\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +133,7 @@
     <ClInclude Include="Graphics\Geometry\HeThickLines.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Geometry\HePlane.h">
+    <ClInclude Include="Graphics\Geometry\HePlaneGeometry.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Texture\HeTexture.h">
@@ -153,6 +156,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\HeFrameBufferObject.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture\HeCubeMapTexture.h">
+      <Filter>Graphics\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

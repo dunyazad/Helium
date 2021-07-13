@@ -31,7 +31,7 @@ namespace ArtificialNature {
 
 		bool withAlpha = true;
 		GLuint textureID;
-		GLenum target = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES
+		GLenum target = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_CUBE_MAP
 		GLenum format = GL_RGBA;
 		GLsizei width = 0;
 		GLsizei height = 0;
