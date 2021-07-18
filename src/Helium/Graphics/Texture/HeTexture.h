@@ -23,6 +23,8 @@ namespace ArtificialNature {
 		inline GLsizei GetWidth() { return width; }
 		inline GLsizei GetHeight() { return height; }
 
+		inline bool HasAlpha() { return withAlpha; }
+
 	protected:
 		HeTexture(const string& name, HeImage* image);
 		HeTexture(const string& name, int width, int height);

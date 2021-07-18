@@ -19,6 +19,8 @@ namespace ArtificialNature {
 		void AddChild(HeSceneNode* child);
 		void RemoveChild(HeSceneNode* child);
 
+		HeSceneNode* GetSceneNode(const string& name);
+
 		virtual void Update(float dt);
 		virtual void Render(HeCamera* camera);
 
@@ -42,10 +44,16 @@ namespace ArtificialNature {
 
 		inline const glm::mat4& GetAbsoluteTransform() { return absoluteTransform; }
 
+		inline bool IsActive() { return active; }
+		inline void SetActive(bool active) { this->active = active; }
+
+		inline HeScene* GetScene() { return scene; }
+
 	protected:
 		HeSceneNode(const string& name, HeScene* scene);
 		~HeSceneNode();
 
+		bool active = true;
 		HeScene* scene = nullptr;
 		HeSceneNode* parentNode = nullptr;
 		set<HeSceneNode*> childNodes;

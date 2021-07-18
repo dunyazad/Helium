@@ -48,6 +48,9 @@ namespace ArtificialNature {
 		HeFrameBufferObject* GetFrameBuffer(const string& name, HeTexture* texture);
 		HeFrameBufferObject* GetFrameBuffer(const string& name, int width, int height);
 
+		void RegisterRenderList(HeGeometry* geometry, const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
+		void Flush();
+
 	private:
 		map<string, HeGeometry*> geometries;
 		map<string, HeShader*> shaders;
@@ -55,5 +58,19 @@ namespace ArtificialNature {
 		map<string, HeTexture*> textures;
 		map<string, HeImage*> images;
 		map<string, HeFrameBufferObject*> frameBuffers;
+
+		struct RenderInfo {
+			HeGeometry* geometry;
+			HeMaterial* material;
+			glm::mat4 projection;
+			glm::mat4 view;
+			glm::mat4 model;
+
+			RenderInfo(HeGeometry* geometry, HeMaterial* material, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
+				: geometry(geometry), material(material), projection(projection), view(view), model(model) {}
+		};
+
+		map<HeTexture*, vector<RenderInfo>> opaqueRenderInfos;
+		map<HeTexture*, vector<RenderInfo>> transparentRenderInfos;
 	};
 }

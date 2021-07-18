@@ -244,4 +244,40 @@ namespace ArtificialNature {
 
 		return frameBuffers[name];
 	}
+
+	void HeGraphics::RegisterRenderList(HeGeometry* geometry, const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
+	{
+		auto texture = geometry->GetMaterial()->GetTexture();
+		if (texture != nullptr) {
+			if (texture->HasAlpha())
+			{
+				transparentRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+			}
+		}
+		opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+	}
+
+	void HeGraphics::Flush()
+	{
+		for (auto& kvp : opaqueRenderInfos)
+		{
+			for (const auto& ri : kvp.second)
+			{
+				ri.geometry->Draw(ri.projection, ri.view, ri.model);
+			}
+
+			kvp.second.clear();
+		}
+		opaqueRenderInfos.clear();
+
+		for (auto& kvp : transparentRenderInfos)
+		{
+			for (const auto& ri : kvp.second)
+			{
+				ri.geometry->Draw(ri.projection, ri.view, ri.model);
+			}
+			kvp.second.clear();
+		}
+		transparentRenderInfos.clear();
+	}
 }

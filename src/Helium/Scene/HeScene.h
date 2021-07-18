@@ -3,6 +3,7 @@
 #include <Helium/Core/Core.h>
 
 namespace ArtificialNature {
+	class HeGraphics;
 	class HeSceneNode;
 	class HeCamera;
 	class HeOrthogonalCamera;
@@ -23,11 +24,16 @@ namespace ArtificialNature {
 		HeOrthogonalCamera* CreateOrthogonalCamera(const string& name, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		HePerspectiveCamera* CreatePerspectiveCamera(const string& name, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 
+		HeSceneNode* GetSceneNode(const string& name);
+
+		inline HeGraphics* GetGraphics() { return graphics; }
+
 	protected:
-		HeScene(const string& name);
+		HeScene(const string& name, HeGraphics* graphics);
 		~HeScene();
 
 	private:
+		HeGraphics* graphics = nullptr;
 		HeSceneNode* rootNode = nullptr;
 		HeCamera* mainCamera = nullptr;
 

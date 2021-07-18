@@ -30,7 +30,10 @@ namespace ArtificialNature {
 			{
 				textureData = new unsigned char[width * height * image->GetChannels()];
 				memset(textureData, 255, width * height * image->GetChannels());
-				memcpy(textureData, image->Data(), width * height * image->GetChannels());
+				if (image->Data() != nullptr)
+				{
+					memcpy(textureData, image->Data(), width * height * image->GetChannels());
+				}
 			}
 		}
 

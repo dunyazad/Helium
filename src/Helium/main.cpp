@@ -321,7 +321,7 @@ int main(int argc, char* argv[]) {
     {
         auto pNode = pScene->CreateSceneNode("Plane");
         pPlane = pNode;
-        auto pGeometry = gGraphics->GetGeometryPlane("Plane.Geometry", mWidth, mHeight, 100, 100, HePlaneType::XY);
+        auto pGeometry = gGraphics->GetGeometryPlane("Plane.Geometry", mWidth * 0.1, mHeight * 0.1, 100, 100, HePlaneType::XY);
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
         pNode->AddGeometry(pGeometry);
@@ -332,17 +332,19 @@ int main(int argc, char* argv[]) {
         auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
         pMaterial->SetShader(pShader);
 
-        auto pImage = gGraphics->GetImage("owl image", "../../res/img/Owl.jpg");
-        //auto pImage = gGraphics->GetCanvasImage("Canvas Image", 512, 512);
+        //auto pImage = gGraphics->GetImage("owl image", "../../res/img/Owl.jpg");
+        //auto pImage = gGraphics->GetImage("awesomeface image", "../../res/img/awesomeface.png");
+        auto pImage = gGraphics->GetCanvasImage("Canvas Image", 512, 512);
         pImage->Initialize();
      
-        auto pTexture = gGraphics->GetTexture("Owl Texture", pImage);
-        pTexture->Initialize();
-        pMaterial->SetTexture(pTexture);
-
-        //auto pTexture = gGraphics->GetCanvasTexture("Canvas Texture", pImage);
+        ////auto pTexture = gGraphics->GetTexture("Owl Texture", pImage);
+        //auto pTexture = gGraphics->GetTexture("awesomeface Texture", pImage);
         //pTexture->Initialize();
         //pMaterial->SetTexture(pTexture);
+
+        auto pTexture = gGraphics->GetCanvasTexture("Canvas Texture", pImage);
+        pTexture->Initialize();
+        pMaterial->SetTexture(pTexture);
     }
 
     {
@@ -411,21 +413,12 @@ int main(int argc, char* argv[]) {
 
         pFrameBuffer->Bind();
 
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        glClearColor(1, 1, 1, 0.1f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 #pragma region [NanoVG]
         glViewport(0, 0, pFrameBuffer->GetWidth(), pFrameBuffer->GetHeight());
 
-        glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glClearColor(1, 1, 1, 0.1f);
+        glClear(GL_COLOR_BUFFER_BIT);
         nvgBeginFrame(vg, mWidth, mHeight, pxRatio);
-
 
         float x = 20;
         float y = 20;
@@ -456,15 +449,20 @@ int main(int argc, char* argv[]) {
 
         pFrameBuffer->Unbind();
 
+        glDepthFunc(GL_LESS);
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
 
         glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        pScene->GetSceneNode("Plane")->SetActive(true);
         pScene->Update((float)delta);
         pScene->Render();
+
+        gGraphics->Flush();
+        
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();

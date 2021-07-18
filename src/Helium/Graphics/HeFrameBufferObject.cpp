@@ -31,10 +31,6 @@ namespace ArtificialNature {
 	{
 		glGenFramebuffers(1, &fboID);
 		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
-		glGenRenderbuffers(1, &depthBufferID);
-		glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBufferID);
 
 		if (targetTexture == nullptr)
 		{
@@ -48,6 +44,11 @@ namespace ArtificialNature {
 		targetTexture->Bind();
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, targetTexture->GetTextureID(), 0);
+
+		glGenRenderbuffers(1, &depthBufferID);
+		glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBufferID);
 
 		//GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -79,10 +80,12 @@ namespace ArtificialNature {
 	void HeFrameBufferObject::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
+		targetTexture->Bind();
 	}
 
 	void HeFrameBufferObject::Unbind()
 	{
+		targetTexture->Unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

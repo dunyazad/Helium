@@ -5,8 +5,8 @@
 
 namespace ArtificialNature {
 
-	HeScene::HeScene(const string& name)
-		: HeObject(name)
+	HeScene::HeScene(const string& name, HeGraphics* graphics)
+		: HeObject(name), graphics(graphics)
 	{
 		rootNode = new HeSceneNode("Root Node", this);
 	}
@@ -51,4 +51,8 @@ namespace ArtificialNature {
 		return pNode;
 	}
 
+	HeSceneNode* HeScene::GetSceneNode(const string& name)
+	{
+		return rootNode->GetSceneNode(name);
+	}
 }

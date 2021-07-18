@@ -31,7 +31,7 @@ namespace ArtificialNature {
 	{
 		if (scenes.count(sceneName) == 0)
 		{
-			scenes[sceneName] = new HeScene(sceneName);
+			scenes[sceneName] = new HeScene(sceneName, graphics);
 		}
 
 		return scenes[sceneName];

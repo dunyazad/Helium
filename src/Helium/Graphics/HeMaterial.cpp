@@ -35,7 +35,7 @@ namespace ArtificialNature {
 
 			if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
 			{
-				glDepthMask(GL_FALSE);
+				//glDepthMask(GL_FALSE);
 			}
 		}
 	}
@@ -46,7 +46,7 @@ namespace ArtificialNature {
 		{
 			if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
 			{
-				glDepthMask(GL_TRUE);
+				//glDepthMask(GL_TRUE);
 			}
 
 			texture->Unbind();

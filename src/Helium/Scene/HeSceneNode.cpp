@@ -3,12 +3,13 @@
 #include <Helium/Scene/HeScene.h>
 #include <Helium/Scene/HeCamera.h>
 
+#include <Helium/Graphics/HeGraphics.h>
 #include <Helium/Graphics/Geometry/Geometry.h>
 
 namespace ArtificialNature {
 
-	HeSceneNode::HeSceneNode(const string& name, HeScene* rootNode)
-		: HeObject(name)
+	HeSceneNode::HeSceneNode(const string& name, HeScene* scene)
+		: HeObject(name), scene(scene)
 	{
 	}
 
@@ -52,58 +53,85 @@ namespace ArtificialNature {
 		scene->GetRootNode()->AddChild(child);
 	}
 
-	void HeSceneNode::Update(float dt)
+	HeSceneNode* HeSceneNode::GetSceneNode(const string& name)
 	{
-		for (auto& callback : onPreupdateCallbacks)
+		if (GetName() == name)
 		{
-			callback->t(this, dt);
+			return this;
 		}
-
-		if (parentNode != nullptr) {
-			absolutePosition = parentNode->absolutePosition + parentNode->absoluteRotation * localPosition;
-			absoluteRotation = parentNode->absoluteRotation * localRotation;
-			absoluteScale = parentNode->absoluteScale * localScale;
-		}
-		else {
-			absolutePosition = localPosition;
-			absoluteRotation = localRotation;
-			absoluteScale = localScale;
-		}
-
-		glm::mat4 model = glm::toMat4(absoluteRotation);
-		model[3][0] = absolutePosition.x;
-		model[3][1] = absolutePosition.y;
-		model[3][2] = absolutePosition.z;
-		glm::mat4 scaleM = glm::identity<glm::mat4>();
-		scaleM[0][0] = absoluteScale.x;
-		scaleM[1][1] = absoluteScale.y;
-		scaleM[2][2] = absoluteScale.z;
-		absoluteTransform = model * scaleM;
 
 		for (auto& child : childNodes)
 		{
-			child->Update(dt);
+			auto result = child->GetSceneNode(name);
+			if (result != nullptr)
+			{
+				return result;
+			}
 		}
 
-		for (auto& callback : onPostupdateCallbacks)
+		return nullptr;
+	}
+
+	void HeSceneNode::Update(float dt)
+	{
+		if (active == true)
 		{
-			callback->t(this, dt);
+			for (auto& callback : onPreupdateCallbacks)
+			{
+				callback->t(this, dt);
+			}
+
+			if (parentNode != nullptr) {
+				absolutePosition = parentNode->absolutePosition + parentNode->absoluteRotation * localPosition;
+				absoluteRotation = parentNode->absoluteRotation * localRotation;
+				absoluteScale = parentNode->absoluteScale * localScale;
+			}
+			else {
+				absolutePosition = localPosition;
+				absoluteRotation = localRotation;
+				absoluteScale = localScale;
+			}
+
+			glm::mat4 model = glm::toMat4(absoluteRotation);
+			model[3][0] = absolutePosition.x;
+			model[3][1] = absolutePosition.y;
+			model[3][2] = absolutePosition.z;
+			glm::mat4 scaleM = glm::identity<glm::mat4>();
+			scaleM[0][0] = absoluteScale.x;
+			scaleM[1][1] = absoluteScale.y;
+			scaleM[2][2] = absoluteScale.z;
+			absoluteTransform = model * scaleM;
+
+			for (auto& child : childNodes)
+			{
+				child->Update(dt);
+			}
+
+			for (auto& callback : onPostupdateCallbacks)
+			{
+				callback->t(this, dt);
+			}
 		}
 	}
 
 	void HeSceneNode::Render(HeCamera* camera)
 	{
-		for (auto& geometry : geometries)
+		if (active == true)
 		{
-			if (geometry != nullptr)
+			for (auto& geometry : geometries)
 			{
-				geometry->Draw(camera->GetProjectionMatrix(), camera->GetViewMatrix(), absoluteTransform);
-			}
-		}
+				if (geometry != nullptr)
+				{
+					//geometry->Draw(camera->GetProjectionMatrix(), camera->GetViewMatrix(), absoluteTransform);
 
-		for (auto& child : childNodes)
-		{
-			child->Render(camera);
+					GetScene()->GetGraphics()->RegisterRenderList(geometry, camera->GetProjectionMatrix(), camera->GetViewMatrix(), absoluteTransform);
+				}
+			}
+
+			for (auto& child : childNodes)
+			{
+				child->Render(camera);
+			}
 		}
 	}
 
