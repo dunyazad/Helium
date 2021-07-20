@@ -37,6 +37,9 @@ using namespace std;
 
 
 
+#include <ft2build.h>
+#include FT_FREETYPE_H 
+
 void _CheckGLError(const char* file, int line);
 #define CheckGLError() _CheckGLError(__FILE__, __LINE__)
 

@@ -206,6 +206,16 @@ namespace ArtificialNature {
 		return images[name];
 	}
 
+	HeFontImage* HeGraphics::GetFontImage(const string& name, const string& fontFilePath)
+	{
+		if (images.count(name) == 0)
+		{
+			images[name] = new HeFontImage(name, fontFilePath);
+		}
+
+		return dynamic_cast<HeFontImage*>(images[name]);
+	}
+
 	HeCanvasImage* HeGraphics::GetCanvasImage(const string& name, int width, int height)
 	{
 		if (images.count(name) == 0)

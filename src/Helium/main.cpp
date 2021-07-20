@@ -20,13 +20,14 @@ using namespace ArtificialNature;
 //     #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-
 //// Standard Headers
 //#include <cstdio>
 //#include <cstdlib>
 
 const int mWidth = 1600;
 const int mHeight = 800;
+
+
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -48,6 +49,7 @@ int main(int argc, char* argv[]) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
@@ -70,6 +72,13 @@ int main(int argc, char* argv[]) {
 
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
+
+
+
+    glEnable(GL_MULTISAMPLE);
+
+
+
 
 
     Helium helium("helium");
@@ -391,6 +400,11 @@ int main(int argc, char* argv[]) {
 
 
 
+    //{
+    //    auto pFont = gGraphics->GetFontImage("Font", "../../res/fonts/arial.ttf");
+    //    pFont->Initialize();
+    //}
+
 
 #pragma region [NanoVG]
     NVGcontext* vg = NULL;
@@ -401,9 +415,9 @@ int main(int argc, char* argv[]) {
     glfwGetFramebufferSize(mWindow, &fbWidth, &fbHeight);
     float pxRatio = (float)fbWidth / (float)fbHeight;
 
-    nvgCreateFont(vg, "sans", "../../res/font/Roboto-Regular.ttf");
-    nvgCreateFont(vg, "sans-bold", "../../res/font/Roboto-Bold.ttf");
-    nvgCreateFont(vg, "malgun", "../../res/font/malgun.ttf");
+    nvgCreateFont(vg, "sans", "../../res/fonts/Roboto-Regular.ttf");
+    nvgCreateFont(vg, "sans-bold", "../../res/fonts/Roboto-Bold.ttf");
+    nvgCreateFont(vg, "malgun", "../../res/fonts/malgun.ttf");
 #pragma endregion
 
     auto lastTime = HeTime::Now();
@@ -419,6 +433,7 @@ int main(int argc, char* argv[]) {
         glClearColor(1, 1, 1, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
         nvgBeginFrame(vg, mWidth, mHeight, pxRatio);
+
 
         float x = 20;
         float y = 20;

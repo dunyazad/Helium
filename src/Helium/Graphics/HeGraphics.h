@@ -16,6 +16,7 @@ namespace ArtificialNature {
 	class HeCanvasTexture;
 	class HeCubemapTexture;
 	class HeImage;
+	class HeFontImage;
 	class HeCanvasImage;
 	class HeFrameBufferObject;
 
@@ -42,6 +43,7 @@ namespace ArtificialNature {
 		HeCubemapTexture* GetCubemapTexture(const string& name, const vector<HeImage*>& images);
 
 		HeImage* GetImage(const string& name, const string& filePath, bool verticalFlip = true);
+		HeFontImage* GetFontImage(const string& name, const string& fontFilePath);
 		HeCanvasImage* GetCanvasImage(const string& name, int width, int height);
 
 		HeFrameBufferObject* GetFrameBuffer(const string& name);

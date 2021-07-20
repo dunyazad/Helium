@@ -97,6 +97,7 @@
     <ClCompile Include="Graphics\HeShader.cpp" />
     <ClCompile Include="Graphics\HeVertexArrayObject.cpp" />
     <ClCompile Include="Graphics\Image\HeCanvasImage.cpp" />
+    <ClCompile Include="Graphics\Image\HeFontImage.cpp" />
     <ClCompile Include="Graphics\Image\HeImage.cpp" />
     <ClCompile Include="Graphics\stb_image.cpp" />
     <ClCompile Include="Graphics\Texture\HeCanvasTexture.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="Graphics\HeVertexArrayObject.h" />
     <ClInclude Include="Graphics\HeVertexBufferObject.hpp" />
     <ClInclude Include="Graphics\Image\HeCanvasImage.h" />
+    <ClInclude Include="Graphics\Image\HeFontImage.h" />
     <ClInclude Include="Graphics\Image\HeImage.h" />
     <ClInclude Include="Graphics\Image\Image.h" />
     <ClInclude Include="Graphics\Texture\HeCanvasTexture.h" />

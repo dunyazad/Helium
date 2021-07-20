@@ -76,6 +76,9 @@
     <ClCompile Include="Graphics\Texture\HeCubemapTexture.cpp">
       <Filter>Graphics\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Image\HeFontImage.cpp">
+      <Filter>Graphics\Image</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -165,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Texture\HeCubemapTexture.h">
       <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Image\HeFontImage.h">
+      <Filter>Graphics\Image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
