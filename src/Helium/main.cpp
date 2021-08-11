@@ -400,11 +400,55 @@ int main(int argc, char* argv[]) {
 
 
 
-    //{
-    //    auto pFont = gGraphics->GetFontImage("Font", "../../res/fonts/arial.ttf");
-    //    pFont->Initialize();
-    //}
+    {
+        auto pFont = gGraphics->GetFontImage("Font", "../../res/fonts/arial.ttf");
+        pFont->Initialize();
+    }
 
+
+    {
+        auto pNode = pScene->CreateSceneNode("Gizmo Node");
+
+#pragma region [Lines]
+        auto pLines = gGraphics->GetGeometryThickLines("Debug");
+        pLines->Initialize();
+        pLines->SetThickness(1);
+        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+        pNode->AddGeometry(pLines);
+
+        pLines->AddVertex(glm::vec3(0, 0, 0));
+        pLines->AddVertex(glm::vec3(10, 30, 0));
+        pLines->AddVertex(glm::vec3(10, 30, 0));
+        pLines->AddVertex(glm::vec3(30, 10, 0));
+
+#define Curve(a, b, c, t) (1 - t) * (1 - t) * a + 2 * t * (1 - t) * b + t * t * c
+
+        for (int i = 1; i < 100; i++) {
+            float a = (float)i / 100.0f;
+            float b = 1.0f - (float)i / 100.0f;
+            pLines->AddVertex(glm::vec3(
+                Curve(0, 10, 30, (float)(i - 1) / 100),
+                Curve(0, 30, 10, (float)(i - 1) / 100),
+                Curve(0, 0, 0, (float)(i - 1) / 100)));
+
+            pLines->AddColor(glm::vec4(1, 1, 1, 1));
+
+            pLines->AddVertex(glm::vec3(
+                Curve(0, 10, 30, (float)i / 100),
+                Curve(0, 30, 10, (float)i / 100),
+                Curve(0, 0, 0, (float)i / 100)));
+
+            pLines->AddColor(glm::vec4(1, 1, 1, 1));
+        }
+
+        auto pMaterial = gGraphics->GetMaterial("Debug Materials");
+
+        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        pMaterial->SetShader(pShader);
+
+        pLines->SetMaterial(pMaterial);
+#pragma endregion
+    }
 
 #pragma region [NanoVG]
     NVGcontext* vg = NULL;
