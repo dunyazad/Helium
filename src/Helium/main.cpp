@@ -63,6 +63,7 @@ int main(int argc, char* argv[]) {
     // Create Context and Load OpenGL Functions
     glfwMakeContextCurrent(mWindow);
     //glfwSwapInterval(1); // Enable vsync
+    glfwSwapInterval(0); // Disable vsync
 
     glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
     glfwSetKeyCallback(mWindow, key_callback);
@@ -465,9 +466,21 @@ int main(int argc, char* argv[]) {
 #pragma endregion
 
     auto lastTime = HeTime::Now();
+    double accTime = 0.0;
+    int frameCount = 0;
+    int fps = 0;
     while (glfwWindowShouldClose(mWindow) == false) {
         auto delta = HeTime::DeltaMili(lastTime);
         lastTime = HeTime::Now();
+
+        accTime += delta;
+        frameCount++;
+        if (accTime >= 1000.0)
+        {
+            accTime -= 1000.0;
+            fps = frameCount;
+            frameCount = 0;
+        }
 
         pFrameBuffer->Bind();
 
@@ -481,7 +494,7 @@ int main(int argc, char* argv[]) {
 
         float x = 20;
         float y = 20;
-        float w = 200;
+        float w = 400;
         float h = 35;
 
         nvgBeginPath(vg);
@@ -495,12 +508,12 @@ int main(int argc, char* argv[]) {
 
         nvgFontFace(vg, "malgun");
 
-        char str[64];
+        char str[1024];
 
         nvgFontSize(vg, 15.0f);
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
         nvgFillColor(vg, nvgRGBA(240, 240, 240, 255));
-        sprintf(str, "%.6f Miliseconds", delta);
+        sprintf(str, "%d FPS  %.6f Miliseconds", fps, delta);
         nvgText(vg, x + w - 3, y + 3, str, NULL);
 
         nvgEndFrame(vg);
