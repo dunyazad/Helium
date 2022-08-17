@@ -79,6 +79,15 @@
       <Filter>Graphics\Image</Filter>
     </ClCompile>
     <ClCompile Include="nanovg.c" />
+    <ClCompile Include="Graphics\Geometry\HeTriangleSoupGeometry.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\HeFile.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\HeResourceIO.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -171,6 +180,15 @@
     </ClInclude>
     <ClInclude Include="Graphics\Image\HeFontImage.h">
       <Filter>Graphics\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Geometry\HeTriangleSoupGeometry.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\HeFile.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\HeResourceIO.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

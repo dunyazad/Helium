@@ -34,8 +34,9 @@ using namespace std;
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/intersect.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
-
+#include <tinyply/tinyply.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H 

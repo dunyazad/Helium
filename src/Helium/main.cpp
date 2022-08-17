@@ -93,200 +93,200 @@ int main(int argc, char* argv[]) {
     pCameraManipulator = &manipulator;
     pScene->SetMainCamera(pCamera);
 
-    {
-        auto pNode = pScene->CreateSceneNode("Cube Node");
-        
-        float angle = 0.0;
-        auto callback = pNode->AddOnPreupdate(
-            [&angle](HeSceneNode* pNode, float dt) {
-                angle += dt * 0.001f;
-                pNode->SetLocalRotation(glm::angleAxis((float)angle, glm::vec3(0, 1, 0)));
-            });
-
-        auto pGeometry = gGraphics->GetGeometry("Cube");
-        pNode->AddGeometry(pGeometry);
-        pGeometry->Initialize();
-
-        #pragma region [Cube]
-#pragma region [Cube Vertices]
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
-
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
-
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
-
-        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
-        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
-#pragma endregion
-
-#pragma region [Cube Colors]
-        pGeometry->AddColor(glm::vec4(0.583f, 0.771f, 0.014f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.609f, 0.115f, 0.436f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.327f, 0.483f, 0.844f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.822f, 0.569f, 0.201f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.435f, 0.602f, 0.223f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.310f, 0.747f, 0.185f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.597f, 0.770f, 0.761f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.559f, 0.436f, 0.730f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.359f, 0.583f, 0.152f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.483f, 0.596f, 0.789f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.559f, 0.861f, 0.639f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.195f, 0.548f, 0.859f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.014f, 0.184f, 0.576f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.771f, 0.328f, 0.970f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.406f, 0.615f, 0.116f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.676f, 0.977f, 0.133f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.971f, 0.572f, 0.833f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.140f, 0.616f, 0.489f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.997f, 0.513f, 0.064f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.945f, 0.719f, 0.592f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.543f, 0.021f, 0.978f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.279f, 0.317f, 0.505f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.167f, 0.620f, 0.077f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.347f, 0.857f, 0.137f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.055f, 0.953f, 0.042f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.714f, 0.505f, 0.345f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.783f, 0.290f, 0.734f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.722f, 0.645f, 0.174f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.302f, 0.455f, 0.848f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.225f, 0.587f, 0.040f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.517f, 0.713f, 0.338f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.053f, 0.959f, 0.120f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.393f, 0.621f, 0.362f, 1.0f));
-
-        pGeometry->AddColor(glm::vec4(0.673f, 0.211f, 0.457f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.820f, 0.883f, 0.371f, 1.0f));
-        pGeometry->AddColor(glm::vec4(0.982f, 0.099f, 0.879f, 1.0f));
-#pragma endregion
-
-#pragma region [Cube UVs]
-        pGeometry->AddUV(glm::vec2(0.000059f, 1.0f - 0.000004f));
-        pGeometry->AddUV(glm::vec2(0.000103f, 1.0f - 0.336048f));
-        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
-
-        pGeometry->AddUV(glm::vec2(1.000023f, 1.0f - 0.000013f));
-        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
-        pGeometry->AddUV(glm::vec2(0.999958f, 1.0f - 0.336064f));
-
-        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
-        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
-        pGeometry->AddUV(glm::vec2(0.667969f, 1.0f - 0.671889f));
-
-        pGeometry->AddUV(glm::vec2(1.000023f, 1.0f - 0.000013f));
-        pGeometry->AddUV(glm::vec2(0.668104f, 1.0f - 0.000013f));
-        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
-
-        pGeometry->AddUV(glm::vec2(0.000059f, 1.0f - 0.000004f));
-        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
-        pGeometry->AddUV(glm::vec2(0.336098f, 1.0f - 0.000071f));
-
-        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
-        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
-        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
-
-        pGeometry->AddUV(glm::vec2(1.000004f, 1.0f - 0.671847f));
-        pGeometry->AddUV(glm::vec2(0.999958f, 1.0f - 0.336064f));
-        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
-
-        pGeometry->AddUV(glm::vec2(0.668104f, 1.0f - 0.000013f));
-        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
-        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
-
-        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
-        pGeometry->AddUV(glm::vec2(0.668104f, 1.0f - 0.000013f));
-        pGeometry->AddUV(glm::vec2(0.336098f, 1.0f - 0.000071f));
-
-        pGeometry->AddUV(glm::vec2(0.000103f, 1.0f - 0.336048f));
-        pGeometry->AddUV(glm::vec2(0.000004f, 1.0f - 0.671870f));
-        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
-
-        pGeometry->AddUV(glm::vec2(0.000103f, 1.0f - 0.336048f));
-        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
-        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
-
-        pGeometry->AddUV(glm::vec2(0.667969f, 1.0f - 0.671889f));
-        pGeometry->AddUV(glm::vec2(1.000004f, 1.0f - 0.671847f));
-        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
-#pragma endregion
-
-#pragma region [Cube Indices]
-        for (GLuint i = 0; i < 36; i++)
-        {
-            pGeometry->AddIndex(i);
-        }
-#pragma endregion
-
-#pragma region [Cube Material]
-        auto pMaterial = gGraphics->GetMaterial("Cube Material");
-
-        // Colored
-        //HeShader shader("../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
-        //material.SetShader(&shader);
-
-        // Textured
-        auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
-        pMaterial->SetShader(pShader);
-
-        auto pImage = gGraphics->GetImage("dice image", "../../res/img/dice.png");
-        pImage->Initialize();
-        auto pTexture = gGraphics->GetTexture("dice texture", pImage);
-        pTexture->Initialize();
-
-        pMaterial->SetTexture(pTexture);
-
-        pGeometry->SetMaterial(pMaterial);
-#pragma endregion
-#pragma endregion
-    }
+//    {
+//        auto pNode = pScene->CreateSceneNode("Cube Node");
+//        
+//        float angle = 0.0;
+//        auto callback = pNode->AddOnPreupdate(
+//            [&angle](HeSceneNode* pNode, float dt) {
+//                angle += dt * 0.001f;
+//                pNode->SetLocalRotation(glm::angleAxis((float)angle, glm::vec3(0, 1, 0)));
+//            });
+//
+//        auto pGeometry = gGraphics->GetGeometry("Cube");
+//        pNode->AddGeometry(pGeometry);
+//        pGeometry->Initialize();
+//
+//        #pragma region [Cube]
+//#pragma region [Cube Vertices]
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, -1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, -1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, -1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
+//
+//        pGeometry->AddVertex(glm::vec3(1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(-1.0f, 1.0f, 1.0f));
+//        pGeometry->AddVertex(glm::vec3(1.0f, -1.0f, 1.0f));
+//#pragma endregion
+//
+//#pragma region [Cube Colors]
+//        pGeometry->AddColor(glm::vec4(0.583f, 0.771f, 0.014f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.609f, 0.115f, 0.436f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.327f, 0.483f, 0.844f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.822f, 0.569f, 0.201f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.435f, 0.602f, 0.223f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.310f, 0.747f, 0.185f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.597f, 0.770f, 0.761f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.559f, 0.436f, 0.730f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.359f, 0.583f, 0.152f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.483f, 0.596f, 0.789f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.559f, 0.861f, 0.639f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.195f, 0.548f, 0.859f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.014f, 0.184f, 0.576f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.771f, 0.328f, 0.970f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.406f, 0.615f, 0.116f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.676f, 0.977f, 0.133f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.971f, 0.572f, 0.833f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.140f, 0.616f, 0.489f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.997f, 0.513f, 0.064f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.945f, 0.719f, 0.592f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.543f, 0.021f, 0.978f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.279f, 0.317f, 0.505f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.167f, 0.620f, 0.077f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.347f, 0.857f, 0.137f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.055f, 0.953f, 0.042f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.714f, 0.505f, 0.345f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.783f, 0.290f, 0.734f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.722f, 0.645f, 0.174f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.302f, 0.455f, 0.848f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.225f, 0.587f, 0.040f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.517f, 0.713f, 0.338f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.053f, 0.959f, 0.120f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.393f, 0.621f, 0.362f, 1.0f));
+//
+//        pGeometry->AddColor(glm::vec4(0.673f, 0.211f, 0.457f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.820f, 0.883f, 0.371f, 1.0f));
+//        pGeometry->AddColor(glm::vec4(0.982f, 0.099f, 0.879f, 1.0f));
+//#pragma endregion
+//
+//#pragma region [Cube UVs]
+//        pGeometry->AddUV(glm::vec2(0.000059f, 1.0f - 0.000004f));
+//        pGeometry->AddUV(glm::vec2(0.000103f, 1.0f - 0.336048f));
+//        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
+//
+//        pGeometry->AddUV(glm::vec2(1.000023f, 1.0f - 0.000013f));
+//        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
+//        pGeometry->AddUV(glm::vec2(0.999958f, 1.0f - 0.336064f));
+//
+//        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
+//        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
+//        pGeometry->AddUV(glm::vec2(0.667969f, 1.0f - 0.671889f));
+//
+//        pGeometry->AddUV(glm::vec2(1.000023f, 1.0f - 0.000013f));
+//        pGeometry->AddUV(glm::vec2(0.668104f, 1.0f - 0.000013f));
+//        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
+//
+//        pGeometry->AddUV(glm::vec2(0.000059f, 1.0f - 0.000004f));
+//        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
+//        pGeometry->AddUV(glm::vec2(0.336098f, 1.0f - 0.000071f));
+//
+//        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
+//        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
+//        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
+//
+//        pGeometry->AddUV(glm::vec2(1.000004f, 1.0f - 0.671847f));
+//        pGeometry->AddUV(glm::vec2(0.999958f, 1.0f - 0.336064f));
+//        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
+//
+//        pGeometry->AddUV(glm::vec2(0.668104f, 1.0f - 0.000013f));
+//        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
+//        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
+//
+//        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
+//        pGeometry->AddUV(glm::vec2(0.668104f, 1.0f - 0.000013f));
+//        pGeometry->AddUV(glm::vec2(0.336098f, 1.0f - 0.000071f));
+//
+//        pGeometry->AddUV(glm::vec2(0.000103f, 1.0f - 0.336048f));
+//        pGeometry->AddUV(glm::vec2(0.000004f, 1.0f - 0.671870f));
+//        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
+//
+//        pGeometry->AddUV(glm::vec2(0.000103f, 1.0f - 0.336048f));
+//        pGeometry->AddUV(glm::vec2(0.336024f, 1.0f - 0.671877f));
+//        pGeometry->AddUV(glm::vec2(0.335973f, 1.0f - 0.335903f));
+//
+//        pGeometry->AddUV(glm::vec2(0.667969f, 1.0f - 0.671889f));
+//        pGeometry->AddUV(glm::vec2(1.000004f, 1.0f - 0.671847f));
+//        pGeometry->AddUV(glm::vec2(0.667979f, 1.0f - 0.335851f));
+//#pragma endregion
+//
+//#pragma region [Cube Indices]
+//        for (GLuint i = 0; i < 36; i++)
+//        {
+//            pGeometry->AddIndex(i);
+//        }
+//#pragma endregion
+//
+//#pragma region [Cube Material]
+//        auto pMaterial = gGraphics->GetMaterial("Cube Material");
+//
+//        // Colored
+//        //HeShader shader("../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+//        //material.SetShader(&shader);
+//
+//        // Textured
+//        auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+//        pMaterial->SetShader(pShader);
+//
+//        auto pImage = gGraphics->GetImage("dice image", "../../res/img/dice.png");
+//        pImage->Initialize();
+//        auto pTexture = gGraphics->GetTexture("dice texture", pImage);
+//        pTexture->Initialize();
+//
+//        pMaterial->SetTexture(pTexture);
+//
+//        pGeometry->SetMaterial(pMaterial);
+//#pragma endregion
+//#pragma endregion
+//    }
 
     {
         auto pNode = pScene->CreateSceneNode("Gizmo Node");
@@ -329,33 +329,48 @@ int main(int argc, char* argv[]) {
     }
 
     {
-        auto pNode = pScene->CreateSceneNode("Plane");
-        pPlane = pNode;
-        auto pGeometry = gGraphics->GetGeometryPlane("Plane.Geometry", mWidth * 0.1, mHeight * 0.1, 100, 100, HePlaneType::XY);
-        //pGeometry->SetFillMode(HeGeometry::Wireframe);
-        pGeometry->Initialize();
+        //auto geometry = HeResourceLoader::LoadPLY("../../res/pointcloud/room_with_normal.ply", false);
+        auto pNode = pScene->CreateSceneNode("TriangleSoup");
+        auto pGeometry = HeResourceIO::ReadPoints(gGraphics, "Points", "../../res/pointcloud/room.points");
+
         pNode->AddGeometry(pGeometry);
 
-        auto pMaterial = gGraphics->GetMaterial("Plane Material");
-        pGeometry->SetMaterial(pMaterial);
+        auto pMaterial = gGraphics->GetMaterial("TriangleSoup Materials");
 
-        auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
         pMaterial->SetShader(pShader);
 
-        //auto pImage = gGraphics->GetImage("owl image", "../../res/img/Owl.jpg");
-        //auto pImage = gGraphics->GetImage("awesomeface image", "../../res/img/awesomeface.png");
-        auto pImage = gGraphics->GetCanvasImage("Canvas Image", 512, 512);
-        pImage->Initialize();
-     
-        ////auto pTexture = gGraphics->GetTexture("Owl Texture", pImage);
-        //auto pTexture = gGraphics->GetTexture("awesomeface Texture", pImage);
-        //pTexture->Initialize();
-        //pMaterial->SetTexture(pTexture);
-
-        auto pTexture = gGraphics->GetCanvasTexture("Canvas Texture", pImage);
-        pTexture->Initialize();
-        pMaterial->SetTexture(pTexture);
+        pGeometry->SetMaterial(pMaterial);
     }
+
+    //{
+    //    auto pNode = pScene->CreateSceneNode("Plane");
+    //    pPlane = pNode;
+    //    auto pGeometry = gGraphics->GetGeometryPlane("Plane.Geometry", mWidth * 0.1, mHeight * 0.1, 100, 100, HePlaneType::XY);
+    //    //pGeometry->SetFillMode(HeGeometry::Wireframe);
+    //    pGeometry->Initialize();
+    //    pNode->AddGeometry(pGeometry);
+
+    //    auto pMaterial = gGraphics->GetMaterial("Plane Material");
+    //    pGeometry->SetMaterial(pMaterial);
+
+    //    auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+    //    pMaterial->SetShader(pShader);
+
+    //    //auto pImage = gGraphics->GetImage("owl image", "../../res/img/Owl.jpg");
+    //    //auto pImage = gGraphics->GetImage("awesomeface image", "../../res/img/awesomeface.png");
+    //    auto pImage = gGraphics->GetCanvasImage("Canvas Image", 512, 512);
+    //    pImage->Initialize();
+    // 
+    //    ////auto pTexture = gGraphics->GetTexture("Owl Texture", pImage);
+    //    //auto pTexture = gGraphics->GetTexture("awesomeface Texture", pImage);
+    //    //pTexture->Initialize();
+    //    //pMaterial->SetTexture(pTexture);
+
+    //    auto pTexture = gGraphics->GetCanvasTexture("Canvas Texture", pImage);
+    //    pTexture->Initialize();
+    //    pMaterial->SetTexture(pTexture);
+    //}
 
     {
         auto pNode = pScene->CreateSceneNode("Skybox");
@@ -395,7 +410,7 @@ int main(int argc, char* argv[]) {
 
     auto pFrameBuffer = gGraphics->GetFrameBuffer("FrameBuffer", mWidth, mHeight);
     pFrameBuffer->Initialize();
-    (*pPlane->GetGeometries().begin())->GetMaterial()->SetTexture(pFrameBuffer->GetTargetTexture());
+    //(*pPlane->GetGeometries().begin())->GetMaterial()->SetTexture(pFrameBuffer->GetTargetTexture());
 
     framebuffer_size_callback(mWindow, mWidth, mHeight);
 
@@ -407,63 +422,63 @@ int main(int argc, char* argv[]) {
     }
 
 
-    {
-        auto pNode = pScene->CreateSceneNode("Gizmo Node");
+//    {
+//        auto pNode = pScene->CreateSceneNode("Gizmo Node");
+//
+//#pragma region [Lines]
+//        auto pLines = gGraphics->GetGeometryThickLines("Debug");
+//        pLines->Initialize();
+//        pLines->SetThickness(1);
+//        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+//        pNode->AddGeometry(pLines);
+//
+//        pLines->AddVertex(glm::vec3(0, 0, 0));
+//        pLines->AddVertex(glm::vec3(10, 30, 0));
+//        pLines->AddVertex(glm::vec3(10, 30, 0));
+//        pLines->AddVertex(glm::vec3(30, 10, 0));
+//
+//#define Curve(a, b, c, t) (1 - t) * (1 - t) * a + 2 * t * (1 - t) * b + t * t * c
+//
+//        for (int i = 1; i < 100; i++) {
+//            float a = (float)i / 100.0f;
+//            float b = 1.0f - (float)i / 100.0f;
+//            pLines->AddVertex(glm::vec3(
+//                Curve(0, 10, 30, (float)(i - 1) / 100),
+//                Curve(0, 30, 10, (float)(i - 1) / 100),
+//                Curve(0, 0, 0, (float)(i - 1) / 100)));
+//
+//            pLines->AddColor(glm::vec4(1, 1, 1, 1));
+//
+//            pLines->AddVertex(glm::vec3(
+//                Curve(0, 10, 30, (float)i / 100),
+//                Curve(0, 30, 10, (float)i / 100),
+//                Curve(0, 0, 0, (float)i / 100)));
+//
+//            pLines->AddColor(glm::vec4(1, 1, 1, 1));
+//        }
+//
+//        auto pMaterial = gGraphics->GetMaterial("Debug Materials");
+//
+//        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+//        pMaterial->SetShader(pShader);
+//
+//        pLines->SetMaterial(pMaterial);
+//#pragma endregion
+//    }
 
-#pragma region [Lines]
-        auto pLines = gGraphics->GetGeometryThickLines("Debug");
-        pLines->Initialize();
-        pLines->SetThickness(1);
-        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-        pNode->AddGeometry(pLines);
-
-        pLines->AddVertex(glm::vec3(0, 0, 0));
-        pLines->AddVertex(glm::vec3(10, 30, 0));
-        pLines->AddVertex(glm::vec3(10, 30, 0));
-        pLines->AddVertex(glm::vec3(30, 10, 0));
-
-#define Curve(a, b, c, t) (1 - t) * (1 - t) * a + 2 * t * (1 - t) * b + t * t * c
-
-        for (int i = 1; i < 100; i++) {
-            float a = (float)i / 100.0f;
-            float b = 1.0f - (float)i / 100.0f;
-            pLines->AddVertex(glm::vec3(
-                Curve(0, 10, 30, (float)(i - 1) / 100),
-                Curve(0, 30, 10, (float)(i - 1) / 100),
-                Curve(0, 0, 0, (float)(i - 1) / 100)));
-
-            pLines->AddColor(glm::vec4(1, 1, 1, 1));
-
-            pLines->AddVertex(glm::vec3(
-                Curve(0, 10, 30, (float)i / 100),
-                Curve(0, 30, 10, (float)i / 100),
-                Curve(0, 0, 0, (float)i / 100)));
-
-            pLines->AddColor(glm::vec4(1, 1, 1, 1));
-        }
-
-        auto pMaterial = gGraphics->GetMaterial("Debug Materials");
-
-        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        pMaterial->SetShader(pShader);
-
-        pLines->SetMaterial(pMaterial);
-#pragma endregion
-    }
-
-#pragma region [NanoVG]
-    NVGcontext* vg = NULL;
-    //vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_DEBUG);
-    vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-
-    int fbWidth, fbHeight;
-    glfwGetFramebufferSize(mWindow, &fbWidth, &fbHeight);
-    float pxRatio = (float)fbWidth / (float)fbHeight;
-
-    nvgCreateFont(vg, "sans", "../../res/fonts/Roboto-Regular.ttf");
-    nvgCreateFont(vg, "sans-bold", "../../res/fonts/Roboto-Bold.ttf");
-    nvgCreateFont(vg, "malgun", "../../res/fonts/malgun.ttf");
-#pragma endregion
+//#pragma region [NanoVG]
+//    NVGcontext* vg = NULL;
+//    //vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_DEBUG);
+//    vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+//
+//    int fbWidth, fbHeight;
+//    glfwGetFramebufferSize(mWindow, &fbWidth, &fbHeight);
+//    float pxRatio = (float)fbWidth / (float)fbHeight;
+//
+//    nvgCreateFont(vg, "sans", "../../res/fonts/Roboto-Regular.ttf");
+//    nvgCreateFont(vg, "sans-bold", "../../res/fonts/Roboto-Bold.ttf");
+//    nvgCreateFont(vg, "malgun", "../../res/fonts/malgun.ttf");
+//#pragma endregion
 
     auto lastTime = HeTime::Now();
     double accTime = 0.0;
@@ -484,40 +499,40 @@ int main(int argc, char* argv[]) {
 
         pFrameBuffer->Bind();
 
-#pragma region [NanoVG]
-        glViewport(0, 0, pFrameBuffer->GetWidth(), pFrameBuffer->GetHeight());
-
-        glClearColor(1, 1, 1, 0.1f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        nvgBeginFrame(vg, mWidth, mHeight, pxRatio);
-
-
-        float x = 20;
-        float y = 20;
-        float w = 400;
-        float h = 35;
-
-        nvgBeginPath(vg);
-        nvgRect(vg, x, y, w, h);
-        nvgFillColor(vg, nvgRGBA(0, 0, 0, 128));
-        nvgFill(vg);
-
-        nvgLineTo(vg, x + w, y + h);
-        nvgFillColor(vg, nvgRGBA(255, 192, 0, 128));
-        nvgFill(vg);
-
-        nvgFontFace(vg, "malgun");
-
-        char str[1024];
-
-        nvgFontSize(vg, 15.0f);
-        nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
-        nvgFillColor(vg, nvgRGBA(240, 240, 240, 255));
-        sprintf(str, "%d FPS  %.6f Miliseconds", fps, delta);
-        nvgText(vg, x + w - 3, y + 3, str, NULL);
-
-        nvgEndFrame(vg);
-#pragma endregion
+//#pragma region [NanoVG]
+//        glViewport(0, 0, pFrameBuffer->GetWidth(), pFrameBuffer->GetHeight());
+//
+//        glClearColor(1, 1, 1, 0.1f);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        nvgBeginFrame(vg, mWidth, mHeight, pxRatio);
+//
+//
+//        float x = 20;
+//        float y = 20;
+//        float w = 400;
+//        float h = 35;
+//
+//        nvgBeginPath(vg);
+//        nvgRect(vg, x, y, w, h);
+//        nvgFillColor(vg, nvgRGBA(0, 0, 0, 128));
+//        nvgFill(vg);
+//
+//        nvgLineTo(vg, x + w, y + h);
+//        nvgFillColor(vg, nvgRGBA(255, 192, 0, 128));
+//        nvgFill(vg);
+//
+//        nvgFontFace(vg, "malgun");
+//
+//        char str[1024];
+//
+//        nvgFontSize(vg, 15.0f);
+//        nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
+//        nvgFillColor(vg, nvgRGBA(240, 240, 240, 255));
+//        sprintf(str, "%d FPS  %.6f Miliseconds", fps, delta);
+//        nvgText(vg, x + w - 3, y + 3, str, NULL);
+//
+//        nvgEndFrame(vg);
+//#pragma endregion
 
         pFrameBuffer->Unbind();
 
@@ -529,7 +544,8 @@ int main(int argc, char* argv[]) {
         glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        pScene->GetSceneNode("Plane")->SetActive(true);
+        //pScene->GetSceneNode("Plane")->SetActive(true);
+
         pScene->Update((float)delta);
         pScene->Render();
 

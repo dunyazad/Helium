@@ -98,6 +98,12 @@ namespace ArtificialNature {
 			return true;
 		}
 
+		void SetElements(const vector<T>& input)
+		{
+			elements.resize(input.size());
+			memcpy(&elements[0], &input[0], sizeof(T) * input.size());
+		}
+
 		void Upload()
 		{
 			if (elements.size() == 0)

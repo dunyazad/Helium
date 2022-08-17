@@ -1,3 +1,4 @@
+#define TINYPLY_IMPLEMENTATION
 #include <Helium/Core/HeliumCommon.h>
 
 void _CheckGLError(const char* file, int line)

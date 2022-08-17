@@ -76,9 +76,19 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
+	void HeGeometry::SetVertices(const vector<glm::vec3>& vertices)
+	{
+		vbo->SetElements(vertices);
+	}
+
 	const glm::vec3& HeGeometry::GetVertex(int index)
 	{
 		return vbo->GetElement(index);
+	}
+
+	size_t HeGeometry::GetVertexCount()
+	{
+		return vbo->Size();
 	}
 
 	void HeGeometry::AddIndex(GLuint index)
@@ -94,6 +104,11 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
+	size_t HeGeometry::GetIndexCount()
+	{
+		return ibo->Size();
+	}
+
 	void HeGeometry::AddColor(const glm::vec4& color)
 	{
 		cbo->AddElement(color);
@@ -107,6 +122,11 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
+	size_t HeGeometry::GetColorsCount()
+	{
+		return cbo->Size();
+	}
+
 	void HeGeometry::AddUV(const glm::vec2& uv)
 	{
 		uvbo->AddElement(uv);
@@ -118,6 +138,11 @@ namespace ArtificialNature {
 	{
 		if (uvbo->SetElement(index, uv) == true)
 			dirty = true;
+	}
+
+	size_t HeGeometry::GetUVCount()
+	{
+		return uvbo->Size();
 	}
 
 	void HeGeometry::PreDraw(HeCamera* camera)

@@ -21,16 +21,21 @@ namespace ArtificialNature {
 
 		void AddVertex(const glm::vec3& vertex);
 		void SetVertex(int index, const glm::vec3& vertex);
+		void SetVertices(const vector<glm::vec3>& vertices);
 		const glm::vec3& GetVertex(int index);
+		size_t GetVertexCount();
 
 		void AddIndex(GLuint index);
 		void SetIndex(int index, GLuint vertexIndex);
+		size_t GetIndexCount();
 
 		void AddColor(const glm::vec4& color);
 		void SetColor(int index, const glm::vec4& color);
+		size_t GetColorsCount();
 
 		void AddUV(const glm::vec2& uv);
 		void SetUV(int index, const glm::vec2& uv);
+		size_t GetUVCount();
 
 		virtual void PreDraw(HeCamera* camera);
 		virtual void Draw(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);

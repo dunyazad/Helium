@@ -116,6 +116,16 @@ namespace ArtificialNature {
 		return dynamic_cast<HeThickLines*>(geometries[name]);
 	}
 
+	HeTriangleSoupGeometry* HeGraphics::GetGeometryTriangleSoup(const string& name)
+	{
+		if (geometries.count(name) == 0)
+		{
+			geometries[name] = new HeTriangleSoupGeometry(name);
+		}
+
+		return dynamic_cast<HeTriangleSoupGeometry*>(geometries[name]);
+	}
+
 	HeShader* HeGraphics::GetShader(const string& name)
 	{
 		if (shaders.count(name) != 0)
@@ -257,14 +267,19 @@ namespace ArtificialNature {
 
 	void HeGraphics::RegisterRenderList(HeGeometry* geometry, const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
 	{
-		auto texture = geometry->GetMaterial()->GetTexture();
-		if (texture != nullptr) {
-			if (texture->HasAlpha())
-			{
-				transparentRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+		auto material = geometry->GetMaterial();
+		if (material != nullptr)
+		{
+			auto texture = material->GetTexture();
+			if (texture != nullptr) {
+				if (texture->HasAlpha())
+				{
+					transparentRenderInfos.push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+				}
 			}
+	
+			opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
 		}
-		opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
 	}
 
 	void HeGraphics::Flush()
@@ -280,13 +295,11 @@ namespace ArtificialNature {
 		}
 		opaqueRenderInfos.clear();
 
-		for (auto& kvp : transparentRenderInfos)
+		sort(transparentRenderInfos.begin(), transparentRenderInfos.end(), RenderInfoLess());
+
+		for (auto& ri : transparentRenderInfos)
 		{
-			for (const auto& ri : kvp.second)
-			{
-				ri.geometry->Draw(ri.projection, ri.view, ri.model);
-			}
-			kvp.second.clear();
+			ri.geometry->Draw(ri.projection, ri.view, ri.model);
 		}
 		transparentRenderInfos.clear();
 	}

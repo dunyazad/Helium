@@ -9,6 +9,7 @@ namespace ArtificialNature {
 	class HePlaneGeometry;
 	class HeSkyboxGeometry;
 	class HeThickLines;
+	class HeTriangleSoupGeometry;
 
 	class HeShader;
 	class HeMaterial;
@@ -30,6 +31,7 @@ namespace ArtificialNature {
 		HePlaneGeometry* GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
 		HeSkyboxGeometry* GetSkyboxGeometry(const string& name);
 		HeThickLines* GetGeometryThickLines(const string& name);
+		HeTriangleSoupGeometry* GetGeometryTriangleSoup(const string& name);
 
 		HeShader* GetShader(const string& name);
 		HeShader* GetShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);
@@ -72,7 +74,13 @@ namespace ArtificialNature {
 				: geometry(geometry), material(material), projection(projection), view(view), model(model) {}
 		};
 
+		struct RenderInfoLess {
+			inline bool operator() (const RenderInfo& a, const RenderInfo& b) {
+				return glm::distance2(glm::vec3(a.view[3]), glm::vec3(a.model[3])) < glm::distance2(glm::vec3(b.view[3]), glm::vec3(b.model[3]));
+			}
+		};
+
 		map<HeTexture*, vector<RenderInfo>> opaqueRenderInfos;
-		map<HeTexture*, vector<RenderInfo>> transparentRenderInfos;
+		vector<RenderInfo> transparentRenderInfos;
 	};
 }

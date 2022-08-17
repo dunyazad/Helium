@@ -83,13 +83,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\glad.c" />
+    <ClCompile Include="Core\HeFile.cpp" />
     <ClCompile Include="Core\HeliumCommon.cpp" />
     <ClCompile Include="Core\HeObject.cpp" />
+    <ClCompile Include="Core\HeResourceIO.cpp" />
     <ClCompile Include="Core\HeTime.cpp" />
     <ClCompile Include="Graphics\Geometry\HeGeometry.cpp" />
     <ClCompile Include="Graphics\Geometry\HePlaneGeometry.cpp" />
     <ClCompile Include="Graphics\Geometry\HeSkyboxGeometry.cpp" />
     <ClCompile Include="Graphics\Geometry\HeThickLines.cpp" />
+    <ClCompile Include="Graphics\Geometry\HeTriangleSoupGeometry.cpp" />
     <ClCompile Include="Graphics\HeFrameBufferObject.cpp" />
     <ClCompile Include="Graphics\HeGraphics.cpp" />
     <ClCompile Include="Graphics\HeIndexBufferObject.cpp" />
@@ -113,14 +116,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Core\HeFile.h" />
     <ClInclude Include="Core\HeliumCommon.h" />
     <ClInclude Include="Core\HeObject.h" />
+    <ClInclude Include="Core\HeResourceIO.h" />
     <ClInclude Include="Core\HeTime.h" />
     <ClInclude Include="Graphics\Geometry\Geometry.h" />
     <ClInclude Include="Graphics\Geometry\HeGeometry.h" />
     <ClInclude Include="Graphics\Geometry\HePlaneGeometry.h" />
     <ClInclude Include="Graphics\Geometry\HeSkyboxGeometry.h" />
     <ClInclude Include="Graphics\Geometry\HeThickLines.h" />
+    <ClInclude Include="Graphics\Geometry\HeTriangleSoupGeometry.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\HeFrameBufferObject.h" />
     <ClInclude Include="Graphics\HeGraphics.h" />
