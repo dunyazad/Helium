@@ -22,3 +22,78 @@ void _CheckGLError(const char* file, int line)
 
     return;
 }
+
+namespace ArtificialNature {
+
+	ostream& operator << (ostream& o, const glm::vec2& v)
+	{
+		return o << v.x << " " << v.y;
+	}
+
+	ostream& operator << (ostream& o, const glm::vec3& v)
+	{
+		return o << v.x << " " << v.y << " " << v.z;
+	}
+
+	int safe_stoi(const string& input)
+	{
+		if (input.empty())
+		{
+			return INT_MAX;
+		}
+		else
+		{
+			return stoi(input);
+		}
+	}
+
+	float safe_stof(const string& input)
+	{
+		if (input.empty())
+		{
+			return FLT_MAX;
+		}
+		else
+		{
+			return stof(input);
+		}
+	}
+
+	vector<string> split(const string& input, const string& delimiters, bool includeEmptyString)
+	{
+		vector<string> result;
+		string piece;
+		for (auto c : input)
+		{
+			bool contains = false;
+			for (auto d : delimiters)
+			{
+				if (d == c)
+				{
+					contains = true;
+					break;
+				}
+			}
+
+			if (contains == false)
+			{
+				piece += c;
+			}
+			else
+			{
+				if (includeEmptyString || piece.empty() == false)
+				{
+					result.push_back(piece);
+					piece.clear();
+				}
+			}
+		}
+		if (piece.empty() == false)
+		{
+			result.push_back(piece);
+		}
+
+		return result;
+	}
+
+}

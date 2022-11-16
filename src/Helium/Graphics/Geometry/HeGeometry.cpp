@@ -13,6 +13,7 @@ namespace ArtificialNature {
 	{
 		vao = new HeVertexArrayObject();
 		vbo = new HeVertexBufferObject<glm::vec3>(HeVertexBufferObject<glm::vec3>::BufferType::VERTEX_BUFFER);
+		vnbo = new HeVertexBufferObject<glm::vec3>(HeVertexBufferObject<glm::vec3>::BufferType::NORMAL_BUFFER);
 		ibo = new HeVertexBufferObject<GLuint>(HeVertexBufferObject<GLuint>::BufferType::INDEX_BUFFER);
 		cbo = new HeVertexBufferObject<glm::vec4>(HeVertexBufferObject<glm::vec4>::BufferType::COLOR_BUFFER);
 		uvbo = new HeVertexBufferObject<glm::vec2>(HeVertexBufferObject<glm::vec2>::BufferType::UV_BUFFER);
@@ -22,6 +23,7 @@ namespace ArtificialNature {
 	{
 		HeDelete(vao);
 		HeDelete(vbo);
+		HeDelete(vnbo);
 		HeDelete(ibo);
 		HeDelete(cbo);
 		HeDelete(uvbo);
@@ -33,6 +35,8 @@ namespace ArtificialNature {
 		vao->Bind();
 
 		vbo->Initialize(0);
+
+		vnbo->Initialize(3);
 
 		ibo->Initialize(-1);
 
@@ -49,6 +53,9 @@ namespace ArtificialNature {
 
 		vbo->Unbind();
 		vbo->Terminate();
+
+		vnbo->Unbind();
+		vnbo->Terminate();
 
 		ibo->Unbind();
 		ibo->Terminate();
@@ -91,6 +98,44 @@ namespace ArtificialNature {
 		return vbo->Size();
 	}
 
+	void HeGeometry::ClearVertices()
+	{
+		vbo->Clear();
+	}
+
+	void HeGeometry::AddNormal(const glm::vec3& normal)
+	{
+		vnbo->AddElement(normal);
+
+		dirty = true;
+	}
+
+	void HeGeometry::SetNormal(int index, const glm::vec3& normal)
+	{
+		if (vnbo->SetElement(index, normal) == true)
+			dirty = true;
+	}
+
+	void HeGeometry::SetNormals(const vector<glm::vec3>& normals)
+	{
+		vnbo->SetElements(normals);
+	}
+
+	const glm::vec3& HeGeometry::GetNormal(int index)
+	{
+		return vnbo->GetElement(index);
+	}
+
+	size_t HeGeometry::GetNormalCount()
+	{
+		return vnbo->Size();
+	}
+
+	void HeGeometry::ClearNormals()
+	{
+		vnbo->Clear();
+	}
+
 	void HeGeometry::AddIndex(GLuint index)
 	{
 		ibo->AddElement(index);
@@ -104,9 +149,19 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
+	GLuint HeGeometry::GetIndex(int at)
+	{
+		return ibo->GetElement(at);
+	}
+
 	size_t HeGeometry::GetIndexCount()
 	{
 		return ibo->Size();
+	}
+
+	void HeGeometry::ClearIndices()
+	{
+		ibo->Clear();
 	}
 
 	void HeGeometry::AddColor(const glm::vec4& color)
@@ -127,6 +182,11 @@ namespace ArtificialNature {
 		return cbo->Size();
 	}
 
+	void HeGeometry::ClearColors()
+	{
+		cbo->Clear();
+	}
+
 	void HeGeometry::AddUV(const glm::vec2& uv)
 	{
 		uvbo->AddElement(uv);
@@ -140,9 +200,19 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
+	const glm::vec2& HeGeometry::GetUV(int index)
+	{
+		return uvbo->GetElement(index);
+	}
+
 	size_t HeGeometry::GetUVCount()
 	{
 		return uvbo->Size();
+	}
+
+	void HeGeometry::ClearUVs()
+	{
+		uvbo->Clear();
 	}
 
 	void HeGeometry::PreDraw(HeCamera* camera)
@@ -160,6 +230,7 @@ namespace ArtificialNature {
 		vao->Bind();
 
 		if(vbo->Size() > 0) vbo->Bind();
+		if(vnbo->Size() > 0) vnbo->Bind();
 		if(ibo->Size() > 0) ibo->Bind();
 		if(cbo->Size() > 0) cbo->Bind();
 		if(uvbo->Size() > 0) uvbo->Bind();

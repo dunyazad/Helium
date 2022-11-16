@@ -24,18 +24,31 @@ namespace ArtificialNature {
 		void SetVertices(const vector<glm::vec3>& vertices);
 		const glm::vec3& GetVertex(int index);
 		size_t GetVertexCount();
+		void ClearVertices();
+
+		void AddNormal(const glm::vec3& normal);
+		void SetNormal(int index, const glm::vec3& normal);
+		void SetNormals(const vector<glm::vec3>& normals);
+		const glm::vec3& GetNormal(int index);
+		size_t GetNormalCount();
+		void ClearNormals();
 
 		void AddIndex(GLuint index);
 		void SetIndex(int index, GLuint vertexIndex);
+		GLuint GetIndex(int at);
 		size_t GetIndexCount();
+		void ClearIndices();
 
 		void AddColor(const glm::vec4& color);
 		void SetColor(int index, const glm::vec4& color);
 		size_t GetColorsCount();
+		void ClearColors();
 
 		void AddUV(const glm::vec2& uv);
 		void SetUV(int index, const glm::vec2& uv);
+		const glm::vec2& GetUV(int index);
 		size_t GetUVCount();
+		void ClearUVs();
 
 		virtual void PreDraw(HeCamera* camera);
 		virtual void Draw(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
@@ -62,6 +75,7 @@ namespace ArtificialNature {
 		HeMaterial* material = nullptr;
 		HeVertexArrayObject* vao;
 		HeVertexBufferObject<glm::vec3>* vbo;
+		HeVertexBufferObject<glm::vec3>* vnbo;
 		HeVertexBufferObject<GLuint>* ibo;
 		HeVertexBufferObject<glm::vec4>* cbo;
 		HeVertexBufferObject<glm::vec2>* uvbo;

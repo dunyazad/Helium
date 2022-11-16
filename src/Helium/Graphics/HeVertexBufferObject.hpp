@@ -8,7 +8,7 @@ namespace ArtificialNature {
 	class HeVertexBufferObject
 	{
 	public:
-		enum BufferType { VERTEX_BUFFER, INDEX_BUFFER, COLOR_BUFFER, UV_BUFFER };
+		enum BufferType { VERTEX_BUFFER, NORMAL_BUFFER, INDEX_BUFFER, COLOR_BUFFER, UV_BUFFER };
 
 	public:
 		HeVertexBufferObject(BufferType bufferType)
@@ -73,6 +73,7 @@ namespace ArtificialNature {
 		}
 
 		inline size_t Size() { return elements.size(); }
+		inline void Clear() { elements.clear(); }
 
 		void AddElement(const T& element)
 		{
@@ -84,6 +85,11 @@ namespace ArtificialNature {
 		const T& GetElement(int index)
 		{
 			return elements[index];
+		}
+
+		const vector<T>& GetElements() const
+		{
+			return elements;
 		}
 
 		bool SetElement(int index, const T& element)

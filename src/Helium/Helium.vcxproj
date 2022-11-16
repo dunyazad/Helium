@@ -57,6 +57,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -72,6 +73,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -93,10 +95,13 @@
     <ClCompile Include="Graphics\Geometry\HeSkyboxGeometry.cpp" />
     <ClCompile Include="Graphics\Geometry\HeThickLines.cpp" />
     <ClCompile Include="Graphics\Geometry\HeTriangleSoupGeometry.cpp" />
+    <ClCompile Include="Graphics\HeAABB.cpp" />
     <ClCompile Include="Graphics\HeFrameBufferObject.cpp" />
+    <ClCompile Include="Graphics\HeFrustum.cpp" />
     <ClCompile Include="Graphics\HeGraphics.cpp" />
     <ClCompile Include="Graphics\HeIndexBufferObject.cpp" />
     <ClCompile Include="Graphics\HeMaterial.cpp" />
+    <ClCompile Include="Graphics\HePlane.cpp" />
     <ClCompile Include="Graphics\HeShader.cpp" />
     <ClCompile Include="Graphics\HeVertexArrayObject.cpp" />
     <ClCompile Include="Graphics\Image\HeCanvasImage.cpp" />
@@ -128,10 +133,13 @@
     <ClInclude Include="Graphics\Geometry\HeThickLines.h" />
     <ClInclude Include="Graphics\Geometry\HeTriangleSoupGeometry.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\HeAABB.h" />
     <ClInclude Include="Graphics\HeFrameBufferObject.h" />
+    <ClInclude Include="Graphics\HeFrustum.h" />
     <ClInclude Include="Graphics\HeGraphics.h" />
     <ClInclude Include="Graphics\HeIndexBufferObject.h" />
     <ClInclude Include="Graphics\HeMaterial.h" />
+    <ClInclude Include="Graphics\HePlane.h" />
     <ClInclude Include="Graphics\HeShader.h" />
     <ClInclude Include="Graphics\HeVertexArrayObject.h" />
     <ClInclude Include="Graphics\HeVertexBufferObject.hpp" />

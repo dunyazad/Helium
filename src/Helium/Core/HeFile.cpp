@@ -182,9 +182,9 @@ namespace ArtificialNature {
 		return (fstream&)((*m_pFileStream) >> data);
 	}
 
-	fstream& HeFile::operator >> (char* data)
-	{
-		return (fstream&)((*m_pFileStream) >> data);
-	}
+	//fstream& HeFile::operator >> (char* data)
+	//{
+	//	return (fstream&)((*m_pFileStream) >> data);
+	//}
 
 }

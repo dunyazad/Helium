@@ -45,7 +45,7 @@ namespace ArtificialNature {
 		fstream& operator >> (float& data);
 		fstream& operator >> (double& data);
 		fstream& operator >> (string& data);
-		fstream& operator >> (char* data);
+		//fstream& operator >> (char* data);
 
 	private:
 		fstream* m_pFileStream;

@@ -48,3 +48,17 @@ void _CheckGLError(const char* file, int line);
 
 
 enum HePlaneType { XY, YX, YZ, ZY, XZ, ZX };
+
+namespace ArtificialNature {
+
+	ostream& operator << (ostream& o, const glm::vec2& v);
+
+	ostream& operator << (ostream& o, const glm::vec3& v);
+
+	int safe_stoi(const string& input);
+
+	float safe_stof(const string& input);
+
+	vector<string> split(const string& input, const string& delimiters, bool includeEmptyString = false);
+
+}

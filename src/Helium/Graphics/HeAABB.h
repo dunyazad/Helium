@@ -22,4 +22,6 @@ namespace ArtificialNature {
 		glm::vec3 vmax = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 	};
 
+	ostream& operator << (ostream& o, const HeAABB& aabb);
+
 }

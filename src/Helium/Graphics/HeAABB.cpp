@@ -1,4 +1,4 @@
-#include "HeAABB.h"
+#include <Helium/Graphics/HeAABB.h>
 
 namespace ArtificialNature {
 
@@ -14,5 +14,10 @@ namespace ArtificialNature {
 		if (v.x > vmax.x) vmax.x = v.x;
 		if (v.y > vmax.y) vmax.y = v.y;
 		if (v.z > vmax.z) vmax.z = v.z;
+	}
+
+	ostream& operator << (ostream& o, const HeAABB& aabb)
+	{
+		return o << "min:\t" << aabb.GetMin() << endl << "max:\t" << aabb.GetMax() << endl << "center:\t" << aabb.GetCenter() << endl << "size:\t" << aabb.GetSize() << endl;
 	}
 }
