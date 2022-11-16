@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Helium/Graphics/HeAABB.h>
+
 #include <Helium/Graphics/HeVertexBufferObject.hpp>
 #include <Helium/Graphics/HeIndexBufferObject.h>
 #include <Helium/Graphics/HeVertexArrayObject.h>
