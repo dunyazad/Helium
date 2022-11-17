@@ -64,8 +64,8 @@ int main(int argc, char* argv[]) {
 
     // Create Context and Load OpenGL Functions
     glfwMakeContextCurrent(mWindow);
-    //glfwSwapInterval(1); // Enable vsync
-    glfwSwapInterval(0); // Disable vsync
+    glfwSwapInterval(1); // Enable vsync
+    //glfwSwapInterval(0); // Disable vsync
 
     glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
     glfwSetKeyCallback(mWindow, key_callback);

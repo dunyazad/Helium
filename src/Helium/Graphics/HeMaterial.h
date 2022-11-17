@@ -38,6 +38,7 @@ namespace ArtificialNature {
 	protected:
 		HeShader* shader = nullptr;
 		map<string, HeTexture*> textures;
+		float textureWeights[32];
 	};
 
 }
