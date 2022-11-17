@@ -39,8 +39,7 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 HeGraphics* gGraphics = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
-HeCameraManipulatorOrbital* pCameraManipulator = nullptr;
-HeSceneNode* pPlane = nullptr;
+HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 
 HeGeometry* Flatten(HeGeometry* from, const string& name, bool asBoundingBox = false);
 
@@ -54,6 +53,8 @@ int main(int argc, char* argv[]) {
     glfwWindowHint(GLFW_SAMPLES, 4);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    //glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Window Visibility
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
     auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
 
     // Check for Valid Context
@@ -61,8 +62,10 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Failed to Create OpenGL Context");
         return EXIT_FAILURE;
     }
+    
+    //glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE); // No Window Title Bar
 
-    // Create Context and Load OpenGL Functions
+        // Create Context and Load OpenGL Functions
     glfwMakeContextCurrent(mWindow);
     glfwSwapInterval(1); // Enable vsync
     //glfwSwapInterval(0); // Disable vsync
@@ -90,7 +93,7 @@ int main(int argc, char* argv[]) {
 
     //HeOrthogonalCamera camera("Main Camera", &scene, 0, 0, mWidth, mHeight);
     pCamera = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, mWidth, mHeight);
-    HeCameraManipulatorOrbital manipulator(pCamera);
+    HeCameraManipulatorFlight manipulator(pCamera);
     pCameraManipulator = &manipulator;
     pScene->SetMainCamera(pCamera);
 
@@ -236,7 +239,8 @@ int main(int argc, char* argv[]) {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
-        glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+        //glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //pScene->GetSceneNode("Plane")->SetActive(true);
@@ -268,7 +272,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
     pCameraManipulator->OnKey(window, key, scancode, action, mods);
 
-    if (key == '1' && action == 0)
+    if (key == '1' && action == GLFW_RELEASE)
     {
         auto pGeometry = gGraphics->GetGeometry("Mesh");
         if (pGeometry != nullptr)
@@ -282,6 +286,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
                 pGeometry->SetFillMode(HeGeometry::FillMode::Fill);
             }
         }
+    }
+    else if (key == GLFW_KEY_C && action == GLFW_RELEASE)
+    {
+        auto image = gGraphics->GetCanvasImage("Capture", mWidth, mHeight);
+        image->CaptureFrame("capture.png");
     }
 }
 

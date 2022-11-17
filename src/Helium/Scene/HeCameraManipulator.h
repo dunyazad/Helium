@@ -20,10 +20,10 @@ namespace ArtificialNature {
 		HeCamera* camera;
 	};
 
-	class HeCameraManipulatorOrbital : public HeCameraManipulatorBase
+	class HeCameraManipulatorFlight : public HeCameraManipulatorBase
 	{
 	public:
-		HeCameraManipulatorOrbital(HeCamera* camera);
+		HeCameraManipulatorFlight(HeCamera* camera);
 
 		void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
 		void OnMousePosition(GLFWwindow* window, double xpos, double ypos);

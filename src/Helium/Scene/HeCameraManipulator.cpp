@@ -9,13 +9,13 @@ namespace ArtificialNature {
 	{
 	}
 
-	HeCameraManipulatorOrbital::HeCameraManipulatorOrbital(HeCamera* camera)
+	HeCameraManipulatorFlight::HeCameraManipulatorFlight(HeCamera* camera)
 		: HeCameraManipulatorBase(camera)
 	{
 		ApplyManipulation();
 	}
 
-	void HeCameraManipulatorOrbital::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
+	void HeCameraManipulatorFlight::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
@@ -78,7 +78,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCameraManipulatorOrbital::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
+	void HeCameraManipulatorFlight::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 	{
 		if (mouseRightButtonDown)
 		{
@@ -104,7 +104,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCameraManipulatorOrbital::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
+	void HeCameraManipulatorFlight::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 	{
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
@@ -144,7 +144,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCameraManipulatorOrbital::OnWheel(GLFWwindow* window, double xoffset, double yoffset)
+	void HeCameraManipulatorFlight::OnWheel(GLFWwindow* window, double xoffset, double yoffset)
 	{
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
 		{
@@ -163,7 +163,7 @@ namespace ArtificialNature {
 		ApplyManipulation();
 	}
 
-	void HeCameraManipulatorOrbital::ApplyManipulation()
+	void HeCameraManipulatorFlight::ApplyManipulation()
 	{
 		auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
 		auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));

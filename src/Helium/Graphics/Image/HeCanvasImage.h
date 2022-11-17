@@ -13,6 +13,8 @@ namespace ArtificialNature {
 		virtual void Initialize();
 		virtual void Terminate();
 
+		void CaptureFrame(const string& filepath, bool verticalFlip = true);
+
 	protected:
 		HeCanvasImage(const string& name, int width, int height);
 		~HeCanvasImage();
