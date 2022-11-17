@@ -7,7 +7,7 @@ namespace ArtificialNature {
 	HeCubemapTexture::HeCubemapTexture(const string& name, const vector<HeImage*>& images)
 		: HeTexture(name, nullptr), images(images)
 	{
-		target = GL_TEXTURE_CUBE_MAP;
+		textureTarget = GL_TEXTURE_CUBE_MAP;
 	}
 
 	HeCubemapTexture::~HeCubemapTexture()
@@ -18,15 +18,15 @@ namespace ArtificialNature {
 	{
 		glGenTextures(1, &textureID);
 
-		glBindTexture(target, textureID);
+		glBindTexture(textureTarget, textureID);
 
-		glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameterf(textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		GLfloat borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		glTexParameterfv(target, GL_TEXTURE_BORDER_COLOR, borderColor);
+		glTexParameterfv(textureTarget, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 		for (size_t i = 0; i < images.size(); i++)
 		{

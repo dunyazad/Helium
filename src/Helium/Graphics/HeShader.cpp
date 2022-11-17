@@ -65,6 +65,30 @@ namespace ArtificialNature {
 		glAttachShader(shaderProgram, fragmentShader);
 		glLinkProgram(shaderProgram);
 
+
+
+
+		//GLint count;
+		//glGetProgramiv(shaderProgram, GL_ACTIVE_UNIFORMS, &count);
+		//printf("Active Uniforms: %d\n", count);
+
+		//GLint size; // size of the variable
+		//GLenum type; // type of the variable (float, vec3 or mat4, etc)
+		//const GLsizei bufSize = 16; // maximum name length
+		//GLchar tname[bufSize]; // variable name in GLSL
+		//GLsizei length;
+
+		//for (int i = 0; i < count; i++)
+		//{
+		//	glGetActiveUniform(shaderProgram, (GLuint)i, bufSize, &length, &size, &type, tname);
+
+		//	printf("Uniform #%d Type: %u Name: %s\n", i, type, tname);
+		//}
+
+
+
+
+
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 	}
@@ -211,6 +235,13 @@ namespace ArtificialNature {
 		}
 
 		return location;
+	}
+
+	void HeShader::SetUniformInt(const string& uniformName, int i)
+	{
+		glUniform1i(GetUniformLocation(uniformName), i);
+
+		CheckGLError();
 	}
 
 	void HeShader::SetUniformFloat(const string& uniformName, float f)

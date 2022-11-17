@@ -12,12 +12,12 @@ namespace ArtificialNature {
 		virtual void Initialize();
 		virtual void Terminate();
 
-		void Bind();
+		void Bind(GLenum textureSlot = GL_TEXTURE0);
 		void Unbind();
 
 		void Resize(int width, int height);
 
-		inline GLenum GetTarget() { return target; }
+		inline GLenum GetTarget() { return textureTarget; }
 		inline GLuint GetTextureID() { return textureID; }
 
 		inline GLsizei GetWidth() { return width; }
@@ -34,7 +34,7 @@ namespace ArtificialNature {
 
 		bool withAlpha = true;
 		GLuint textureID = -1;
-		GLenum target = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_CUBE_MAP
+		GLenum textureTarget = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_CUBE_MAP
 		GLenum format = GL_RGBA;
 		GLsizei width = 0;
 		GLsizei height = 0;

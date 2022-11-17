@@ -39,19 +39,19 @@ namespace ArtificialNature {
 
 		glGenTextures(1, &textureID);
 
-		glBindTexture(target, textureID);
+		glBindTexture(textureTarget, textureID);
 
-		glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameterf(textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		GLfloat borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		glTexParameterfv(target, GL_TEXTURE_BORDER_COLOR, borderColor);
+		glTexParameterfv(textureTarget, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 		if (image == nullptr)
 		{
-			glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glTexImage2D(textureTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		}
 		else
 		{
@@ -59,11 +59,11 @@ namespace ArtificialNature {
 			{
 				if (withAlpha)
 				{
-					glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+					glTexImage2D(textureTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 				}
 				else
 				{
-					glTexImage2D(target, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+					glTexImage2D(textureTarget, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
 				}
 			}
 		}
@@ -82,15 +82,18 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeTexture::Bind()
+	void HeTexture::Bind(GLenum textureSlot)
 	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(target, textureID);
+		glActiveTexture(textureSlot);
+		CheckGLError();
+
+		glBindTexture(textureTarget, textureID);
+		CheckGLError();
 	}
 
 	void HeTexture::Unbind()
 	{
-		glBindTexture(target, 0);
+		glBindTexture(textureTarget, 0);
 	}
 
 	void HeTexture::Resize(int width, int height)
@@ -114,20 +117,20 @@ namespace ArtificialNature {
 			}
 		}
 
-		glBindTexture(target, textureID);
+		glBindTexture(textureTarget, textureID);
 
 		if (image == nullptr)
 		{
-			glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glTexImage2D(textureTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		}
 		else
 		{
 			if (textureData != nullptr) {
 				if (withAlpha) {
-					glTexImage2D(target, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+					glTexImage2D(textureTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 				}
 				else {
-					glTexImage2D(target, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+					glTexImage2D(textureTarget, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
 				}
 			}
 		}

@@ -34,9 +34,9 @@ namespace ArtificialNature {
 
 		inline const set<HeGeometry*>& GetGeometries() { return geometries; }
 
-		inline const glm::quat& GetLocalRotation() { return localRotation; }
-		inline const glm::vec3& GetLocalPosition() { return localPosition; }
-		inline const glm::vec3& GetLocalScale() { return localScale; }
+		inline const glm::quat& GetLocalRotation() const { return localRotation; }
+		inline const glm::vec3& GetLocalPosition() const { return localPosition; }
+		inline const glm::vec3& GetLocalScale() const { return localScale; }
 
 		inline void SetLocalRotation(const glm::quat& rotation) { localRotation = rotation; }
 		inline void SetLocalPosition(const glm::vec3& position) { localPosition = position; }

@@ -35,11 +35,15 @@ namespace ArtificialNature {
 		inline float GetAspectRatio() { return aspectRatio; }
 		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
 
-		inline const glm::vec3& GetTargetPosition() { return targetPosition; }
+		inline const glm::vec3& GetTargetPosition() const { return targetPosition; }
 		inline void SetTargetPosition(const glm::vec3& targetPosition) { this->targetPosition = targetPosition; }
 
 		inline const glm::mat4 GetViewMatrix() { return viewMatrix; }
 		inline const glm::mat4 GetProjectionMatrix() { return projectionMatrix; }
+
+		inline const glm::vec3& GetCameraRight() const { return glm::vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]); }
+		inline const glm::vec3& GetCameraUp() const { return glm::vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]); }
+		inline const glm::vec3& GetCameraFront() const { return -glm::vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]); }
 
 	protected:
 		HeCamera(const string& name, HeScene* scene, float viewportX, float viewportY, float viewportWidth, float viewportHeight);

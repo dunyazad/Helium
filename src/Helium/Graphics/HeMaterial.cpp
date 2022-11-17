@@ -28,29 +28,45 @@ namespace ArtificialNature {
 		shader->SetUniformMat4("view", view);
 		shader->SetUniformMat4("model", model);
 
-		if (texture)
+		int textureSlot = 0;
+		for (auto& kvp : textures)
 		{
-			texture->Bind();
-			CheckGLError();
-
-			if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
+			auto texture = kvp.second;
+			if (texture)
 			{
-				//glDepthMask(GL_FALSE);
+				stringstream ss;
+				ss << "texture" << textureSlot;
+				shader->SetUniformInt(ss.str(), textureSlot);
+				CheckGLError();
+
+				texture->Bind(GL_TEXTURE0 + textureSlot);
+				CheckGLError();
+
+				if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
+				{
+					//glDepthMask(GL_FALSE);
+				}
 			}
+
+			textureSlot++;
 		}
 	}
 
 	void HeMaterial::StopUse()
 	{
-		if (texture)
+		for (auto& kvp : textures)
 		{
-			if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
+			auto texture = kvp.second;
+			if (texture)
 			{
-				//glDepthMask(GL_TRUE);
-			}
+				if (texture->GetTarget() == GL_TEXTURE_CUBE_MAP)
+				{
+					//glDepthMask(GL_TRUE);
+				}
 
-			texture->Unbind();
-			CheckGLError();
+				texture->Unbind();
+				CheckGLError();
+			}
 		}
 	}
 }

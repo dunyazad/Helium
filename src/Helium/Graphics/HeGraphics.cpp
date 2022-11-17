@@ -270,15 +270,20 @@ namespace ArtificialNature {
 		auto material = geometry->GetMaterial();
 		if (material != nullptr)
 		{
-			auto texture = material->GetTexture();
-			if (texture != nullptr) {
-				if (texture->HasAlpha())
-				{
-					transparentRenderInfos.push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+			for (auto& kvp : material->GetTextures())
+			{
+				auto texture = kvp.second;
+				if (texture != nullptr) {
+					if (texture->HasAlpha())
+					{
+						transparentRenderInfos.push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+					}
 				}
+				
+				opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
 			}
-	
-			opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+
+			opaqueRenderInfos[nullptr].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
 		}
 	}
 

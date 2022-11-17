@@ -34,43 +34,47 @@ namespace ArtificialNature {
 			ApplyManipulation();
 		}
 
-		if (key == GLFW_KEY_W && action == GLFW_PRESS)
+		if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto& p = camera->GetLocalPosition();
-			auto& t = camera->GetTargetPosition();
+			auto front = camera->GetCameraFront();
 
-			float dist = glm::distance(t, p);
+			camera->SetLocalPosition(camera->GetLocalPosition() + front);
+			camera->SetTargetPosition(camera->GetTargetPosition() + front);
+		}
+		if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			auto front = camera->GetCameraFront();
 
-			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, 0, -1 * dist / 10));
+			camera->SetLocalPosition(camera->GetLocalPosition() - front);
+			camera->SetTargetPosition(camera->GetTargetPosition() - front);
 		}
-		if (key == GLFW_KEY_S && action == GLFW_PRESS)
+		if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto& p = camera->GetLocalPosition();
-			auto& t = camera->GetTargetPosition();
+			auto right = camera->GetCameraRight();
 
-			float dist = glm::distance(t, p);
+			camera->SetLocalPosition(camera->GetLocalPosition() - right);
+			camera->SetTargetPosition(camera->GetTargetPosition() - right);
+		}
+		if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			auto right = camera->GetCameraRight();
 
-			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, 0, 1 * dist / 10));
+			camera->SetLocalPosition(camera->GetLocalPosition() + right);
+			camera->SetTargetPosition(camera->GetTargetPosition() + right);
 		}
-		if (key == GLFW_KEY_A && action == GLFW_PRESS)
+		if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(-0.1, 0, 0));
-			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(-0.1, 0, 0));
+			auto up = camera->GetCameraUp();
+
+			camera->SetLocalPosition(camera->GetLocalPosition() + up);
+			camera->SetTargetPosition(camera->GetTargetPosition() + up);
 		}
-		if (key == GLFW_KEY_D && action == GLFW_PRESS)
+		if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0.1, 0, 0));
-			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(0.1, 0, 0));
-		}
-		if (key == GLFW_KEY_Q && action == GLFW_PRESS)
-		{
-			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, -0.1, 0));
-			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(0, -0.1, 0));
-		}
-		if (key == GLFW_KEY_E && action == GLFW_PRESS)
-		{
-			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(0, 0.1, 0));
-			camera->SetTargetPosition(camera->GetTargetPosition() + glm::vec3(0, 0.1, 0));
+			auto up = camera->GetCameraUp();
+
+			camera->SetLocalPosition(camera->GetLocalPosition() - up);
+			camera->SetTargetPosition(camera->GetTargetPosition() - up);
 		}
 	}
 

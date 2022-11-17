@@ -12,6 +12,7 @@ namespace ArtificialNature {
 		GLint GetVertexAttributeLocation(const std::string& attributeName);
 		GLint GetUniformLocation(const string& uniformName);
 
+		void SetUniformInt(const string& uniformName, int i);
 		void SetUniformFloat(const string& uniformName, float f);
 		void SetUniformVec2(const string& uniformName, const glm::vec2& v);
 		void SetUniformMat4(const string& uniformName, const glm::mat4& mat);

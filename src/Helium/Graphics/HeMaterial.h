@@ -19,12 +19,25 @@ namespace ArtificialNature {
 		inline HeShader* GetShader() { return shader; }
 		inline void SetShader(HeShader* shader) { this->shader = shader; }
 
-		inline HeTexture* GetTexture() { return texture; }
-		inline void SetTexture(HeTexture* texture) { this->texture = texture; }
+		inline HeTexture* GetTexture(const string& name) const
+		{
+			if (textures.count(name) == 0)
+			{
+				return nullptr;
+			}
+			else
+			{
+				auto texture = (*(textures.find(name))).second;
+				return texture;
+			}
+		}
+		inline void AddTexture(const string& name, HeTexture* texture) { textures[name] = texture; }
+
+		const map<string, HeTexture*>& GetTextures() { return textures; }
 
 	protected:
 		HeShader* shader = nullptr;
-		HeTexture* texture = nullptr;
+		map<string, HeTexture*> textures;
 	};
 
 }
