@@ -1,4 +1,4 @@
-#include <Helium/Graphics/HeMaterial.h>
+#include <Helium/Graphics/Material/HeMaterialMutiTexture.h>
 
 #include <Helium/Graphics/HeShader.h>
 #include <Helium/Graphics/HeShader.h>
@@ -8,9 +8,10 @@
 
 namespace ArtificialNature {
 
-	HeMaterial::HeMaterial(const string& name)
-		: HeObject(name)
+	HeMaterialMutiTexture::HeMaterialMutiTexture(const string& name)
+		: HeMaterial(name)
 	{
+		textureWeights.resize(32);
 		for (size_t i = 0; i < 32; i++)
 		{
 			textureWeights[i] = 0.0f;
@@ -18,38 +19,18 @@ namespace ArtificialNature {
 		textureWeights[0] = 1.0f;
 	}
 
-	HeMaterial::~HeMaterial()
+	HeMaterialMutiTexture::~HeMaterialMutiTexture()
 	{
 	}
 
-	int temp = 0;
-	void HeMaterial::Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
+	void HeMaterialMutiTexture::Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
 	{
 		if (shader == nullptr)
 			return;
 
-		shader->Use();
+		HeMaterial::Use(projection, view, model);
 
-		shader->SetUniformMat4("projection", projection);
-		shader->SetUniformMat4("view", view);
-		shader->SetUniformMat4("model", model);
-
-		if (temp > 60)
-		{
-			if (textureWeights[0] > 0) {
-				textureWeights[0] = 0.0f;
-				textureWeights[1] = 1.0f;
-			}
-			else {
-				textureWeights[0] = 1.0f;
-				textureWeights[1] = 0.0f;
-			}
-			temp = 0;
-		}
-		temp++;
-
-
-		shader->SetUniformFloatArray("textureWeights", textureWeights, 32);
+		shader->SetUniformFloatArray("textureWeights", textureWeights.data(), 32);
 
 		int textureSlot = 0;
 		for (auto& kvp : textures)
@@ -75,7 +56,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeMaterial::StopUse()
+	void HeMaterialMutiTexture::StopUse()
 	{
 		for (auto& kvp : textures)
 		{

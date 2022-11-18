@@ -15,15 +15,8 @@ using namespace ArtificialNature;
 
 //#pragma comment(lib, "nanovg.lib")
 
-// Reference: https://github.com/nothings/stb/blob/master/stb_image.h#L4
-// To use stb_image, add this in *one* C++ source file.
-//     #define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-
-//// Standard Headers
-//#include <cstdio>
-//#include <cstdlib>
-
+//const int mWidth = 1024;
+//const int mHeight = 1024;
 const int mWidth = 1024;
 const int mHeight = 1024;
 
@@ -38,13 +31,14 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
 //void processInput(GLFWwindow* window);
 
 HeGraphics* gGraphics = nullptr;
-HePerspectiveCamera* pCamera = nullptr;
-HeCameraManipulatorFlight* pCameraManipulator = nullptr;
+HeOrthogonalCamera* pCamera = nullptr;
+//HeCameraManipulatorFlight* pCameraManipulator = nullptr;
+HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-HeGeometry* Flatten(HeGeometry* from, const string& name, bool asBoundingBox = false);
+HeGeometry* Flatten(HeGeometry* from, const string& name, float scale, bool asBoundingBox = false);
 
-int main(int argc, char* argv[]) {
-
+int main(int argc, char* argv[])
+{
     // Load GLFW and Create a Window
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -92,11 +86,15 @@ int main(int argc, char* argv[]) {
     auto pScene = helium.GetScene("Default Scene");
 
     //HeOrthogonalCamera camera("Main Camera", &scene, 0, 0, mWidth, mHeight);
-    pCamera = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, mWidth, mHeight);
-    HeCameraManipulatorFlight manipulator(pCamera);
+    //pCamera = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, mWidth, mHeight);
+    pCamera = pScene->CreateOrthogonalCamera("Main Camera", 0, 0, mWidth, mHeight);
+    //HeCameraManipulatorFlight manipulator(pCamera);
+    pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+    HeCameraManipulatorOrtho manipulator(pCamera);
     pCameraManipulator = &manipulator;
     pScene->SetMainCamera(pCamera);
 
+    /*
     {
         auto pNode = pScene->CreateSceneNode("Gizmo Node");
         
@@ -136,19 +134,20 @@ int main(int argc, char* argv[]) {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         #pragma endregion
     }
+    */
 
     {
-        auto pNode = pScene->CreateSceneNode("Mesh");
+        //auto pNode = pScene->CreateSceneNode("Mesh");
         auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
-        pNode->AddGeometry(pGeometry);
+        //pNode->AddGeometry(pGeometry);
 
-        auto pMaterial = gGraphics->GetMaterial("Mesh Material");
-        pGeometry->SetMaterial(pMaterial);
+        //auto pMaterial = gGraphics->GetMaterial("Mesh Material");
+        //pGeometry->SetMaterial(pMaterial);
 
-        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
-        pMaterial->SetShader(pShader);
+        //auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+        //pMaterial->SetShader(pShader);
 
         //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
     }
@@ -157,7 +156,7 @@ int main(int argc, char* argv[]) {
         auto from = gGraphics->GetGeometry("Mesh");
         {
             auto pNode = pScene->CreateSceneNode("uvMesh");
-            auto pGeometry = Flatten(from, "uvMesh");
+            auto pGeometry = Flatten(from, "uvMesh", 1);
             pGeometry->SetFillMode(HeGeometry::Wireframe);
             pNode->AddGeometry(pGeometry);
             auto nov = pGeometry->GetVertexCount();
@@ -175,7 +174,7 @@ int main(int argc, char* argv[]) {
         
         {
             auto pNode = pScene->CreateSceneNode("bbMesh");
-            auto pGeometry = Flatten(from, "bbMesh", true);
+            auto pGeometry = Flatten(from, "bbMesh", 1.0f, true);
             pGeometry->SetFillMode(HeGeometry::Wireframe);
             pNode->AddGeometry(pGeometry);
             auto nov = pGeometry->GetVertexCount();
@@ -192,13 +191,14 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    /* Multi texture test
     {
         auto pNode = pScene->CreateSceneNode("MultiTexture");
         auto plane = gGraphics->GetGeometryPlane("MultiTexture", 1, 1, 10, 10, HePlaneType::XY);
         plane->Initialize();
         pNode->AddGeometry(plane);
 
-        auto pMaterial = gGraphics->GetMaterial("MultiTexture");
+        auto pMaterial = gGraphics->GetMaterialMutiTexture("MultiTexture");
         plane->SetMaterial(pMaterial);
 
         auto pShader = gGraphics->GetShader("MultiTexture", "../../res/shader/mutiTexture.vs", "../../res/shader/mutiTexture.fs");
@@ -215,6 +215,18 @@ int main(int argc, char* argv[]) {
         auto texture1 = gGraphics->GetTexture("texture1", image1);
         texture1->Initialize();
         pMaterial->AddTexture("texture1", texture1);
+    }
+    */
+
+    {
+        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+
+        for (auto& frame : project.GetFrames())
+        {
+            cout << frame->frameIndex << endl;
+            frame->LoadColorImage(gGraphics);
+            cout << frame->GetColorImage() << endl;
+        }
     }
 
     auto lastTime = HeTime::Now();
@@ -270,7 +282,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    pCameraManipulator->OnKey(window, key, scancode, action, mods);
+    if (pCameraManipulator != nullptr)
+    {
+        pCameraManipulator->OnKey(window, key, scancode, action, mods);
+    }
 
     if (key == '1' && action == GLFW_RELEASE)
     {
@@ -296,51 +311,39 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    pCameraManipulator->OnMousePosition(window, xpos, ypos);
-
-    //if (firstMouse)
-    //{
-    //    lastX = xpos;
-    //    lastY = ypos;
-    //    firstMouse = false;
-    //}
-
-    //float xoffset = xpos - lastX;
-    //float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-    //lastX = xpos;
-    //lastY = ypos;
-
-    //float sensitivity = 0.1f; // change this value to your liking
-    //xoffset *= sensitivity;
-    //yoffset *= sensitivity;
-
-    //yaw += xoffset;
-    //pitch += yoffset;
-
-    //// make sure that when pitch is out of bounds, screen doesn't get flipped
-    //if (pitch > 89.0f)
-    //    pitch = 89.0f;
-    //if (pitch < -89.0f)
-    //    pitch = -89.0f;
-
-    //glm::vec3 front;
-    //front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    //front.y = sin(glm::radians(pitch));
-    //front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    //cameraFront = glm::normalize(front);
+    if (pCameraManipulator != nullptr)
+    {
+        pCameraManipulator->OnMousePosition(window, xpos, ypos);
+    }
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    pCameraManipulator->OnMouseButton(window, button, action, mods);
+    if (pCameraManipulator != nullptr)
+    {
+        pCameraManipulator->OnMouseButton(window, button, action, mods);
+    }
 }
 
 void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    pCameraManipulator->OnWheel(window, xoffset, yoffset);
+    if (pCameraManipulator != nullptr)
+    {
+        pCameraManipulator->OnWheel(window, xoffset, yoffset);
+    }
 }
 
-HeGeometry* Flatten(HeGeometry* from, const string& name, bool asBoundingBox)
+//struct FlatteningInfo
+//{
+//    int faceIndex = -1;
+//    float sizeX = 0.0f;
+//    float sizeY = 0.0f;
+//    glm::vec2 normalizedUV0;
+//    glm::vec2 normalizedUV1;
+//    glm::vec2 normalizedUV2;
+//};
+
+HeGeometry* Flatten(HeGeometry* from, const string& name, float scale, bool asBoundingBox)
 {
     auto uvMesh = gGraphics->GetGeometryTriangleSoup(name);
     uvMesh->Initialize();
@@ -354,9 +357,9 @@ HeGeometry* Flatten(HeGeometry* from, const string& name, bool asBoundingBox)
     auto nof = from->GetIndexCount() / 3;
     for (size_t i = 0; i < nof; i++)
     {
-        auto vi0 = from->GetIndex(i * 3);
-        auto vi1 = from->GetIndex(i * 3 + 1);
-        auto vi2 = from->GetIndex(i * 3 + 2);
+        auto vi0 = from->GetIndex((int)i * 3);
+        auto vi1 = from->GetIndex((int)i * 3 + 1);
+        auto vi2 = from->GetIndex((int)i * 3 + 2);
 
         auto& v0 = from->GetVertex(vi0);
         auto& v1 = from->GetVertex(vi1);
@@ -383,9 +386,9 @@ HeGeometry* Flatten(HeGeometry* from, const string& name, bool asBoundingBox)
         auto tv1 = rotation * (v1 - fc);
         auto tv2 = rotation * (v2 - fc);
 
-        auto stv0 = glm::vec3(tv0.x * 100, tv0.y * 100, 0);
-        auto stv1 = glm::vec3(tv1.x * 100, tv1.y * 100, 0);
-        auto stv2 = glm::vec3(tv2.x * 100, tv2.y * 100, 0);
+        auto stv0 = glm::vec3(tv0.x * scale, tv0.y * scale, 0);
+        auto stv1 = glm::vec3(tv1.x * scale, tv1.y * scale, 0);
+        auto stv2 = glm::vec3(tv2.x * scale, tv2.y * scale, 0);
 
         HeAABB aabb;
         aabb.Extend(stv0);
@@ -411,7 +414,20 @@ HeGeometry* Flatten(HeGeometry* from, const string& name, bool asBoundingBox)
             printf("Error. size.y == -FLT_MAX\n");
         }
 
-        if (size.x + offsetX > 1024) {
+
+
+        //FlatteningInfo info;
+        //info.faceIndex = i;
+        //info.sizeX = aabb.GetSize().x;
+        //info.sizeY = aabb.GetSize().y;
+        //info.normalizedUV0 = stv0;
+        //info.normalizedUV1 = stv1;
+        //info.normalizedUV2 = stv2;
+
+
+
+
+        if (size.x + offsetX > 1.0 * scale) {
             offsetX = 0;
             offsetY += maxY;
             maxY = 0;

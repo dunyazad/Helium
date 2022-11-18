@@ -1,7 +1,7 @@
 #include <Helium/Graphics/HeGraphics.h>
 #include <Helium/Graphics/Geometry/Geometry.h>
 #include <Helium/Graphics/HeShader.h>
-#include <Helium/Graphics/HeMaterial.h>
+#include <Helium/Graphics/Material/Material.h>
 #include <Helium/Graphics/Texture/Texture.h>
 #include <Helium/Graphics/Image/Image.h>
 #include <Helium/Graphics/HeFrameBufferObject.h>
@@ -166,6 +166,16 @@ namespace ArtificialNature {
 		return materials[name];
 	}
 
+	HeMaterialMutiTexture* HeGraphics::GetMaterialMutiTexture(const string& name)
+	{
+		if (materials.count(name) == 0)
+		{
+			materials[name] = new HeMaterialMutiTexture(name);
+		}
+
+		return dynamic_cast<HeMaterialMutiTexture*>(materials[name]);
+	}
+
 	HeTexture* HeGraphics::GetTexture(const string& name, HeImage* image)
 	{
 		if (textures.count(name) == 0)
@@ -270,19 +280,34 @@ namespace ArtificialNature {
 		auto material = geometry->GetMaterial();
 		if (material != nullptr)
 		{
-			for (auto& kvp : material->GetTextures())
-			{
-				auto texture = kvp.second;
-				if (texture != nullptr) {
-					if (texture->HasAlpha())
+			auto multiTextureMaterial = dynamic_cast<HeMaterialMutiTexture*>(material);
+			if (multiTextureMaterial != nullptr) {
+				for (auto& kvp : multiTextureMaterial->GetTextures())
+				{
+					auto texture = kvp.second;
+					if (texture != nullptr) {
+						if (texture->HasAlpha())
+						{
+							transparentRenderInfos.push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+						}
+						else
+						{
+							opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+						}
+					}
+					else
 					{
-						transparentRenderInfos.push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+						opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
 					}
 				}
-				
-				opaqueRenderInfos[texture].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
 			}
-
+			else
+			{
+				opaqueRenderInfos[nullptr].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
+			}
+		}
+		else
+		{
 			opaqueRenderInfos[nullptr].push_back(RenderInfo(geometry, geometry->GetMaterial(), projection, view, model));
 		}
 	}

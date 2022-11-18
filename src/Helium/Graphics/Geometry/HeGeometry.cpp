@@ -1,6 +1,6 @@
 #include <Helium/Graphics/Geometry/HeGeometry.h>
 
-#include <Helium/Graphics/HeMaterial.h>
+#include <Helium/Graphics/Material/Material.h>
 #include <Helium/Graphics/HeVertexArrayObject.h>
 #include <Helium/Graphics/HeVertexBufferObject.hpp>
 

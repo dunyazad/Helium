@@ -5,6 +5,7 @@
 namespace ArtificialNature {
 
 	class HeCamera;
+	class HeOrthogonalCamera;
 
 	class HeCameraManipulatorBase
 	{
@@ -20,15 +21,38 @@ namespace ArtificialNature {
 		HeCamera* camera;
 	};
 
+	class HeCameraManipulatorOrtho : public HeCameraManipulatorBase
+	{
+	public:
+		HeCameraManipulatorOrtho(HeOrthogonalCamera* camera);
+
+		virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
+		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
+		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
+		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
+
+	protected:
+		double lastMouseLeftPositionX = 0.0;
+		double lastMouseLeftPositionY = 0.0;
+		double lastMouseRightPositionX = 0.0;
+		double lastMouseRightPositionY = 0.0;
+		double lastMouseMiddlePositionX = 0.0;
+		double lastMouseMiddlePositionY = 0.0;
+
+		bool mouseLeftButtonDown = false;
+		bool mouseRightButtonDown = false;
+		bool mouseMiddleButtonDown = false;
+	};
+
 	class HeCameraManipulatorFlight : public HeCameraManipulatorBase
 	{
 	public:
 		HeCameraManipulatorFlight(HeCamera* camera);
 
-		void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
-		void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
-		void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
-		void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
+		virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
+		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
+		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
+		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
 
 		void ApplyManipulation();
 

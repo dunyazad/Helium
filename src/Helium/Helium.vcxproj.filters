@@ -14,9 +14,6 @@
     <ClCompile Include="Graphics\HeIndexBufferObject.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\HeMaterial.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\HeShader.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -97,6 +94,15 @@
     <ClCompile Include="Graphics\HeFrustum.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\HeProject.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Material\HeMaterial.cpp">
+      <Filter>Graphics\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Material\HeMaterialMutiTexture.cpp">
+      <Filter>Graphics\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium.h" />
@@ -113,9 +119,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\HeIndexBufferObject.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HeMaterial.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\HeShader.h">
@@ -208,6 +211,18 @@
     <ClInclude Include="Graphics\HeFrustum.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Core\HeProject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Material\HeMaterial.h">
+      <Filter>Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Material\HeMaterialMutiTexture.h">
+      <Filter>Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Material\Material.h">
+      <Filter>Graphics\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -227,6 +242,9 @@
     </Filter>
     <Filter Include="Graphics\Image">
       <UniqueIdentifier>{14c5fd2c-898a-44ca-ab66-0d2361b7a9e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Material">
+      <UniqueIdentifier>{802a4fff-5530-4234-8092-b4c7d4702433}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

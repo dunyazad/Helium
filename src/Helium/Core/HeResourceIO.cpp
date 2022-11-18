@@ -341,14 +341,14 @@ pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 			memcpy(header, header_string, 6);
 			fwrite(header, 80, 1, fp);
 
-			int nof = pGeometry->GetIndexCount() / 3;
+			int nof = (int)pGeometry->GetIndexCount() / 3;
 			fwrite(&nof, 4, 1, fp);
 
 			int buffer_index = 0;
 			char* buffer = new char[nof * 50];
 			memset(buffer, 0, nof * 50);
 
-			for (size_t i = 0; i < nof; i++)
+			for (int i = 0; i < nof; i++)
 			{
 				auto vi0 = pGeometry->GetIndex(i * 3);
 				auto vi1 = pGeometry->GetIndex(i * 3 + 1);
@@ -389,22 +389,22 @@ pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 
 		ss << "# MeshIO" << endl;
 
-		auto nov = pGeometry->GetVertexCount();
-		for (size_t i = 0; i < nov; i++)
+		auto nov = (int)pGeometry->GetVertexCount();
+		for (int i = 0; i < nov; i++)
 		{
 			auto& v = pGeometry->GetVertex(i);
 			ss << "v " << v << endl;
 		}
 
-		auto nouv = pGeometry->GetUVCount();
-		for (size_t i = 0; i < nouv; i++)
+		auto nouv = (int)pGeometry->GetUVCount();
+		for (int i = 0; i < nouv; i++)
 		{
 			auto& uv = pGeometry->GetUV(i);
 			ss << "vt " << uv << endl;
 		}
 
-		auto non = pGeometry->GetNormalCount();
-		for (size_t i = 0; i < non; i++)
+		auto non = (int)pGeometry->GetNormalCount();
+		for (int i = 0; i < non; i++)
 		{
 			auto& vn = pGeometry->GetNormal(i);
 			ss << "vn " << vn << endl;
@@ -413,10 +413,10 @@ pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 		bool has_uv = pGeometry->GetUVCount() != 0;
 		bool has_vn = pGeometry->GetNormalCount() != 0;
 
-		auto nof = pGeometry->GetIndexCount() / 3;
-		for (size_t i = 0; i < nof; i++)
+		auto nof = (int)pGeometry->GetIndexCount() / 3;
+		for (int i = 0; i < nof; i++)
 		{
-			GLuint face[3] = { i * 3, i * 3 + 1, i * 3 + 2 };
+			GLuint face[3] = { (GLuint)i * 3, (GLuint)i * 3 + 1, (GLuint)i * 3 + 2 };
 		
 			if (has_uv && has_vn)
 			{

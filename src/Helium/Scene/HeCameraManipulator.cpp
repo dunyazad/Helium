@@ -9,6 +9,81 @@ namespace ArtificialNature {
 	{
 	}
 
+	HeCameraManipulatorOrtho::HeCameraManipulatorOrtho(HeOrthogonalCamera* camera)
+		: HeCameraManipulatorBase(camera)
+	{
+
+	}
+
+	void HeCameraManipulatorOrtho::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, true);
+	}
+
+	void HeCameraManipulatorOrtho::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
+	{
+		if (mouseRightButtonDown)
+		{
+			auto offsetX = xpos - lastMouseRightPositionX;
+			auto offsetY = ypos - lastMouseRightPositionY;
+			lastMouseRightPositionX = xpos;
+			lastMouseRightPositionY = ypos;
+
+			camera->SetLocalPosition(camera->GetLocalPosition() + glm::vec3(-offsetX * 0.001f, offsetY * 0.001f, 0));
+		}
+	}
+
+	void HeCameraManipulatorOrtho::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		{
+			mouseLeftButtonDown = true;
+
+			lastMouseLeftPositionX = xpos;
+			lastMouseLeftPositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+		{
+			mouseLeftButtonDown = false;
+		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+		{
+			mouseRightButtonDown = true;
+
+			lastMouseRightPositionX = xpos;
+			lastMouseRightPositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+		{
+			mouseRightButtonDown = false;
+		}
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+		{
+			mouseMiddleButtonDown = true;
+
+			lastMouseMiddlePositionX = xpos;
+			lastMouseMiddlePositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+		{
+			mouseMiddleButtonDown = false;
+		}
+	}
+
+	void HeCameraManipulatorOrtho::OnWheel(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		if (yoffset < 0) {
+			camera->SetZoomFactor(camera->GetZoomFactor() * 0.5f);
+		}
+		else {
+			camera->SetZoomFactor(camera->GetZoomFactor() * 2.0f);
+		}
+	}
+
 	HeCameraManipulatorFlight::HeCameraManipulatorFlight(HeCamera* camera)
 		: HeCameraManipulatorBase(camera)
 	{

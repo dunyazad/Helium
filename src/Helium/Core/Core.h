@@ -5,3 +5,4 @@
 #include <Helium/Core/HeTime.h>
 #include <Helium/Core/HeFile.h>
 #include <Helium/Core/HeResourceIO.h>
+#include <Helium/Core/HeProject.h>

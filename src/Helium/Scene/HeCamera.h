@@ -23,6 +23,9 @@ namespace ArtificialNature {
 		float distance;
 	};*/
 
+	class HeOrthogonalCamera;
+	class HePerspectiveCamera;
+
 	class HeCamera : public HeSceneNode
 	{
 	public:
@@ -34,6 +37,9 @@ namespace ArtificialNature {
 
 		inline float GetAspectRatio() { return aspectRatio; }
 		inline void SetAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
+
+		inline float GetZoomFactor() { return zoomFactor; }
+		inline void SetZoomFactor(float zoomFactor) { this->zoomFactor = zoomFactor; }
 
 		inline const glm::vec3& GetTargetPosition() const { return targetPosition; }
 		inline void SetTargetPosition(const glm::vec3& targetPosition) { this->targetPosition = targetPosition; }

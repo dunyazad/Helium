@@ -88,6 +88,7 @@
     <ClCompile Include="Core\HeFile.cpp" />
     <ClCompile Include="Core\HeliumCommon.cpp" />
     <ClCompile Include="Core\HeObject.cpp" />
+    <ClCompile Include="Core\HeProject.cpp" />
     <ClCompile Include="Core\HeResourceIO.cpp" />
     <ClCompile Include="Core\HeTime.cpp" />
     <ClCompile Include="Graphics\Geometry\HeGeometry.cpp" />
@@ -100,13 +101,14 @@
     <ClCompile Include="Graphics\HeFrustum.cpp" />
     <ClCompile Include="Graphics\HeGraphics.cpp" />
     <ClCompile Include="Graphics\HeIndexBufferObject.cpp" />
-    <ClCompile Include="Graphics\HeMaterial.cpp" />
     <ClCompile Include="Graphics\HePlane.cpp" />
     <ClCompile Include="Graphics\HeShader.cpp" />
     <ClCompile Include="Graphics\HeVertexArrayObject.cpp" />
     <ClCompile Include="Graphics\Image\HeCanvasImage.cpp" />
     <ClCompile Include="Graphics\Image\HeFontImage.cpp" />
     <ClCompile Include="Graphics\Image\HeImage.cpp" />
+    <ClCompile Include="Graphics\Material\HeMaterial.cpp" />
+    <ClCompile Include="Graphics\Material\HeMaterialMutiTexture.cpp" />
     <ClCompile Include="Graphics\stb_image.cpp" />
     <ClCompile Include="Graphics\Texture\HeCanvasTexture.cpp" />
     <ClCompile Include="Graphics\Texture\HeCubemapTexture.cpp" />
@@ -124,6 +126,7 @@
     <ClInclude Include="Core\HeFile.h" />
     <ClInclude Include="Core\HeliumCommon.h" />
     <ClInclude Include="Core\HeObject.h" />
+    <ClInclude Include="Core\HeProject.h" />
     <ClInclude Include="Core\HeResourceIO.h" />
     <ClInclude Include="Core\HeTime.h" />
     <ClInclude Include="Graphics\Geometry\Geometry.h" />
@@ -138,7 +141,6 @@
     <ClInclude Include="Graphics\HeFrustum.h" />
     <ClInclude Include="Graphics\HeGraphics.h" />
     <ClInclude Include="Graphics\HeIndexBufferObject.h" />
-    <ClInclude Include="Graphics\HeMaterial.h" />
     <ClInclude Include="Graphics\HePlane.h" />
     <ClInclude Include="Graphics\HeShader.h" />
     <ClInclude Include="Graphics\HeVertexArrayObject.h" />
@@ -147,6 +149,9 @@
     <ClInclude Include="Graphics\Image\HeFontImage.h" />
     <ClInclude Include="Graphics\Image\HeImage.h" />
     <ClInclude Include="Graphics\Image\Image.h" />
+    <ClInclude Include="Graphics\Material\HeMaterial.h" />
+    <ClInclude Include="Graphics\Material\HeMaterialMutiTexture.h" />
+    <ClInclude Include="Graphics\Material\Material.h" />
     <ClInclude Include="Graphics\Texture\HeCanvasTexture.h" />
     <ClInclude Include="Graphics\Texture\HeCubemapTexture.h" />
     <ClInclude Include="Graphics\Texture\HeTexture.h" />
