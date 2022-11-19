@@ -61,6 +61,20 @@ namespace ArtificialNature {
 
 		~HeFrameInfo();
 
+		void LoadColorImage(HeGraphics* pGraphics);
+
+		inline int GetFrameIndex() const { return frameIndex; }
+		inline const filesystem::path& GetCameraInfoFile() const { return cameraInfoFile; }
+		inline const filesystem::path& GetDepthFile() const { return depthFile; }
+		inline const filesystem::path& GetResizedDepthFile() const { return resizedDepthFile; }
+		inline const filesystem::path& GetDepthDataFilePath() const { return depthDataFilePath; }
+		inline const filesystem::path& GetConvertedDepthFile() const { return convertedDepthFile; }
+		inline const filesystem::path& GetColorFile() const { return colorFile; }
+		inline const filesystem::path& GetResizedColorFile() const { return resizedColorFile; }
+		inline const HeCameraInfo* GetCameraInfo() const { return cameraInfo; }
+		inline HeImage* GetColorImage() const { return colorImage; }
+
+	protected:
 		HeProject* project;
 		int frameIndex;
 		filesystem::path cameraInfoFile;
@@ -71,12 +85,6 @@ namespace ArtificialNature {
 		filesystem::path colorFile;
 		filesystem::path resizedColorFile;
 		HeCameraInfo* cameraInfo;
-
-		void LoadColorImage(HeGraphics* pGraphics);
-
-		inline HeImage* GetColorImage() { return colorImage; }
-
-	protected:
 		HeImage* colorImage;
 	};
 
@@ -86,6 +94,26 @@ namespace ArtificialNature {
 		HeCameraInfo(HeFrameInfo* frameInfo, const filesystem::path& cameraInfoFile);
 
 		~HeCameraInfo();
+
+		inline int GetFrameIndex() const { return frameIndex; }
+		inline int GetImageWidth() const { return imageWidth; }
+		inline int GetImageHeight() const { return imageHeight; }
+		inline float GetFX() const { return fx; }
+		inline float GetFY() const { return fy; }
+		inline float GetOX() const { return ox; }
+		inline float GetOY() const { return oy; }
+
+		inline const glm::mat3& GetIntrinsicMatrix() const { return intrinsicMatrix; }
+		inline const glm::mat4& GetViewMatrix() const { return viewMatrix; }
+		inline const glm::mat4& GetInverseViewMatrix() const { return viewMatrixInversed; }
+		inline const glm::mat4& GetTransformMatrix() const { return transformMatrix; }
+		inline const glm::mat4& GetLocalToWorldMatrix() const { return localToWorldMatrix; }
+		inline const glm::mat4& GetExtrinsicMatrix() const { return extrinsicMatrix; }
+
+		inline const glm::vec3& GetPosition() const { return position; }
+		inline const glm::mat3& GetRotation() const { return rotation; }
+
+		inline const HeFrustum* GetFrustum() const { return frustum;}
 
 	protected:
 		int frameIndex = -1;

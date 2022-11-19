@@ -130,9 +130,9 @@ namespace ArtificialNature {
 		auto faceCount = this->GetIndexCount();
 		for (size_t i = 0; i < faceCount / 3; i++)
 		{
-			auto vi0 = this->GetIndex(i * 3);
-			auto vi1 = this->GetIndex(i * 3 + 1);
-			auto vi2 = this->GetIndex(i * 3 + 2);
+			auto vi0 = this->GetIndex(int(i * 3));
+			auto vi1 = this->GetIndex(int(i * 3 + 1));
+			auto vi2 = this->GetIndex(int(i * 3 + 2));
 
 			auto& v0 = this->GetVertex(vi0);
 			auto& v1 = this->GetVertex(vi1);

@@ -8,6 +8,7 @@ namespace ArtificialNature {
 	class HeCamera;
 	class HeVertexArrayObject;
 	template <typename T> class HeVertexBufferObject;
+	class HeAABB;
 
 	class HeGeometry : public HeObject
 	{
@@ -46,6 +47,7 @@ namespace ArtificialNature {
 
 		void AddUV(const glm::vec2& uv);
 		void SetUV(int index, const glm::vec2& uv);
+		void SetUVs(const vector<glm::vec2>& uvs);
 		const glm::vec2& GetUV(int index);
 		size_t GetUVCount();
 		void ClearUVs();
@@ -54,14 +56,16 @@ namespace ArtificialNature {
 		virtual void Draw(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
 		virtual void PostDraw(HeCamera* camera);
 
-		inline HeMaterial* GetMaterial() { return material; }
+		inline HeMaterial* GetMaterial() const { return material; }
 		inline void SetMaterial(HeMaterial* material) { this->material = material; }
 
-		inline FillMode GetFillMode() { return fillMode; }
+		inline FillMode GetFillMode() const { return fillMode; }
 		inline void SetFillMode(FillMode fillMode) { this->fillMode = fillMode; }
 
-		inline DrawingMode GetDrawingMode() { return drawingMode; }
+		inline DrawingMode GetDrawingMode() const { return drawingMode; }
 		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
+
+		inline const HeAABB* GetAABB() const { return aabb; }
 
 	protected:
 		HeGeometry(const string& name);
@@ -79,6 +83,8 @@ namespace ArtificialNature {
 		HeVertexBufferObject<GLuint>* ibo;
 		HeVertexBufferObject<glm::vec4>* cbo;
 		HeVertexBufferObject<glm::vec2>* uvbo;
+
+		HeAABB* aabb;
 
 	public:
 		friend class HeGraphics;

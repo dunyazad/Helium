@@ -35,7 +35,7 @@ HeOrthogonalCamera* pCamera = nullptr;
 //HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-HeGeometry* Flatten(HeGeometry* from, const string& name, float scale, bool asBoundingBox = false);
+HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, bool asBoundingBox = false);
 
 int main(int argc, char* argv[])
 {
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 
 
 
-    Helium helium("helium");
+    Helium helium("helium", mWidth, mHeight);
     gGraphics = helium.GetGraphics();
 
     auto pScene = helium.GetScene("Default Scene");
@@ -153,34 +153,42 @@ int main(int argc, char* argv[])
     }
 
     {
+        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+
         auto from = gGraphics->GetGeometry("Mesh");
-        {
-            auto pNode = pScene->CreateSceneNode("uvMesh");
-            auto pGeometry = Flatten(from, "uvMesh", 1);
-            pGeometry->SetFillMode(HeGeometry::Wireframe);
-            pNode->AddGeometry(pGeometry);
-            auto nov = pGeometry->GetVertexCount();
-            for (size_t i = 0; i < nov; i++)
-            {
-                pGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-            }
+        //{
+        //    auto pNode = pScene->CreateSceneNode("uvMesh");
+        //    auto pGeometry = Flatten(from, "uvMesh", 1);
+        //    //pGeometry->SetFillMode(HeGeometry::Wireframe);
+        //    pNode->AddGeometry(pGeometry);
+        //    auto nov = pGeometry->GetVertexCount();
+        //    for (size_t i = 0; i < nov; i++)
+        //    {
+        //        auto& v = pGeometry->GetVertex(i);
 
-            auto pMaterial = gGraphics->GetMaterial("vertex with color");
-            pGeometry->SetMaterial(pMaterial);
+        //        pGeometry->AddColor(glm::vec4(1, v.y / 36.0f, 0, 1));
+        //    }
 
-            auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
-            pMaterial->SetShader(pShader);
-        }
+        //    auto pMaterial = gGraphics->GetMaterial("vertex with color");
+        //    pGeometry->SetMaterial(pMaterial);
+
+        //    auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+        //    pMaterial->SetShader(pShader);
+        //}
         
         {
+            vector<glm::vec2> uvs;
+
             auto pNode = pScene->CreateSceneNode("bbMesh");
-            auto pGeometry = Flatten(from, "bbMesh", 1.0f, true);
-            pGeometry->SetFillMode(HeGeometry::Wireframe);
+            auto pGeometry = Flatten(project, from, "bbMesh", 1.0f, uvs, true);
+            //pGeometry->SetFillMode(HeGeometry::Wireframe);
             pNode->AddGeometry(pGeometry);
             auto nov = pGeometry->GetVertexCount();
             for (size_t i = 0; i < nov; i++)
             {
-                pGeometry->AddColor(glm::vec4(1, 1, 0, 1));
+                auto& v = pGeometry->GetVertex(i);
+
+                pGeometry->AddColor(glm::vec4(1, v.y / 36.0f, 0, 1));
             }
 
             auto pMaterial = gGraphics->GetMaterial("vertex with color");
@@ -188,6 +196,16 @@ int main(int argc, char* argv[])
 
             auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
             pMaterial->SetShader(pShader);
+
+            //for (auto& uv : uvs)
+            //{
+            //    cout << uv << endl;
+            //}
+
+            from->ClearUVs();
+            from->SetUVs(uvs);
+
+            HeResourceIO::WriteOBJFile(gGraphics, from->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\WithUV.obj");
         }
     }
 
@@ -217,17 +235,6 @@ int main(int argc, char* argv[])
         pMaterial->AddTexture("texture1", texture1);
     }
     */
-
-    {
-        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
-
-        for (auto& frame : project.GetFrames())
-        {
-            cout << frame->frameIndex << endl;
-            frame->LoadColorImage(gGraphics);
-            cout << frame->GetColorImage() << endl;
-        }
-    }
 
     auto lastTime = HeTime::Now();
     double accTime = 0.0;
@@ -304,8 +311,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
     else if (key == GLFW_KEY_C && action == GLFW_RELEASE)
     {
-        auto image = gGraphics->GetCanvasImage("Capture", mWidth, mHeight);
-        image->CaptureFrame("capture.png");
+        //auto image = gGraphics->GetCanvasImage("Capture", mWidth, mHeight);
+        //image->CaptureFrame("capture.png");
+
+        vector<string> fileNames;
+        for (size_t i = 0; i < 37; i++)
+        {
+            stringstream ss;
+            ss << "CaptureFileName_" << i << ".png";
+            fileNames.push_back(ss.str());
+        }
+
+        gGraphics->SerialFrameCapture(fileNames, [&](int frameNumber) {
+            pCamera->SetLocalPosition(pCamera->GetLocalPosition() + glm::vec3(0.0f, 1.0f, 0.0f));
+        });
     }
 }
 
@@ -333,26 +352,31 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
     }
 }
 
-//struct FlatteningInfo
-//{
-//    int faceIndex = -1;
-//    float sizeX = 0.0f;
-//    float sizeY = 0.0f;
-//    glm::vec2 normalizedUV0;
-//    glm::vec2 normalizedUV1;
-//    glm::vec2 normalizedUV2;
-//};
-
-HeGeometry* Flatten(HeGeometry* from, const string& name, float scale, bool asBoundingBox)
+HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, bool asBoundingBox)
 {
+    struct FlatteningInfo
+    {
+        int faceIndex = -1;
+        float sizeX = 0.0f;
+        float sizeY = 0.0f;
+        glm::vec3 v0;
+        glm::vec3 v1;
+        glm::vec3 v2;
+        glm::vec3 fn;
+        glm::vec3 fc;
+        glm::vec3 normalizedUV0;
+        glm::vec3 normalizedUV1;
+        glm::vec3 normalizedUV2;
+    };
+
+    vector<FlatteningInfo> flatteningInfos;
+
     auto uvMesh = gGraphics->GetGeometryTriangleSoup(name);
     uvMesh->Initialize();
 
     vector<HeAABB> uvBoxes;
 
-    float offsetX = 0.0f;
-    float offsetY = 0.0f;
-    float maxY = 0.0f;
+    const auto& frames = project.GetFrames();
 
     auto nof = from->GetIndexCount() / 3;
     for (size_t i = 0; i < nof; i++)
@@ -414,65 +438,103 @@ HeGeometry* Flatten(HeGeometry* from, const string& name, float scale, bool asBo
             printf("Error. size.y == -FLT_MAX\n");
         }
 
+        FlatteningInfo info;
+        HeAABB infoAABB;
+        infoAABB.Extend(stv0);
+        infoAABB.Extend(stv1);
+        infoAABB.Extend(stv2);
+        info.faceIndex = (int)i;
+        info.sizeX = infoAABB.GetSize().x;
+        info.sizeY = infoAABB.GetSize().y;
+        info.v0 = v0;
+        info.v1 = v1;
+        info.v2 = v2;
+        info.fn = fn;
+        info.fc = fc;
+        info.normalizedUV0 = stv0;
+        info.normalizedUV1 = stv1;
+        info.normalizedUV2 = stv2;
 
+        flatteningInfos.push_back(info);
+    }
 
-        //FlatteningInfo info;
-        //info.faceIndex = i;
-        //info.sizeX = aabb.GetSize().x;
-        //info.sizeY = aabb.GetSize().y;
-        //info.normalizedUV0 = stv0;
-        //info.normalizedUV1 = stv1;
-        //info.normalizedUV2 = stv2;
+    struct FlatteningInfoLess {
+        inline bool operator() (const FlatteningInfo& a, const FlatteningInfo& b) {
+            return a.sizeY < b.sizeY;
+        }
+    };
 
+    sort(flatteningInfos.begin(), flatteningInfos.end(), FlatteningInfoLess());
 
+    float offsetX = 0.0f;
+    float offsetY = 0.0f;
+    float maxY = 0.0f;
 
+    uvs.resize(flatteningInfos.size() * 3);
 
-        if (size.x + offsetX > 1.0 * scale) {
+    for (auto& info : flatteningInfos)
+    {
+        if (info.sizeX + offsetX > 1.0f * scale) {
             offsetX = 0;
             offsetY += maxY;
             maxY = 0;
         }
 
-        stv0.x += offsetX;
-        stv0.y += offsetY;
-        stv1.x += offsetX;
-        stv1.y += offsetY;
-        stv2.x += offsetX;
-        stv2.y += offsetY;
+        for (auto& frame : frames)
+        {
+            auto delta = info.fc - frame->GetCameraInfo()->GetPosition();
+        }
 
-        if (stv0.x < 0 || stv0.y < 0) {
-            cout << "Error. stv0: " << stv0 << endl;
+        info.normalizedUV0.x += offsetX;
+        info.normalizedUV0.y += offsetY;
+        info.normalizedUV1.x += offsetX;
+        info.normalizedUV1.y += offsetY;
+        info.normalizedUV2.x += offsetX;
+        info.normalizedUV2.y += offsetY;
+
+        if (info.normalizedUV0.x < 0 || info.normalizedUV0.y < 0) {
+            cout << "Error. stv0: " << info.normalizedUV0 << endl;
         }
-        if (stv1.x < 0 || stv1.y < 0) {
-            cout << "Error. stv1: " << stv1 << endl;
+        if (info.normalizedUV1.x < 0 || info.normalizedUV1.y < 0) {
+            cout << "Error. stv1: " << info.normalizedUV1 << endl;
         }
-        if (stv2.x < 0 || stv2.y < 0) {
-            cout << "Error. stv2: " << stv2 << endl;
+        if (info.normalizedUV2.x < 0 || info.normalizedUV2.y < 0) {
+            cout << "Error. stv2: " << info.normalizedUV2 << endl;
         }
+
+        auto fi = info.faceIndex;
+        auto uvi0 = fi * 3;
+        auto uvi1 = fi * 3 + 1;
+        auto uvi2 = fi * 3 + 2;
+        uvs[uvi0].x = info.normalizedUV0.x;
+        uvs[uvi0].y = info.normalizedUV0.y;
+        uvs[uvi1].x = info.normalizedUV1.x;
+        uvs[uvi1].y = info.normalizedUV1.y;
+        uvs[uvi2].x = info.normalizedUV2.x;
+        uvs[uvi2].y = info.normalizedUV2.y;
 
         if (asBoundingBox == false)
         {
-            uvMesh->AddTriangle(stv0, stv1, stv2);
+            uvMesh->AddTriangle(info.normalizedUV0, info.normalizedUV1, info.normalizedUV2);
         }
 
-        offsetX += size.x;
-        maxY = maxY < size.y ? size.y : maxY;
+        offsetX += info.sizeX;
+        maxY = maxY > info.sizeY ? maxY : info.sizeY;
 
-        if (offsetX < 0)
-        {
-            printf("Error. offsetX < 0\n");
+        if (offsetX < 0) {
+            cout << "Error. offsetX < 0" << endl;
         }
 
         if (asBoundingBox)
         {
             HeAABB tempAABB;
-            tempAABB.Extend(stv0);
-            tempAABB.Extend(stv1);
-            tempAABB.Extend(stv2);
-
+            tempAABB.Extend(info.normalizedUV0);
+            tempAABB.Extend(info.normalizedUV1);
+            tempAABB.Extend(info.normalizedUV2);
+            
             auto tamin = tempAABB.GetMin();
             auto tamax = tempAABB.GetMax();
-
+            
             uvMesh->AddTriangle(
                 glm::vec3(tamin.x, tamin.y, 0),
                 glm::vec3(tamin.x, tamax.y, 0),

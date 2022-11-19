@@ -23,5 +23,6 @@ namespace ArtificialNature {
 	};
 
 	ostream& operator << (ostream& o, const HeAABB& aabb);
+	ostream& operator << (ostream& o, const HeAABB* aabb);
 
 }

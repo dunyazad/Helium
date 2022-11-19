@@ -9,7 +9,7 @@ namespace ArtificialNature {
 	class Helium : public HeObject
 	{
 	public:
-		Helium(const string& name);
+		Helium(const string& name, int windowWidth, int windowHeight);
 		~Helium();
 
 		HeScene* GetScene(const string& sceneName);
@@ -18,6 +18,9 @@ namespace ArtificialNature {
 		inline const map<string, HeScene*> GetScenes() const { return scenes; }
 
 	private:
+		int windowWidth;
+		int windowHeight;
+
 		HeGraphics* graphics = nullptr;
 		map<string, HeScene*> scenes;
 	};

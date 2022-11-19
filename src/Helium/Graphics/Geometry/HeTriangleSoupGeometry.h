@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Helium/Core/Core.h>
-
 #include <Helium/Graphics/Geometry/HeGeometry.h>
 
 namespace ArtificialNature {

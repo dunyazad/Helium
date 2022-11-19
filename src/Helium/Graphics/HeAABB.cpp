@@ -20,4 +20,9 @@ namespace ArtificialNature {
 	{
 		return o << "min:\t" << aabb.GetMin() << endl << "max:\t" << aabb.GetMax() << endl << "center:\t" << aabb.GetCenter() << endl << "size:\t" << aabb.GetSize() << endl;
 	}
+
+	ostream& operator << (ostream& o, const HeAABB* aabb)
+	{
+		return o << "min:\t" << aabb->GetMin() << endl << "max:\t" << aabb->GetMax() << endl << "center:\t" << aabb->GetCenter() << endl << "size:\t" << aabb->GetSize() << endl;
+	}
 }

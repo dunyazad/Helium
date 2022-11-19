@@ -8,8 +8,8 @@
 
 namespace ArtificialNature {
 
-	HeGraphics::HeGraphics(const string& name)
-		: HeObject(name)
+	HeGraphics::HeGraphics(const string& name, int windowWidth, int windowHeight)
+		: HeObject(name), windowWidth(windowWidth), windowHeight(windowHeight)
 	{
 	}
 
@@ -332,5 +332,23 @@ namespace ArtificialNature {
 			ri.geometry->Draw(ri.projection, ri.view, ri.model);
 		}
 		transparentRenderInfos.clear();
+
+		if (serialCaptureFileNames.size() > 0) {
+			auto image = this->GetCanvasImage("SerialCapture", this->windowWidth, this->windowHeight);
+			image->CaptureFrame(serialCaptureFileNames[0]);
+			serialCaptureFileNames.erase(serialCaptureFileNames.begin());
+
+			if (onSerialCaptureCallback != nullptr) {
+				onSerialCaptureCallback(serialCaptureIndex);
+			}
+
+			serialCaptureIndex++;
+
+			if (serialCaptureFileNames.size() == 0) {
+				serialCaptureIndex = 0;
+				onSerialCaptureCallback = nullptr;
+			}
+		}
 	}
+
 }

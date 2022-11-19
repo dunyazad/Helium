@@ -3,6 +3,7 @@
 #include <Helium/Graphics/Material/Material.h>
 #include <Helium/Graphics/HeVertexArrayObject.h>
 #include <Helium/Graphics/HeVertexBufferObject.hpp>
+#include <Helium/Graphics/HeAABB.h>
 
 #include <Helium/Scene/HeCamera.h>
 
@@ -17,6 +18,8 @@ namespace ArtificialNature {
 		ibo = new HeVertexBufferObject<GLuint>(HeVertexBufferObject<GLuint>::BufferType::INDEX_BUFFER);
 		cbo = new HeVertexBufferObject<glm::vec4>(HeVertexBufferObject<glm::vec4>::BufferType::COLOR_BUFFER);
 		uvbo = new HeVertexBufferObject<glm::vec2>(HeVertexBufferObject<glm::vec2>::BufferType::UV_BUFFER);
+
+		aabb = new HeAABB();
 	}
 
 	HeGeometry::~HeGeometry()
@@ -27,6 +30,8 @@ namespace ArtificialNature {
 		HeDelete(ibo);
 		HeDelete(cbo);
 		HeDelete(uvbo);
+
+		delete aabb;
 	}
 
 	void HeGeometry::Initialize()
@@ -74,18 +79,26 @@ namespace ArtificialNature {
 	{
 		vbo->AddElement(vertex);
 
+		aabb->Extend(vertex);
+
 		dirty = true;
 	}
 
 	void HeGeometry::SetVertex(int index, const glm::vec3& vertex)
 	{
-		if(vbo->SetElement(index, vertex) == true)
+		if (vbo->SetElement(index, vertex) == true) {
+			aabb->Extend(vertex);
 			dirty = true;
+		}
 	}
 
 	void HeGeometry::SetVertices(const vector<glm::vec3>& vertices)
 	{
 		vbo->SetElements(vertices);
+		for (auto& v : vertices)
+		{
+			aabb->Extend(v);
+		}
 	}
 
 	const glm::vec3& HeGeometry::GetVertex(int index)
@@ -198,6 +211,13 @@ namespace ArtificialNature {
 	{
 		if (uvbo->SetElement(index, uv) == true)
 			dirty = true;
+	}
+
+	void HeGeometry::SetUVs(const vector<glm::vec2>& uvs)
+	{
+		uvbo->SetElements(uvs);
+
+		dirty = true;
 	}
 
 	const glm::vec2& HeGeometry::GetUV(int index)

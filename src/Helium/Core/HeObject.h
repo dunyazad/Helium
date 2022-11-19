@@ -10,7 +10,7 @@ namespace ArtificialNature {
 		HeObject(const string& name);
 		~HeObject();
 
-		inline long GetInstanceID() { return instanceID; }
+		inline long GetInstanceID() const { return instanceID; }
 		inline const string& GetName() const { return name; }
 	protected:
 		long NewID();

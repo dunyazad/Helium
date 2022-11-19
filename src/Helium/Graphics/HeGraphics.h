@@ -25,7 +25,7 @@ namespace ArtificialNature {
 	class HeGraphics : public HeObject
 	{
 	public:
-		HeGraphics(const string& name);
+		HeGraphics(const string& name, int windowWidth, int windowHeight);
 		~HeGraphics();
 
 		HeGeometry* GetGeometry(const string& name);
@@ -57,7 +57,16 @@ namespace ArtificialNature {
 		void RegisterRenderList(HeGeometry* geometry, const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
 		void Flush();
 
+		inline void SerialFrameCapture(const vector<string>& captureFileNames) { serialCaptureFileNames = captureFileNames; }
+		inline void SerialFrameCapture(const vector<string>& captureFileNames, function<void(int)> serialCaptureCallback) { serialCaptureFileNames = captureFileNames; onSerialCaptureCallback = serialCaptureCallback; }
+
+		inline int GetWindowWidth() const { return windowWidth; }
+		inline int GetWindowHeight() const { return windowHeight; }
+
 	private:
+		int windowWidth;
+		int windowHeight;
+
 		map<string, HeGeometry*> geometries;
 		map<string, HeShader*> shaders;
 		map<string, HeMaterial*> materials;
@@ -84,5 +93,9 @@ namespace ArtificialNature {
 
 		map<HeTexture*, vector<RenderInfo>> opaqueRenderInfos;
 		vector<RenderInfo> transparentRenderInfos;
+
+		int serialCaptureIndex = 0;
+		vector<string> serialCaptureFileNames;
+		function<void(int)> onSerialCaptureCallback = nullptr;
 	};
 }

@@ -2,10 +2,10 @@
 
 namespace ArtificialNature {
 
-	Helium::Helium(const string& name)
+	Helium::Helium(const string& name, int windowWidth, int windowHeight)
 		: HeObject(name)
 	{
-		graphics = new HeGraphics(name + ".Graphics");
+		graphics = new HeGraphics(name + ".Graphics", windowWidth, windowHeight);
 	}
 
 	Helium::~Helium()
