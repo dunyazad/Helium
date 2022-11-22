@@ -23,14 +23,14 @@ namespace ArtificialNature {
 		void AddVertex(const glm::vec3& vertex);
 		void SetVertex(int index, const glm::vec3& vertex);
 		void SetVertices(const vector<glm::vec3>& vertices);
-		const glm::vec3& GetVertex(int index);
+		const glm::vec3& GetVertex(int index) const;
 		size_t GetVertexCount();
 		void ClearVertices();
 
 		void AddNormal(const glm::vec3& normal);
 		void SetNormal(int index, const glm::vec3& normal);
 		void SetNormals(const vector<glm::vec3>& normals);
-		const glm::vec3& GetNormal(int index);
+		const glm::vec3& GetNormal(int index) const;
 		size_t GetNormalCount();
 		void ClearNormals();
 
@@ -48,7 +48,7 @@ namespace ArtificialNature {
 		void AddUV(const glm::vec2& uv);
 		void SetUV(int index, const glm::vec2& uv);
 		void SetUVs(const vector<glm::vec2>& uvs);
-		const glm::vec2& GetUV(int index);
+		const glm::vec2& GetUV(int index) const;
 		size_t GetUVCount();
 		void ClearUVs();
 

@@ -15,7 +15,6 @@
 #include <Helium/Graphics/Texture/Texture.h>
 #include <Helium/Graphics/HeShader.h>
 
-#include <Helium/Graphics/Material/HeMaterial.h>
-#include <Helium/Graphics/Material/HeMaterialMutiTexture.h>
+#include <Helium/Graphics/Material/Material.h>
 
 #include <Helium/Graphics/HeGraphics.h>

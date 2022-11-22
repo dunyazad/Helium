@@ -30,8 +30,8 @@ using namespace std;
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_access.hpp>
 #include <glm/gtx/intersect.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/vector_angle.hpp>
@@ -58,10 +58,20 @@ namespace ArtificialNature {
 
 	ostream& operator << (ostream& o, const glm::vec3& v);
 
+	ostream& operator << (ostream& o, const glm::vec4& v);
+
+	ostream& operator << (ostream& o, const glm::mat3& m);
+
+	ostream& operator << (ostream& o, const glm::mat4& m);
+
 	int safe_stoi(const string& input);
 
 	float safe_stof(const string& input);
 
 	vector<string> split(const string& input, const string& delimiters, bool includeEmptyString = false);
 
+}
+
+namespace glm {
+	mat4 flip_axes(const mat4& m);
 }

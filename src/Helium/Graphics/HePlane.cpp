@@ -3,6 +3,7 @@
 namespace ArtificialNature {
 
 	HePlane::HePlane(const glm::vec3& position, const glm::vec3& normal)
+		: position(position), normal(normal)
 	{
 	}
 

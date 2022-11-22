@@ -24,15 +24,15 @@ namespace ArtificialNature {
 		auto dfu = glm::normalize(this->forward + this->up);
 		auto dfd = glm::normalize(this->forward - this->up);
 
-		auto dlu = glm::normalize(this->forward - this->right + this->up);
-		auto dru = glm::normalize(this->forward + this->right + this->up);
-		auto dll = glm::normalize(this->forward - this->right - this->up);
-		auto drl = glm::normalize(this->forward + this->right - this->up);
+		ldlu = glm::normalize(this->forward - this->right + this->up);
+		ldru = glm::normalize(this->forward + this->right + this->up);
+		ldll = glm::normalize(this->forward - this->right - this->up);
+		ldrl = glm::normalize(this->forward + this->right - this->up);
 
-		auto nl = glm::normalize(glm::cross(dlu, dll));
-		auto nr = glm::normalize(glm::cross(drl, dru));
-		auto nu = glm::normalize(glm::cross(dru, dlu));
-		auto nd = glm::normalize(glm::cross(dll, drl));
+		auto nl = glm::normalize(glm::cross(ldlu, ldll));
+		auto nr = glm::normalize(glm::cross(ldrl, ldru));
+		auto nu = glm::normalize(glm::cross(ldru, ldlu));
+		auto nd = glm::normalize(glm::cross(ldll, ldrl));
 
 		this->leftPlaneNormal = this->rotation * nl;
 		this->rightPlaneNormal = this->rotation * nr;
@@ -44,10 +44,10 @@ namespace ArtificialNature {
 		this->upperPlane = new HePlane(this->position, this->upperPlaneNormal);
 		this->lowerPlane = new HePlane(this->position, this->lowerPlaneNormal);
 
-		this->adlu = this->rotation * dlu;
-		this->adru = this->rotation * dru;
-		this->adll = this->rotation * dll;
-		this->adrl = this->rotation * drl;
+		this->adlu = this->rotation * ldlu;
+		this->adru = this->rotation * ldru;
+		this->adll = this->rotation * ldll;
+		this->adrl = this->rotation * ldrl;
 
 		this->dfl = this->rotation * dfl;
 		this->dfr = this->rotation * dfr;
@@ -67,7 +67,7 @@ namespace ArtificialNature {
 		delete lowerPlane;
 	}
 
-	bool HeFrustum::Contains(const glm::vec3& point)
+	bool HeFrustum::Contains(const glm::vec3& point) const
 	{
 		if (this->leftPlane->PointIsOnPositiveSide(point) == false) return false;
 		if (this->rightPlane->PointIsOnPositiveSide(point) == false) return false;
@@ -76,7 +76,7 @@ namespace ArtificialNature {
 		return true;
 	}
 
-	bool HeFrustum::ContainsAny(const vector<glm::vec3>& points)
+	bool HeFrustum::ContainsAny(const vector<glm::vec3>& points) const
 	{
 		for (auto& point : points)
 		{
@@ -89,4 +89,16 @@ namespace ArtificialNature {
 		return false;
 	}
 
+	bool HeFrustum::ContainsAll(const vector<glm::vec3>& points) const
+	{
+		for (auto& point : points)
+		{
+			if (Contains(point) == false)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

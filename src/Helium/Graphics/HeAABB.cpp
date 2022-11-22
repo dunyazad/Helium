@@ -5,6 +5,15 @@ namespace ArtificialNature {
 	HeAABB::HeAABB() {}
 	HeAABB::~HeAABB() {}
 
+	void HeAABB::Extend(const glm::vec2& v)
+	{
+		if (v.x < vmin.x) vmin.x = v.x;
+		if (v.y < vmin.y) vmin.y = v.y;
+
+		if (v.x > vmax.x) vmax.x = v.x;
+		if (v.y > vmax.y) vmax.y = v.y;
+	}
+
 	void HeAABB::Extend(const glm::vec3& v)
 	{
 		if (v.x < vmin.x) vmin.x = v.x;

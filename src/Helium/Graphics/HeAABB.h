@@ -10,6 +10,7 @@ namespace ArtificialNature {
 		HeAABB();
 		~HeAABB();
 
+		void Extend(const glm::vec2& v);
 		void Extend(const glm::vec3& v);
 
 		inline const glm::vec3& GetMin() const { return vmin; }

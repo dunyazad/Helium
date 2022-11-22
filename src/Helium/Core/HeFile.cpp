@@ -25,7 +25,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeFile::Open(string fileName, bool isBinary)
+	bool HeFile::Open(string fileName, bool isBinary)
 	{
 		if (isBinary) {
 			(*m_pFileStream).open(fileName, ios::binary | ios::in);
@@ -33,6 +33,16 @@ namespace ArtificialNature {
 		else {
 			(*m_pFileStream).open(fileName, ios::in);
 		}
+
+		if ((*m_pFileStream).is_open()) {
+			(*m_pFileStream).seekg(0, ios::end);
+			m_fileLength = (*m_pFileStream).tellg();
+			(*m_pFileStream).seekg(0, ios::beg);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	void HeFile::Close()

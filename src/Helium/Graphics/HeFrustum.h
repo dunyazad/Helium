@@ -13,9 +13,28 @@ namespace ArtificialNature {
 
 		~HeFrustum();
 
-		bool Contains(const glm::vec3& point);
+		bool Contains(const glm::vec3& point) const;
 
-		bool ContainsAny(const vector<glm::vec3>& points);
+		bool ContainsAny(const vector<glm::vec3>& points) const;
+
+		bool ContainsAll(const vector<glm::vec3>& points) const;
+
+		inline const glm::vec3& GetPosition() const { return position; }
+		inline const glm::mat3& GetRotation() const { return rotation; }
+
+		inline const glm::vec3& GetNormalizedRight() const { return nr; }
+		inline const glm::vec3& GetNormalizedUp() const { return nu; }
+		inline const glm::vec3& GetNormalizedFront() const { return nf; }
+
+		inline const glm::vec3& GetLocalDirectionLeftTop() const { return ldlu; }
+		inline const glm::vec3& GetLocalDirectionRightTop() const { return ldru; }
+		inline const glm::vec3& GetLocalDirectionLeftBottom() const { return ldll; }
+		inline const glm::vec3& GetLocalDirectionRightBottom() const { return ldrl; }
+
+		inline const glm::vec3& GetDirectionLeftTop() const { return adlu; }
+		inline const glm::vec3& GetDirectionRightTop() const { return adru; }
+		inline const glm::vec3& GetDirectionLeftBottom() const { return adll; }
+		inline const glm::vec3& GetDirectionRightBottom() const { return adrl; }
 
 	protected:
 		glm::vec3 position = glm::vec3(0, 0, 0);
@@ -38,6 +57,11 @@ namespace ArtificialNature {
 		HePlane* rightPlane = nullptr;
 		HePlane* upperPlane = nullptr;
 		HePlane* lowerPlane = nullptr;
+
+		glm::vec3 ldlu = glm::vec3(0, 0, 0);
+		glm::vec3 ldru = glm::vec3(0, 0, 0);
+		glm::vec3 ldll = glm::vec3(0, 0, 0);
+		glm::vec3 ldrl = glm::vec3(0, 0, 0);
 
 		glm::vec3 adlu = glm::vec3(0, 0, 0);
 		glm::vec3 adru = glm::vec3(0, 0, 0);

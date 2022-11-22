@@ -59,6 +59,8 @@ public:
     void Next()
     {
         if (index + 1 < nodes.size()) {
+            HideAll();
+
             nodes[index]->SetActive(false);
             nodes[index + 1]->SetActive(true);
             index++;
@@ -67,7 +69,9 @@ public:
 
     void Previous()
     {
-        if (index - 1 > -1) {
+        if (index > 0) {
+            HideAll();
+
             nodes[index]->SetActive(false);
             nodes[index - 1]->SetActive(true);
             index--;
@@ -100,7 +104,7 @@ int main(int argc, char* argv[])
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     //glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Window Visibility
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
+    //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
     auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
 
     // Check for Valid Context
@@ -203,7 +207,7 @@ int main(int argc, char* argv[])
         //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
     }
 
-    {
+ /*   {
         auto pNode = pScene->CreateSceneNode("Point");
         auto pGeometry = gGraphics->GetGeometryPlane("Point", 0.01, 0.01, 1, 1, HePlaneType::XY);
 
@@ -215,7 +219,7 @@ int main(int argc, char* argv[])
 
         auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
         pMaterial->SetShader(pShader);
-    }
+    }*/
 
     {
         HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
@@ -225,6 +229,12 @@ int main(int argc, char* argv[])
         {
             auto cameraInfo = frame->GetCameraInfo();
             auto frustum = cameraInfo->GetFrustum();
+            frame->LoadColorImage(gGraphics);
+            auto image = frame->GetColorImage();
+            image->Initialize();
+            auto texture = gGraphics->GetTexture(image->GetName(), image);
+            texture->Initialize();
+
             auto& nr = frustum->GetNormalizedRight();
             auto& nu = frustum->GetNormalizedUp();
             auto& nf = frustum->GetNormalizedFront();
@@ -271,7 +281,6 @@ int main(int argc, char* argv[])
                 pLines->AddColor(glm::vec4(1, 1, 0, 1));
                 pLines->AddColor(glm::vec4(1, 1, 0, 1));
 
-
                 auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
 
                 auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
@@ -290,9 +299,10 @@ int main(int argc, char* argv[])
                 auto pGeometry = gGraphics->GetGeometryTriangleSoup(format("frame{}_Triangles", frame->GetFrameIndex()));
                 pGeometry->Initialize();
                 pNode->AddGeometry(pGeometry);
-                auto pMaterial = gGraphics->GetMaterial("Triangles");
-                auto pShader = gGraphics->GetShader("vertexColor");
+                auto pMaterial = gGraphics->GetMaterialSingleTexture(format("frame{}_SingleTexture", frame->GetFrameIndex()));
+                auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
                 pMaterial->SetShader(pShader);
+                pMaterial->SetTexture(texture);
                 pGeometry->SetMaterial(pMaterial);
 
                 auto pMesh = gGraphics->GetGeometry("Mesh");
@@ -310,7 +320,21 @@ int main(int argc, char* argv[])
                     vector<glm::vec3> vertices = { v0, v1, v2 };
                     if (frustum->ContainsAny(vertices))
                     {
+                        auto uv0 = cameraInfo->WorldToUV(v0);
+                        auto uv1 = cameraInfo->WorldToUV(v1);
+                        auto uv2 = cameraInfo->WorldToUV(v2);
+
+                        //pGeometry->AddTriangle(glm::vec3(uv0, 1.0f), glm::vec3(uv1, 1.0f), glm::vec3(uv2, 1.0f));
+
+                        //pGeometry->AddUV(uv0);
+                        //pGeometry->AddUV(uv1);
+                        //pGeometry->AddUV(uv2);
+
                         pGeometry->AddTriangle(v0, v1, v2);
+
+                        pGeometry->AddUV(uv0);
+                        pGeometry->AddUV(uv1);
+                        pGeometry->AddUV(uv2);
                     }
                 }
             }
@@ -436,12 +460,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
     else if (key == GLFW_KEY_LEFT_BRACKET && action == GLFW_RELEASE)
     {
-        onoff.HideAll();
         onoff.Previous();
     }
     else if (key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_RELEASE)
     {
-        onoff.HideAll();
         onoff.Next();
     }
 }

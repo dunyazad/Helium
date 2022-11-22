@@ -11,7 +11,7 @@ namespace ArtificialNature {
 		~HeFile();
 
 		void Create(string fileName, bool isBinary);
-		void Open(string fileName, bool isBinary);
+		bool Open(string fileName, bool isBinary);
 		void Close();
 		bool isOpen();
 
@@ -47,8 +47,11 @@ namespace ArtificialNature {
 		fstream& operator >> (string& data);
 		//fstream& operator >> (char* data);
 
+		inline int GetFileLength() const { return m_fileLength; }
+
 	private:
 		fstream* m_pFileStream;
 		string m_stlFileName;
+		int m_fileLength;
 	};
 }

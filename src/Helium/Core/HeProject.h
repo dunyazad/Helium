@@ -58,10 +58,12 @@ namespace ArtificialNature {
 	{
 	public:
 		HeFrameInfo(HeProject* project, int frameIndex);
+		HeFrameInfo(HeProject* project, int frameIndex, const json& reconstructionInfo);
 
 		~HeFrameInfo();
 
 		void LoadColorImage(HeGraphics* pGraphics);
+		void LoadDepthInfo();
 
 		inline int GetFrameIndex() const { return frameIndex; }
 		inline const filesystem::path& GetCameraInfoFile() const { return cameraInfoFile; }
@@ -73,6 +75,7 @@ namespace ArtificialNature {
 		inline const filesystem::path& GetResizedColorFile() const { return resizedColorFile; }
 		inline const HeCameraInfo* GetCameraInfo() const { return cameraInfo; }
 		inline HeImage* GetColorImage() const { return colorImage; }
+		inline const vector<float>& GetDepthInfos() const { return depthInfos; }
 
 	protected:
 		HeProject* project;
@@ -86,14 +89,18 @@ namespace ArtificialNature {
 		filesystem::path resizedColorFile;
 		HeCameraInfo* cameraInfo;
 		HeImage* colorImage;
+		vector<float> depthInfos;
 	};
 
 	class HeCameraInfo
 	{
 	public:
 		HeCameraInfo(HeFrameInfo* frameInfo, const filesystem::path& cameraInfoFile);
+		HeCameraInfo(HeFrameInfo* frameInfo, const filesystem::path& cameraInfoFile, const json& reconstructionInfo);
 
 		~HeCameraInfo();
+
+		glm::vec2 WorldToUV(const glm::vec3& worldPosition) const;
 
 		inline int GetFrameIndex() const { return frameIndex; }
 		inline int GetImageWidth() const { return imageWidth; }
@@ -107,8 +114,10 @@ namespace ArtificialNature {
 		inline const glm::mat4& GetViewMatrix() const { return viewMatrix; }
 		inline const glm::mat4& GetInverseViewMatrix() const { return viewMatrixInversed; }
 		inline const glm::mat4& GetTransformMatrix() const { return transformMatrix; }
+		inline const glm::mat4& GetInversedTransformMatrix() const { return transformMatrixInversed; }
 		inline const glm::mat4& GetLocalToWorldMatrix() const { return localToWorldMatrix; }
 		inline const glm::mat4& GetExtrinsicMatrix() const { return extrinsicMatrix; }
+		inline const glm::mat4& GetProjectionMatrix() const { return projectionMatrix; }
 
 		inline const glm::vec3& GetPosition() const { return position; }
 		inline const glm::mat3& GetRotation() const { return rotation; }
@@ -127,8 +136,11 @@ namespace ArtificialNature {
 		glm::mat4 viewMatrix = glm::identity<glm::mat4>();
 		glm::mat4 viewMatrixInversed = glm::identity<glm::mat4>();
 		glm::mat4 transformMatrix = glm::identity<glm::mat4>();
+		glm::mat4 transformMatrixInversed = glm::identity<glm::mat4>();
 		glm::mat4 localToWorldMatrix = glm::identity<glm::mat4>();
 		glm::mat4 extrinsicMatrix = glm::identity<glm::mat4>();
+		glm::mat4 projectionMatrix = glm::identity<glm::mat4>();
+		glm::mat4 viewProjectionMatrix = glm::identity<glm::mat4>();
 
 		glm::vec3 position = glm::vec3(0, 0, 0);
 		glm::mat3 rotation = glm::identity<glm::mat3>();

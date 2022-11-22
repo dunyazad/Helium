@@ -13,6 +13,7 @@ namespace ArtificialNature {
 
 	class HeShader;
 	class HeMaterial;
+	class HeMaterialSingleTexture;
 	class HeMaterialMutiTexture;
 	class HeTexture;
 	class HeCanvasTexture;
@@ -39,6 +40,7 @@ namespace ArtificialNature {
 		HeShader* GetShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
 
 		HeMaterial* GetMaterial(const string& name);
+		HeMaterialSingleTexture* GetMaterialSingleTexture(const string& name);
 		HeMaterialMutiTexture* GetMaterialMutiTexture(const string& name);
 
 		HeTexture* GetTexture(const string& name, HeImage* image);

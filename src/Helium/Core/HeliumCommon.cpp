@@ -35,6 +35,21 @@ namespace ArtificialNature {
 		return o << v.x << " " << v.y << " " << v.z;
 	}
 
+	ostream& operator << (ostream& o, const glm::vec4& v)
+	{
+		return o << v.x << "\t" << v.y << "\t" << v.z << "\t" << v.w;
+	}
+
+	ostream& operator << (ostream& o, const glm::mat3& m)
+	{
+		return o << m[0] << endl << m[1] << endl << m[2];
+	}
+
+	ostream& operator << (ostream& o, const glm::mat4& m)
+	{
+		return o << m[0] << endl << m[1] << endl << m[2] << endl << m[3];
+	}
+
 	int safe_stoi(const string& input)
 	{
 		if (input.empty())
@@ -96,4 +111,32 @@ namespace ArtificialNature {
 		return result;
 	}
 
+}
+
+namespace glm {
+	mat4 flip_axes(const mat4& m)
+	{
+		mat4 rm;
+		rm[0][0] = m[0][0];
+		rm[0][1] = -m[0][1];
+		rm[0][2] = -m[0][2];
+		rm[0][3] = m[0][3];
+
+		rm[1][0] = m[1][0];
+		rm[1][1] = -m[1][1];
+		rm[1][2] = -m[1][2];
+		rm[1][3] = m[1][3];
+
+		rm[2][0] = m[2][0];
+		rm[2][1] = -m[2][1];
+		rm[2][2] = -m[2][2];
+		rm[2][3] = m[2][3];
+
+		rm[3][0] = m[3][0];
+		rm[3][1] = m[3][1];
+		rm[3][2] = m[3][2];
+		rm[3][3] = m[3][3];
+
+		return rm;
+	}
 }

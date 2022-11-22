@@ -166,6 +166,16 @@ namespace ArtificialNature {
 		return materials[name];
 	}
 
+	HeMaterialSingleTexture* HeGraphics::GetMaterialSingleTexture(const string& name)
+	{
+		if (materials.count(name) == 0)
+		{
+			materials[name] = new HeMaterialSingleTexture(name);
+		}
+
+		return dynamic_cast<HeMaterialSingleTexture*>(materials[name]);
+	}
+
 	HeMaterialMutiTexture* HeGraphics::GetMaterialMutiTexture(const string& name)
 	{
 		if (materials.count(name) == 0)

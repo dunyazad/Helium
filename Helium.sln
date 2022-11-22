@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Helium", "src\Helium\Helium.vcxproj", "{668B30BC-A07C-4C72-BBF7-51F49FDBF507}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeliumDebuggingFrame", "src\HeliumDebuggingFrame.vcxproj", "{87799F54-9D2E-4044-A36C-D40B73859E05}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Helium", "src\Helium.vcxproj", "{0F4E8A8A-D886-48AC-8D4A-6FB19B1CDE3C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeliumDebuggingViewer", "src\HeliumDebuggingViewer.vcxproj", "{43AB87B1-98D4-40FB-AD8F-3CBF41101F56}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeliumDebuggingDepthToWorld", "src\HeliumDebuggingDepthToWorld.vcxproj", "{D98059B6-5038-41B1-AAB9-D765BB9EB479}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeliumDebuggingSimple", "src\HeliumDebuggingSimple.vcxproj", "{C16D64EF-2A26-4CEE-A331-CCBB89BA5180}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +19,26 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{668B30BC-A07C-4C72-BBF7-51F49FDBF507}.Debug|x64.ActiveCfg = Debug|x64
-		{668B30BC-A07C-4C72-BBF7-51F49FDBF507}.Debug|x64.Build.0 = Debug|x64
-		{668B30BC-A07C-4C72-BBF7-51F49FDBF507}.Release|x64.ActiveCfg = Release|x64
-		{668B30BC-A07C-4C72-BBF7-51F49FDBF507}.Release|x64.Build.0 = Release|x64
+		{87799F54-9D2E-4044-A36C-D40B73859E05}.Debug|x64.ActiveCfg = Debug|x64
+		{87799F54-9D2E-4044-A36C-D40B73859E05}.Debug|x64.Build.0 = Debug|x64
+		{87799F54-9D2E-4044-A36C-D40B73859E05}.Release|x64.ActiveCfg = Release|x64
+		{87799F54-9D2E-4044-A36C-D40B73859E05}.Release|x64.Build.0 = Release|x64
+		{0F4E8A8A-D886-48AC-8D4A-6FB19B1CDE3C}.Debug|x64.ActiveCfg = Debug|x64
+		{0F4E8A8A-D886-48AC-8D4A-6FB19B1CDE3C}.Debug|x64.Build.0 = Debug|x64
+		{0F4E8A8A-D886-48AC-8D4A-6FB19B1CDE3C}.Release|x64.ActiveCfg = Release|x64
+		{0F4E8A8A-D886-48AC-8D4A-6FB19B1CDE3C}.Release|x64.Build.0 = Release|x64
+		{43AB87B1-98D4-40FB-AD8F-3CBF41101F56}.Debug|x64.ActiveCfg = Debug|x64
+		{43AB87B1-98D4-40FB-AD8F-3CBF41101F56}.Debug|x64.Build.0 = Debug|x64
+		{43AB87B1-98D4-40FB-AD8F-3CBF41101F56}.Release|x64.ActiveCfg = Release|x64
+		{43AB87B1-98D4-40FB-AD8F-3CBF41101F56}.Release|x64.Build.0 = Release|x64
+		{D98059B6-5038-41B1-AAB9-D765BB9EB479}.Debug|x64.ActiveCfg = Debug|x64
+		{D98059B6-5038-41B1-AAB9-D765BB9EB479}.Debug|x64.Build.0 = Debug|x64
+		{D98059B6-5038-41B1-AAB9-D765BB9EB479}.Release|x64.ActiveCfg = Release|x64
+		{D98059B6-5038-41B1-AAB9-D765BB9EB479}.Release|x64.Build.0 = Release|x64
+		{C16D64EF-2A26-4CEE-A331-CCBB89BA5180}.Debug|x64.ActiveCfg = Debug|x64
+		{C16D64EF-2A26-4CEE-A331-CCBB89BA5180}.Debug|x64.Build.0 = Debug|x64
+		{C16D64EF-2A26-4CEE-A331-CCBB89BA5180}.Release|x64.ActiveCfg = Release|x64
+		{C16D64EF-2A26-4CEE-A331-CCBB89BA5180}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

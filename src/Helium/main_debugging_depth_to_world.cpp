@@ -38,8 +38,9 @@ HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 
 class OnOff {
 public:
-    void AddSceneNode(HeSceneNode* node) {
+    void AddSceneNode(HeSceneNode* node, const glm::vec3& position) {
         nodes.push_back(node);
+        positions.push_back(position);
     }
 
     void First()
@@ -59,18 +60,26 @@ public:
     void Next()
     {
         if (index + 1 < nodes.size()) {
+            HideAll();
+
             nodes[index]->SetActive(false);
             nodes[index + 1]->SetActive(true);
             index++;
+
+            cout << positions[index] << endl;
         }
     }
 
     void Previous()
     {
-        if (index - 1 > -1) {
+        if (index > 0) {
+            HideAll();
+
             nodes[index]->SetActive(false);
             nodes[index - 1]->SetActive(true);
             index--;
+
+            cout << positions[index] << endl;
         }
     }
 
@@ -84,6 +93,7 @@ public:
 
 protected:
     vector<HeSceneNode*> nodes;
+    vector<glm::vec3> positions;
     int index = 0;
 };
 
@@ -100,7 +110,7 @@ int main(int argc, char* argv[])
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     //glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Window Visibility
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
+    //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
     auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
 
     // Check for Valid Context
@@ -192,7 +202,7 @@ int main(int argc, char* argv[])
         auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
-        pNode->AddGeometry(pGeometry);
+        //pNode->AddGeometry(pGeometry);
 
         auto pMaterial = gGraphics->GetMaterial("Mesh Material");
         pGeometry->SetMaterial(pMaterial);
@@ -203,7 +213,7 @@ int main(int argc, char* argv[])
         //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
     }
 
-    {
+ /*   {
         auto pNode = pScene->CreateSceneNode("Point");
         auto pGeometry = gGraphics->GetGeometryPlane("Point", 0.01, 0.01, 1, 1, HePlaneType::XY);
 
@@ -215,7 +225,7 @@ int main(int argc, char* argv[])
 
         auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
         pMaterial->SetShader(pShader);
-    }
+    }*/
 
     {
         HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
@@ -225,13 +235,19 @@ int main(int argc, char* argv[])
         {
             auto cameraInfo = frame->GetCameraInfo();
             auto frustum = cameraInfo->GetFrustum();
+            frame->LoadColorImage(gGraphics);
+            auto image = frame->GetColorImage();
+            image->Initialize();
+            auto texture = gGraphics->GetTexture(image->GetName(), image);
+            texture->Initialize();
+
             auto& nr = frustum->GetNormalizedRight();
             auto& nu = frustum->GetNormalizedUp();
             auto& nf = frustum->GetNormalizedFront();
             auto& fp = frustum->GetPosition();
 
             auto pNode = pScene->CreateSceneNode(format("frame{}", frame->GetFrameIndex()));
-            onoff.AddSceneNode(pNode);
+            onoff.AddSceneNode(pNode, cameraInfo->GetPosition());
             {
                 auto pLines = gGraphics->GetGeometryThickLines(format("frame{}_Lines", frame->GetFrameIndex()));
                 pLines->Initialize();
@@ -271,7 +287,6 @@ int main(int argc, char* argv[])
                 pLines->AddColor(glm::vec4(1, 1, 0, 1));
                 pLines->AddColor(glm::vec4(1, 1, 0, 1));
 
-
                 auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
 
                 auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
@@ -286,13 +301,48 @@ int main(int argc, char* argv[])
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             }
+            /*
+            {
+                const auto& depthInfo = frame->GetDepthInfos();
+                int width = frame->GetCameraInfo()->GetImageWidth();
+                int height = frame->GetCameraInfo()->GetImageHeight();
+
+                stringstream ss;
+                ss << "depth_" << frame->GetFrameIndex();
+                auto pGeometry = gGraphics->GetGeometryPlane(ss.str(), 1, 1, width, height, HePlaneType::XY);
+                pGeometry->Initialize();
+                pGeometry->SetFillMode(HeGeometry::Wireframe);
+
+                for (size_t h = 0; h < height; h++)
+                {
+                    for (size_t w = 0; w < width; w++)
+                    {
+                        auto index = h * width + w;
+                        auto d = depthInfo[(height - h) * width + w];
+                        auto v = pGeometry->GetVertex(index);
+                        v.z = d;
+
+                        auto p = glm::mat4(frame->GetCameraInfo()->GetIntrinsicMatrix()) * frame->GetCameraInfo()->GetExtrinsicMatrix();
+                        pGeometry->SetVertex(index, v);
+                    }
+                }
+
+                pNode->AddGeometry(pGeometry);
+
+                auto pMaterial = gGraphics->GetMaterial("Mesh Material");
+
+                pGeometry->SetMaterial(pMaterial);
+
+            }
+            */
             {
                 auto pGeometry = gGraphics->GetGeometryTriangleSoup(format("frame{}_Triangles", frame->GetFrameIndex()));
                 pGeometry->Initialize();
                 pNode->AddGeometry(pGeometry);
-                auto pMaterial = gGraphics->GetMaterial("Triangles");
-                auto pShader = gGraphics->GetShader("vertexColor");
+                auto pMaterial = gGraphics->GetMaterialSingleTexture(format("frame{}_SingleTexture", frame->GetFrameIndex()));
+                auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
                 pMaterial->SetShader(pShader);
+                pMaterial->SetTexture(texture);
                 pGeometry->SetMaterial(pMaterial);
 
                 auto pMesh = gGraphics->GetGeometry("Mesh");
@@ -308,9 +358,33 @@ int main(int argc, char* argv[])
                     auto& v2 = pMesh->GetVertex(vi2);
 
                     vector<glm::vec3> vertices = { v0, v1, v2 };
-                    if (frustum->ContainsAny(vertices))
+                    if (frustum->ContainsAll(vertices))
                     {
+                        //auto uv0 = cameraInfo->WorldToUV(v0);
+                        //auto uv1 = cameraInfo->WorldToUV(v1);
+                        //auto uv2 = cameraInfo->WorldToUV(v2);
+
+                        auto uv0 = 
+                            (glm::mat4(frame->GetCameraInfo()->GetIntrinsicMatrix()) *
+                            frame->GetCameraInfo()->GetExtrinsicMatrix() * glm::vec4(v0, 1.0f))/ v0.z;
+                        auto uv1 =
+                            (glm::mat4(frame->GetCameraInfo()->GetIntrinsicMatrix()) *
+                                frame->GetCameraInfo()->GetExtrinsicMatrix() * glm::vec4(v1, 1.0f)) / v1.z;
+                        auto uv2 =
+                            (glm::mat4(frame->GetCameraInfo()->GetIntrinsicMatrix()) *
+                                frame->GetCameraInfo()->GetExtrinsicMatrix() * glm::vec4(v2, 1.0f)) / v2.z;
+
+                        //pGeometry->AddTriangle(glm::vec3(uv0, 1.0f), glm::vec3(uv1, 1.0f), glm::vec3(uv2, 1.0f));
+
+                        //pGeometry->AddUV(uv0);
+                        //pGeometry->AddUV(uv1);
+                        //pGeometry->AddUV(uv2);
+
                         pGeometry->AddTriangle(v0, v1, v2);
+
+                        pGeometry->AddUV(uv0);
+                        pGeometry->AddUV(uv1);
+                        pGeometry->AddUV(uv2);
                     }
                 }
             }
@@ -434,14 +508,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             pCamera->SetLocalPosition(pCamera->GetLocalPosition() + glm::vec3(0.0f, 1.0f, 0.0f));
         });
     }
-    else if (key == GLFW_KEY_LEFT_BRACKET && action == GLFW_RELEASE)
+    else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        onoff.HideAll();
         onoff.Previous();
     }
-    else if (key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_RELEASE)
+    else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        onoff.HideAll();
         onoff.Next();
     }
 }

@@ -101,7 +101,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	const glm::vec3& HeGeometry::GetVertex(int index)
+	const glm::vec3& HeGeometry::GetVertex(int index) const
 	{
 		return vbo->GetElement(index);
 	}
@@ -134,7 +134,7 @@ namespace ArtificialNature {
 		vnbo->SetElements(normals);
 	}
 
-	const glm::vec3& HeGeometry::GetNormal(int index)
+	const glm::vec3& HeGeometry::GetNormal(int index) const
 	{
 		return vnbo->GetElement(index);
 	}
@@ -220,7 +220,7 @@ namespace ArtificialNature {
 		dirty = true;
 	}
 
-	const glm::vec2& HeGeometry::GetUV(int index)
+	const glm::vec2& HeGeometry::GetUV(int index) const
 	{
 		return uvbo->GetElement(index);
 	}
