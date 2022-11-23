@@ -266,8 +266,9 @@ namespace ArtificialNature {
 			glm::mat4 tm = glm::make_mat4(transform_matrix);
 			auto p = glm::vec3(glm::row(tm, 3));
 			auto r = glm::mat3(glm::transpose(tm)) * glm::mat3(glm::angleAxis(glm::radians(180.0f), glm::vec3(1, 0, 0)));
-			this->transformMatrix = glm::translate(glm::mat4(r), p);
-			this->transformMatrix = glm::transpose(this->transformMatrix);
+			this->transformMatrix = glm::mat4(r);
+			this->transformMatrix[3] = glm::vec4(p, 1.0f);
+			this->transformMatrixInversed = glm::inverse(this->transformMatrix);
 
 			this->viewMatrix = glm::make_mat4(view_matrix);
 			this->viewMatrixInversed = glm::inverse(this->viewMatrix);
@@ -289,8 +290,6 @@ namespace ArtificialNature {
 			//this->localToWorldMatrix = glm::inverse(this->viewMatrixInversed * flipMatrix);
 
 			this->extrinsicMatrix = this->localToWorldMatrix;
-
-			this->transformMatrixInversed = glm::inverse(this->transformMatrix);
 
 			this->projectionMatrix = glm::transpose(glm::make_mat4(projection_matrix));
 

@@ -17,7 +17,7 @@ namespace ArtificialNature {
 	{
 	}
 
-	void HeMaterial::Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
+	void HeMaterial::Use(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 	{
 		if (shader == nullptr)
 			return;

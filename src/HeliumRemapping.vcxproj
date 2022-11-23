@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{B572468D-A94C-4EDE-8082-F6DE865B19CD}</ProjectGuid>
+    <RootNamespace>Helium</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Helium.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Helium.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Helium\Core\glad.c" />
+    <ClCompile Include="Helium\Core\HeFile.cpp" />
+    <ClCompile Include="Helium\Core\HeliumCommon.cpp" />
+    <ClCompile Include="Helium\Core\HeObject.cpp" />
+    <ClCompile Include="Helium\Core\HeProject.cpp" />
+    <ClCompile Include="Helium\Core\HeResourceIO.cpp" />
+    <ClCompile Include="Helium\Core\HeTime.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometry.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HePlaneGeometry.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeSkyboxGeometry.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeThickLines.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeTriangleSoupGeometry.cpp" />
+    <ClCompile Include="Helium\Graphics\HeAABB.cpp" />
+    <ClCompile Include="Helium\Graphics\HeFrameBufferObject.cpp" />
+    <ClCompile Include="Helium\Graphics\HeFrustum.cpp" />
+    <ClCompile Include="Helium\Graphics\HeGraphics.cpp" />
+    <ClCompile Include="Helium\Graphics\HeIndexBufferObject.cpp" />
+    <ClCompile Include="Helium\Graphics\HePlane.cpp" />
+    <ClCompile Include="Helium\Graphics\HeShader.cpp" />
+    <ClCompile Include="Helium\Graphics\HeVertexArrayObject.cpp" />
+    <ClCompile Include="Helium\Graphics\Image\HeCanvasImage.cpp" />
+    <ClCompile Include="Helium\Graphics\Image\HeFontImage.cpp" />
+    <ClCompile Include="Helium\Graphics\Image\HeImage.cpp" />
+    <ClCompile Include="Helium\Graphics\Material\HeMaterial.cpp" />
+    <ClCompile Include="Helium\Graphics\Material\HeMaterialMutiTexture.cpp" />
+    <ClCompile Include="Helium\Graphics\Material\HeMaterialSingleTexture.cpp" />
+    <ClCompile Include="Helium\Graphics\stb_image.cpp" />
+    <ClCompile Include="Helium\Graphics\Texture\HeCanvasTexture.cpp" />
+    <ClCompile Include="Helium\Graphics\Texture\HeCubemapTexture.cpp" />
+    <ClCompile Include="Helium\Graphics\Texture\HeTexture.cpp" />
+    <ClCompile Include="Helium\Helium.cpp" />
+    <ClCompile Include="Helium\main_remapping.cpp" />
+    <ClCompile Include="Helium\nanovg.c" />
+    <ClCompile Include="Helium\Scene\HeCamera.cpp" />
+    <ClCompile Include="Helium\Scene\HeCameraManipulator.cpp" />
+    <ClCompile Include="Helium\Scene\HeScene.cpp" />
+    <ClCompile Include="Helium\Scene\HeSceneNode.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Helium\Core\Core.h" />
+    <ClInclude Include="Helium\Core\HeFile.h" />
+    <ClInclude Include="Helium\Core\HeliumCommon.h" />
+    <ClInclude Include="Helium\Core\HeObject.h" />
+    <ClInclude Include="Helium\Core\HeProject.h" />
+    <ClInclude Include="Helium\Core\HeResourceIO.h" />
+    <ClInclude Include="Helium\Core\HeTime.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\Geometry.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometry.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HePlaneGeometry.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeSkyboxGeometry.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeThickLines.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeTriangleSoupGeometry.h" />
+    <ClInclude Include="Helium\Graphics\Graphics.h" />
+    <ClInclude Include="Helium\Graphics\HeAABB.h" />
+    <ClInclude Include="Helium\Graphics\HeFrameBufferObject.h" />
+    <ClInclude Include="Helium\Graphics\HeFrustum.h" />
+    <ClInclude Include="Helium\Graphics\HeGraphics.h" />
+    <ClInclude Include="Helium\Graphics\HeIndexBufferObject.h" />
+    <ClInclude Include="Helium\Graphics\HePlane.h" />
+    <ClInclude Include="Helium\Graphics\HeShader.h" />
+    <ClInclude Include="Helium\Graphics\HeVertexArrayObject.h" />
+    <ClInclude Include="Helium\Graphics\HeVertexBufferObject.hpp" />
+    <ClInclude Include="Helium\Graphics\Image\HeCanvasImage.h" />
+    <ClInclude Include="Helium\Graphics\Image\HeFontImage.h" />
+    <ClInclude Include="Helium\Graphics\Image\HeImage.h" />
+    <ClInclude Include="Helium\Graphics\Image\Image.h" />
+    <ClInclude Include="Helium\Graphics\Material\HeMaterial.h" />
+    <ClInclude Include="Helium\Graphics\Material\HeMaterialMutiTexture.h" />
+    <ClInclude Include="Helium\Graphics\Material\HeMaterialSingleTexture.h" />
+    <ClInclude Include="Helium\Graphics\Material\Material.h" />
+    <ClInclude Include="Helium\Graphics\Texture\HeCanvasTexture.h" />
+    <ClInclude Include="Helium\Graphics\Texture\HeCubemapTexture.h" />
+    <ClInclude Include="Helium\Graphics\Texture\HeTexture.h" />
+    <ClInclude Include="Helium\Graphics\Texture\Texture.h" />
+    <ClInclude Include="Helium\Helium.h" />
+    <ClInclude Include="Helium\Scene\HeCamera.h" />
+    <ClInclude Include="Helium\Scene\HeCameraManipulator.h" />
+    <ClInclude Include="Helium\Scene\HeScene.h" />
+    <ClInclude Include="Helium\Scene\HeSceneNode.h" />
+    <ClInclude Include="Helium\Scene\Scene.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

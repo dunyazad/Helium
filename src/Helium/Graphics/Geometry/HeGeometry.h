@@ -52,8 +52,11 @@ namespace ArtificialNature {
 		size_t GetUVCount();
 		void ClearUVs();
 
+		virtual vector<int> RayIntersect(float screenX, float screenY, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
+		virtual vector<int> RayIntersect(const glm::vec3& rayPoint, const glm::vec3& rayDirection, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
+
 		virtual void PreDraw(HeCamera* camera);
-		virtual void Draw(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
+		virtual void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 		virtual void PostDraw(HeCamera* camera);
 
 		inline HeMaterial* GetMaterial() const { return material; }

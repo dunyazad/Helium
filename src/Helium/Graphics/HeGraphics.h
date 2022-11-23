@@ -56,7 +56,7 @@ namespace ArtificialNature {
 		HeFrameBufferObject* GetFrameBuffer(const string& name, HeTexture* texture);
 		HeFrameBufferObject* GetFrameBuffer(const string& name, int width, int height);
 
-		void RegisterRenderList(HeGeometry* geometry, const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
+		void RegisterRenderList(HeGeometry* geometry, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 		void Flush();
 
 		inline void SerialFrameCapture(const vector<string>& captureFileNames) { serialCaptureFileNames = captureFileNames; }

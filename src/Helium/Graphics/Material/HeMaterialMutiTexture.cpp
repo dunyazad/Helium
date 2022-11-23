@@ -23,7 +23,7 @@ namespace ArtificialNature {
 	{
 	}
 
-	void HeMaterialMutiTexture::Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
+	void HeMaterialMutiTexture::Use(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 	{
 		if (shader == nullptr)
 			return;

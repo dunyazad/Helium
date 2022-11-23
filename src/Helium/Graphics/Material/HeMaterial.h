@@ -13,7 +13,7 @@ namespace ArtificialNature {
 		HeMaterial(const string& name);
 		~HeMaterial();
 
-		virtual void Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
+		virtual void Use(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 		virtual void StopUse();
 
 		inline HeShader* GetShader() { return shader; }

@@ -11,7 +11,7 @@ namespace ArtificialNature {
 		HeMaterialMutiTexture(const string& name);
 		~HeMaterialMutiTexture();
 
-		virtual void Use(const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model);
+		virtual void Use(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 		virtual void StopUse();
 
 		inline HeTexture* GetTexture(const string& name) const

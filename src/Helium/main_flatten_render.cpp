@@ -31,12 +31,9 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
 //void processInput(GLFWwindow* window);
 
 HeGraphics* gGraphics = nullptr;
-HePerspectiveCamera* pCameraPerspective = nullptr;
-HeOrthogonalCamera* pCameraOrtho = nullptr;
-HeCamera* pCamera = nullptr;
-HeCameraManipulatorFlight* pCameraManipulatorFlight = nullptr;
-HeCameraManipulatorOrtho* pCameraManipulatorOrtho = nullptr;
-HeCameraManipulatorBase* pCameraManipulator = nullptr;
+HeOrthogonalCamera* pCamera = nullptr;
+//HeCameraManipulatorFlight* pCameraManipulator = nullptr;
+HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
 HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, bool asBoundingBox = false);
 
@@ -51,7 +48,7 @@ int main(int argc, char* argv[])
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     //glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Window Visibility
-    //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
     auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
 
     // Check for Valid Context
@@ -88,25 +85,16 @@ int main(int argc, char* argv[])
 
     auto pScene = helium.GetScene("Default Scene");
 
-    {
-        pCameraPerspective = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, mWidth, mHeight);
-        pCamera = pCameraPerspective;
-        HeCameraManipulatorFlight manipulator(pCameraPerspective);
-        pCameraPerspective->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
-        pCameraManipulatorFlight = &manipulator;
-        pCameraManipulator = pCameraManipulatorFlight;
-        pScene->SetMainCamera(pCameraPerspective);
-        pCameraManipulatorFlight->ApplyManipulation();
-    }
-    //{
-    //    pCameraOrtho = pScene->CreateOrthogonalCamera("Main Camera", 0, 0, mWidth, mHeight);
-    //    pCamera = pCameraOrtho;
-    //    HeCameraManipulatorOrtho manipulator(pCameraOrtho);
-    //    pCameraManipulatorOrtho = &manipulator;
-    //    pCameraManipulator = pCameraManipulatorOrtho;
-    //    pScene->SetMainCamera(pCameraOrtho);
-    //}
+    //HeOrthogonalCamera camera("Main Camera", &scene, 0, 0, mWidth, mHeight);
+    //pCamera = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, mWidth, mHeight);
+    pCamera = pScene->CreateOrthogonalCamera("Main Camera", 0, 0, mWidth, mHeight);
+    //HeCameraManipulatorFlight manipulator(pCamera);
+    pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+    HeCameraManipulatorOrtho manipulator(pCamera);
+    pCameraManipulator = &manipulator;
+    pScene->SetMainCamera(pCamera);
 
+    /*
     {
         auto pNode = pScene->CreateSceneNode("Gizmo Node");
         
@@ -146,22 +134,107 @@ int main(int argc, char* argv[])
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         #pragma endregion
     }
+    */
 
     {
-        auto pNode = pScene->CreateSceneNode("Mesh");
+        //auto pNode = pScene->CreateSceneNode("Mesh");
         auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
-        pNode->AddGeometry(pGeometry);
+        //pNode->AddGeometry(pGeometry);
 
-        auto pMaterial = gGraphics->GetMaterial("Mesh Material");
-        pGeometry->SetMaterial(pMaterial);
+        //auto pMaterial = gGraphics->GetMaterial("Mesh Material");
+        //pGeometry->SetMaterial(pMaterial);
 
-        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
-        pMaterial->SetShader(pShader);
+        //auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+        //pMaterial->SetShader(pShader);
 
         //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
     }
+
+    {
+        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+
+        auto from = gGraphics->GetGeometry("Mesh");
+        //{
+        //    auto pNode = pScene->CreateSceneNode("uvMesh");
+        //    auto pGeometry = Flatten(from, "uvMesh", 1);
+        //    //pGeometry->SetFillMode(HeGeometry::Wireframe);
+        //    pNode->AddGeometry(pGeometry);
+        //    auto nov = pGeometry->GetVertexCount();
+        //    for (size_t i = 0; i < nov; i++)
+        //    {
+        //        auto& v = pGeometry->GetVertex(i);
+
+        //        pGeometry->AddColor(glm::vec4(1, v.y / 36.0f, 0, 1));
+        //    }
+
+        //    auto pMaterial = gGraphics->GetMaterial("vertex with color");
+        //    pGeometry->SetMaterial(pMaterial);
+
+        //    auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+        //    pMaterial->SetShader(pShader);
+        //}
+        
+        {
+            vector<glm::vec2> uvs;
+
+            auto pNode = pScene->CreateSceneNode("bbMesh");
+            auto pGeometry = Flatten(project, from, "bbMesh", 1.0f, uvs, true);
+            //pGeometry->SetFillMode(HeGeometry::Wireframe);
+            pNode->AddGeometry(pGeometry);
+            auto nov = pGeometry->GetVertexCount();
+            for (size_t i = 0; i < nov; i++)
+            {
+                auto& v = pGeometry->GetVertex((int)i);
+
+                pGeometry->AddColor(glm::vec4(1, v.y / 36.0f, 0, 1));
+            }
+
+            auto pMaterial = gGraphics->GetMaterial("vertex with color");
+            pGeometry->SetMaterial(pMaterial);
+
+            auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+            pMaterial->SetShader(pShader);
+
+            //for (auto& uv : uvs)
+            //{
+            //    cout << uv << endl;
+            //}
+
+            from->ClearUVs();
+            from->SetUVs(uvs);
+
+            //HeResourceIO::WriteOBJFile(gGraphics, from->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\WithUV.obj");
+        }
+    }
+
+    /* Multi texture test
+    {
+        auto pNode = pScene->CreateSceneNode("MultiTexture");
+        auto plane = gGraphics->GetGeometryPlane("MultiTexture", 1, 1, 10, 10, HePlaneType::XY);
+        plane->Initialize();
+        pNode->AddGeometry(plane);
+
+        auto pMaterial = gGraphics->GetMaterialMutiTexture("MultiTexture");
+        plane->SetMaterial(pMaterial);
+
+        auto pShader = gGraphics->GetShader("MultiTexture", "../../res/shader/mutiTexture.vs", "../../res/shader/mutiTexture.fs");
+        pMaterial->SetShader(pShader);
+
+        auto image0 = gGraphics->GetImage("texture0", "../../res/img/awesomeface.png");
+        image0->Initialize();
+        auto texture0 = gGraphics->GetTexture("texture0", image0);
+        texture0->Initialize();
+        pMaterial->AddTexture("texture0", texture0);
+
+        auto image1 = gGraphics->GetImage("texture1", "../../res/img/Owl.jpg");
+        image1->Initialize();
+        auto texture1 = gGraphics->GetTexture("texture1", image1);
+        texture1->Initialize();
+        pMaterial->AddTexture("texture1", texture1);
+    }
+    */
 
     auto lastTime = HeTime::Now();
     double accTime = 0.0;
@@ -185,8 +258,8 @@ int main(int argc, char* argv[])
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        //glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //pScene->GetSceneNode("Plane")->SetActive(true);
@@ -241,7 +314,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         //auto image = gGraphics->GetCanvasImage("Capture", mWidth, mHeight);
         //image->CaptureFrame("capture.png");
 
- /*       vector<string> fileNames;
+        vector<string> fileNames;
         for (size_t i = 0; i < 37; i++)
         {
             stringstream ss;
@@ -251,7 +324,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
         gGraphics->SerialFrameCapture(fileNames, [&](int frameNumber) {
             pCamera->SetLocalPosition(pCamera->GetLocalPosition() + glm::vec3(0.0f, 1.0f, 0.0f));
-        });*/
+        });
     }
 }
 

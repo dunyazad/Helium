@@ -285,7 +285,7 @@ namespace ArtificialNature {
 		return frameBuffers[name];
 	}
 
-	void HeGraphics::RegisterRenderList(HeGeometry* geometry, const glm::mat4 projection, const glm::mat4 view, const glm::mat4 model)
+	void HeGraphics::RegisterRenderList(HeGeometry* geometry, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 	{
 		auto material = geometry->GetMaterial();
 		if (material != nullptr)

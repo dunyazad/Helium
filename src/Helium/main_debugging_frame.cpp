@@ -90,7 +90,6 @@ protected:
     vector<HeSceneNode*> nodes;
     int index = 0;
 };
-
 OnOff onoff;
 
 int main(int argc, char* argv[])
@@ -115,7 +114,7 @@ int main(int argc, char* argv[])
     
     //glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE); // No Window Title Bar
 
-        // Create Context and Load OpenGL Functions
+    // Create Context and Load OpenGL Functions
     glfwMakeContextCurrent(mWindow);
     glfwSwapInterval(1); // Enable vsync
     //glfwSwapInterval(0); // Disable vsync
@@ -194,6 +193,8 @@ int main(int argc, char* argv[])
     {
         auto pNode = pScene->CreateSceneNode("Mesh");
         auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+        //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
+        
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
         //pNode->AddGeometry(pGeometry);
