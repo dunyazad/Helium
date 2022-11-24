@@ -9,6 +9,7 @@ namespace ArtificialNature {
 	class HeVertexArrayObject;
 	template <typename T> class HeVertexBufferObject;
 	class HeAABB;
+	class HeOctreeGeometry;
 
 	class HeGeometry : public HeObject
 	{
@@ -36,7 +37,7 @@ namespace ArtificialNature {
 
 		void AddIndex(GLuint index);
 		void SetIndex(int index, GLuint vertexIndex);
-		GLuint GetIndex(int at);
+		GLuint GetIndex(int at) const;
 		size_t GetIndexCount();
 		void ClearIndices();
 
@@ -53,7 +54,7 @@ namespace ArtificialNature {
 		void ClearUVs();
 
 		virtual vector<int> RayIntersect(float screenX, float screenY, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
-		virtual vector<int> RayIntersect(const glm::vec3& rayPoint, const glm::vec3& rayDirection, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
+		virtual vector<int> RayIntersect(const glm::vec3& rayOrigin, const glm::vec3& rayDirection);
 
 		virtual void PreDraw(HeCamera* camera);
 		virtual void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
@@ -69,6 +70,7 @@ namespace ArtificialNature {
 		inline void SetDrawingMode(DrawingMode drawingMode) { this->drawingMode = drawingMode; }
 
 		inline const HeAABB* GetAABB() const { return aabb; }
+		inline const HeOctreeGeometry* GetOctree() const { return octree; }
 
 	protected:
 		HeGeometry(const string& name);
@@ -88,6 +90,9 @@ namespace ArtificialNature {
 		HeVertexBufferObject<glm::vec2>* uvbo;
 
 		HeAABB* aabb;
+		HeOctreeGeometry* octree;
+
+		void RebuildOctree();
 
 	public:
 		friend class HeGraphics;

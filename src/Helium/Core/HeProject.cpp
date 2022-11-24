@@ -343,7 +343,7 @@ namespace ArtificialNature {
 		delete this->frustum;
 	}
 
-	glm::vec3 RayPlaneIntersection(const glm::vec3& planePoint, const glm::vec3& planeNormal, const glm::vec3& rayPoint, const glm::vec3& rayDirection)
+	glm::vec3 RayPlaneIntersection(const glm::vec3& planePoint, const glm::vec3& planeNormal, const glm::vec3& rayOrigin, const glm::vec3& rayDirection)
 	{
 		auto ndotu = glm::dot(planeNormal, rayDirection);
 
@@ -351,7 +351,7 @@ namespace ArtificialNature {
 			cout << "No intersection or line is within plane." << endl;
 		}
 
-		auto w = rayPoint - planePoint;
+		auto w = rayOrigin - planePoint;
 		auto si = -glm::dot(planeNormal, w) / ndotu;
 		return w + si * rayDirection + planePoint;
 	}
@@ -364,9 +364,9 @@ namespace ArtificialNature {
 		//auto uv4 = this->projectionMatrix * this->transformMatrixInversed * glm::vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1);
 		glm::vec3 planePoint = glm::vec3(0, 0, this->fx);
 		glm::vec3 planeNormal = glm::vec3(0, 0, 1);
-		glm::vec3 rayPoint = glm::vec3(0, 0, 0);
+		glm::vec3 rayOrigin = glm::vec3(0, 0, 0);
 		glm::vec3 rayDirection = glm::normalize(glm::vec3(ip4.x, ip4.y, ip4.z));
-		glm::vec3 intersection = RayPlaneIntersection(planePoint, planeNormal, rayPoint, rayDirection);
+		glm::vec3 intersection = RayPlaneIntersection(planePoint, planeNormal, rayOrigin, rayDirection);
 		float u = ((intersection.x / (this->imageWidth * 0.5f)) * 0.5f + 0.5f);
 		float v = 1 - ((intersection.y / (this->imageHeight * 0.5f)) * 0.5f + 0.5f);
 		return glm::vec2(u, v);

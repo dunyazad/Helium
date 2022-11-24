@@ -3,6 +3,24 @@
 namespace ArtificialNature {
 
 	HeAABB::HeAABB() {}
+	
+	HeAABB::HeAABB(const HeAABB* other)
+	{
+		vmin = other->vmin;
+		vmax = other->vmax;
+	}
+
+	HeAABB::HeAABB(const HeAABB& other)
+	{
+		vmin = other.vmin;
+		vmax = other.vmax;
+	}
+
+	HeAABB::HeAABB(const glm::vec3& vmin, const glm::vec3& vmax)
+		: vmin(vmin), vmax(vmax)
+	{
+	}
+
 	HeAABB::~HeAABB() {}
 
 	void HeAABB::Extend(const glm::vec2& v)
@@ -23,6 +41,40 @@ namespace ArtificialNature {
 		if (v.x > vmax.x) vmax.x = v.x;
 		if (v.y > vmax.y) vmax.y = v.y;
 		if (v.z > vmax.z) vmax.z = v.z;
+	}
+
+	bool HeAABB::Contains(const glm::vec2& v)
+	{
+		if (vmin.x > v.x || vmax.x < v.x)
+			return false;
+		if (vmin.y > v.y || vmax.y < v.y)
+			return false;
+
+		return true;
+	}
+	
+	bool HeAABB::Contains(const glm::vec3& v)
+	{
+		if (vmin.x > v.x || vmax.x < v.x)
+			return false;
+		if (vmin.y > v.y || vmax.y < v.y)
+			return false;
+		if (vmin.z > v.z || vmax.z < v.z)
+			return false;
+
+		return true;
+	}
+
+	bool HeAABB::Contains(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
+	{
+		if (Contains(v0) == false)
+			return false;
+		if (Contains(v1) == false)
+			return false;
+		if (Contains(v2) == false)
+			return false;
+
+		return true;
 	}
 
 	ostream& operator << (ostream& o, const HeAABB& aabb)

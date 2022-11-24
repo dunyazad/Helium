@@ -4,6 +4,7 @@
 #include <Helium/Graphics/HeVertexArrayObject.h>
 #include <Helium/Graphics/HeVertexBufferObject.hpp>
 #include <Helium/Graphics/HeAABB.h>
+#include <Helium/Graphics/HeOctree.h>
 
 #include <Helium/Scene/HeCamera.h>
 
@@ -20,6 +21,7 @@ namespace ArtificialNature {
 		uvbo = new HeVertexBufferObject<glm::vec2>(HeVertexBufferObject<glm::vec2>::BufferType::UV_BUFFER);
 
 		aabb = new HeAABB();
+		octree = new HeOctreeGeometry(this, aabb->GetMin(), aabb->GetMax(), 0);
 	}
 
 	HeGeometry::~HeGeometry()
@@ -162,7 +164,7 @@ namespace ArtificialNature {
 			dirty = true;
 	}
 
-	GLuint HeGeometry::GetIndex(int at)
+	GLuint HeGeometry::GetIndex(int at) const
 	{
 		return ibo->GetElement(at);
 	}
@@ -249,8 +251,8 @@ namespace ArtificialNature {
 
 		auto pp = glm::unProject(glm::vec3(winX, winY, 1), glm::identity<glm::mat4>(), projectionMatrix * viewMatrix, glm::vec4(viewport[0], viewport[1], viewport[2], viewport[3]));
 
-		auto rayPoint = glm::vec3(glm::inverse(viewMatrix)[3]);
-		auto rayDirection = glm::normalize(pp - rayPoint);
+		auto rayOrigin = glm::vec3(glm::inverse(viewMatrix)[3]);
+		auto rayDirection = glm::normalize(pp - rayOrigin);
 
 		vector<tuple<float, int>> unorderedPickedFaceIndices;
 		auto nof = GetIndexCount() / 3;
@@ -266,7 +268,7 @@ namespace ArtificialNature {
 
 			glm::vec2 baricenter;
 			float distance = 0.0f;
-			if (glm::intersectRayTriangle(rayPoint, rayDirection, v0, v1, v2, baricenter, distance))
+			if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baricenter, distance))
 			{
 				if (distance > 0) {
 					unorderedPickedFaceIndices.push_back(make_tuple(distance, (int)i));
@@ -293,7 +295,7 @@ namespace ArtificialNature {
 		return pickedFaceIndices;
 	}
 
-	vector<int> HeGeometry::RayIntersect(const glm::vec3& rayPoint, const glm::vec3& rayDirection, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix)
+	vector<int> HeGeometry::RayIntersect(const glm::vec3& rayOrigin, const glm::vec3& rayDirection)
 	{
 		vector<int> pickedFaceIndices;
 
@@ -311,7 +313,7 @@ namespace ArtificialNature {
 
 			glm::vec2 baricenter;
 			float distance = 0.0f;
-			if (glm::intersectRayTriangle(rayPoint, rayDirection, v0, v1, v2, baricenter, distance))
+			if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baricenter, distance))
 			{
 				if (distance > 0) {
 					unorderedPickedFaceIndices.push_back(make_tuple(distance, (int)i));
@@ -345,6 +347,11 @@ namespace ArtificialNature {
 
 	void HeGeometry::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 	{
+		if (dirty == true) {
+			RebuildOctree();
+			dirty = false;
+		}
+
 		if (material == nullptr)
 			return;
 
@@ -391,4 +398,25 @@ namespace ArtificialNature {
 
 	}
 
+	void HeGeometry::RebuildOctree()
+	{
+		if (octree != nullptr) {
+			delete octree;
+		}
+		octree = new HeOctreeGeometry(this, aabb->GetMin(), aabb->GetMax(), 0);
+
+		auto nof = GetIndexCount() / 3;
+		for (size_t fi = 0; fi < nof; fi++)
+		{
+			auto vi0 = GetIndex((int)fi * 3);
+			auto vi1 = GetIndex((int)fi * 3 + 1);
+			auto vi2 = GetIndex((int)fi * 3 + 2);
+
+			auto& v0 = GetVertex(vi0);
+			auto& v1 = GetVertex(vi1);
+			auto& v2 = GetVertex(vi2);
+
+			octree->AddTriangle((int)fi, v0, v1, v2);
+		}
+	}
 }

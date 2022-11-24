@@ -38,6 +38,8 @@ HeCameraManipulatorFlight* pCameraManipulatorFlight = nullptr;
 HeCameraManipulatorOrtho* pCameraManipulatorOrtho = nullptr;
 HeCameraManipulatorBase* pCameraManipulator = nullptr;
 
+HeOctreeGeometry* pOctree = nullptr;
+
 class FrameDebugger
 {
 public:
@@ -259,7 +261,311 @@ protected:
     HeThickLines* pLinesGeometry;
 };
 
+class OctreeDebugger
+{
+public:
+    OctreeDebugger(HeGraphics* gGraphics, HeScene* scene, HeGeometry* geometry)
+        : graphics(graphics), scene(scene), geometry(geometry)
+    {
+        stack<const HeOctreeGeometry*> os;
+        os.push(geometry->GetOctree());
+
+        vector<vector<const HeAABB*>> aabbs;
+        while (os.empty() == false)
+        {
+            auto currentOctree = os.top();
+            os.pop();
+
+            auto depth = currentOctree->GetDepth();
+            if (aabbs.size() < depth + 1) {
+                aabbs.resize(depth + 1);
+            }
+            aabbs[depth].push_back(currentOctree->GetAABB());
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (currentOctree->GetSubvolumes()[i] != nullptr) {
+                    os.push(currentOctree->GetSubvolumes()[i]);
+                }
+            }
+        }
+
+        for (size_t depth = 0; depth < aabbs.size(); depth++)
+        {
+            auto pNode = scene->CreateSceneNode(format("AABB Debugging Lines {}", depth));
+            aabbSceneNodes.push_back(pNode);
+
+            auto pGeometry = gGraphics->GetGeometryThickLines(format("AABB Debugging Lines {}", depth));
+            pGeometry->Initialize();
+            pGeometry->SetThickness(1);
+            pGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+            pNode->AddGeometry(pGeometry);
+
+            auto pMaterial = gGraphics->GetMaterial("thick lines");
+
+            auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+            pMaterial->SetShader(pShader);
+
+            pGeometry->SetMaterial(pMaterial);
+
+            glEnable(GL_LINE_SMOOTH);
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+            int count = 0;
+            for (auto aabb : aabbs[depth])
+            {
+                auto& vmin = aabb->GetMin();
+                auto& vmax = aabb->GetMax();
+
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmin.z));
+
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmin.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmax.z));
+
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmax.z));
+                pGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmax.z));
+
+                
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+                pGeometry->AddColor(glm::vec4(0, 1, 0, 0.2f));
+
+                count++;
+            }
+        }
+
+        pLinesSceneNode = scene->CreateSceneNode("Picking Debugging Lines");
+
+        pLinesGeometry = gGraphics->GetGeometryThickLines("Gizmo");
+        pLinesGeometry->Initialize();
+        pLinesGeometry->SetThickness(1);
+        pLinesGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+        pLinesSceneNode->AddGeometry(pLinesGeometry);
+
+        auto pMaterial = gGraphics->GetMaterial("thick lines");
+
+        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        pMaterial->SetShader(pShader);
+
+        pLinesGeometry->SetMaterial(pMaterial);
+
+
+        glEnable(GL_LINE_SMOOTH);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    void HideAll() {
+        for (auto& pNode : aabbSceneNodes)
+        {
+            pNode->SetActive(false);
+        }
+    }
+
+    void Previous()
+    {
+        HideAll();
+
+        if (currentDepth - 1 > 0) {
+            aabbSceneNodes[currentDepth - 1]->SetActive(true);
+            currentDepth--;
+        }
+    }
+
+    void Next()
+    {
+        HideAll();
+
+        if (currentDepth + 1 < aabbSceneNodes.size()) {
+            aabbSceneNodes[currentDepth + 1]->SetActive(true);
+            currentDepth++;
+        }
+    }
+
+    void Pick(float screenX, float screenY, HeCamera* pCamera)
+    {
+        GLint viewport[4];
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        float winX = (float)screenX;
+        float winY = (float)viewport[3] - (float)screenY;
+
+        auto u = winX / viewport[2] - 0.5f;
+        auto v = winY / viewport[3] - 0.5f;
+
+        const auto& projectionMatrix = pCamera->GetProjectionMatrix();
+        const auto& viewMatrix = pCamera->GetViewMatrix();
+
+        auto pp = glm::unProject(glm::vec3(winX, winY, 1), glm::identity<glm::mat4>(), projectionMatrix * viewMatrix, glm::vec4(viewport[0], viewport[1], viewport[2], viewport[3]));
+
+        auto rayOrigin = glm::vec3(glm::inverse(viewMatrix)[3]);
+        auto rayDirection = glm::normalize(pp - rayOrigin);
+
+        pLinesGeometry->AddVertex(rayOrigin);
+        pLinesGeometry->AddVertex(rayOrigin + rayDirection * 1024.0f);
+        pLinesGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+        pLinesGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+
+        vector<HeOctreeGeometry*> rio;
+        const auto octree = const_cast<HeOctreeGeometry*>(geometry->GetOctree());
+        if (octree->GetRayInersectingOcrees(rayOrigin, rayDirection, rio))
+        {
+            for (auto& o : rio)
+            {
+                auto& vmin = o->GetAABB()->GetMin();
+                auto& vmax = o->GetAABB()->GetMax();
+
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmin.z));
+
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmin.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmax.z));
+
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmin.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmax.x, vmax.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmax.y, vmax.z));
+                //pLinesGeometry->AddVertex(glm::vec3(vmin.x, vmin.y, vmax.z));
+
+
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+                //pLinesGeometry->AddColor(glm::vec4(0, 0, 1, 0.2f));
+
+                for (auto& fi : o->GetContainingFaceIndices())
+                {
+                    auto geometry = o->GetGeometry();
+                    auto vi0 = geometry->GetIndex(fi * 3);
+                    auto vi1 = geometry->GetIndex(fi * 3 + 1);
+                    auto vi2 = geometry->GetIndex(fi * 3 + 2);
+                    const auto& v0 = geometry->GetVertex(vi0);
+                    const auto& v1 = geometry->GetVertex(vi1);
+                    const auto& v2 = geometry->GetVertex(vi2);
+                    
+                    glm::vec2 baryPosition;
+                    float distance = 0;
+                    if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baryPosition, distance))
+                    {
+                        if (distance > 0) {
+                            pLinesGeometry->AddVertex(v0);
+                            pLinesGeometry->AddVertex(v1);
+                            pLinesGeometry->AddVertex(v1);
+                            pLinesGeometry->AddVertex(v2);
+                            pLinesGeometry->AddVertex(v2);
+                            pLinesGeometry->AddVertex(v0);
+
+                            pLinesGeometry->AddColor(glm::vec4(1, 1, 1, 1));
+                            pLinesGeometry->AddColor(glm::vec4(1, 1, 1, 1));
+                            pLinesGeometry->AddColor(glm::vec4(1, 1, 1, 1));
+                            pLinesGeometry->AddColor(glm::vec4(1, 1, 1, 1));
+                            pLinesGeometry->AddColor(glm::vec4(1, 1, 1, 1));
+                            pLinesGeometry->AddColor(glm::vec4(1, 1, 1, 1));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+protected:
+    HeGraphics* graphics = nullptr;
+    HeScene* scene = nullptr;
+    HeGeometry* geometry = nullptr;
+    vector<HeSceneNode*> aabbSceneNodes;
+
+    HeSceneNode* pLinesSceneNode = nullptr;
+    HeThickLines* pLinesGeometry = nullptr;
+
+    int currentDepth = 0;
+};
+
 FrameSelector* pFrameSelector = nullptr;
+
+OctreeDebugger* od = nullptr;
 
 int main(int argc, char* argv[])
 {
@@ -312,9 +618,9 @@ int main(int argc, char* argv[])
     {
         pCameraPerspective = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, mWidth, mHeight);
         pCamera = pCameraPerspective;
-        HeCameraManipulatorFlight manipulator(pCameraPerspective);
+        //HeCameraManipulatorFlight manipulator(pCameraPerspective);
         pCameraPerspective->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
-        pCameraManipulatorFlight = &manipulator;
+        pCameraManipulatorFlight = new HeCameraManipulatorFlight(pCameraPerspective);
         pCameraManipulator = pCameraManipulatorFlight;
         pScene->SetMainCamera(pCameraPerspective);
         pCameraManipulatorFlight->ApplyManipulation();
@@ -382,6 +688,8 @@ int main(int argc, char* argv[])
         pMaterial->SetShader(pShader);
 
         //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
+
+        od = new OctreeDebugger(gGraphics, pScene, pGeometry);
     }
 
     HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
@@ -482,6 +790,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             pCamera->SetLocalPosition(pCamera->GetLocalPosition() + glm::vec3(0.0f, 1.0f, 0.0f));
         });*/
     }
+    else if (key == GLFW_KEY_LEFT_BRACKET && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        if (od != nullptr)
+        {
+            od->Previous();
+        }
+    }
+    else if (key == GLFW_KEY_RIGHT_BRACKET && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        if (od != nullptr)
+        {
+            od->Next();
+        }
+    }
 }
 
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -503,7 +825,13 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
         if (pCameraManipulator != nullptr)
         {
+            auto st = HeTime::Now();
             pFrameSelector->PickTriangle((float)pCameraManipulator->GetLastMousePositionX(), (float)pCameraManipulator->GetLastMousePositionY());
+            cout << "Naive: " << HeTime::DeltaMili(st) << " miliseconds" << endl;
+
+            st = HeTime::Now();
+            od->Pick((float)pCameraManipulator->GetLastMousePositionX(), (float)pCameraManipulator->GetLastMousePositionY(), pCamera);
+            cout << "Octree: " << HeTime::DeltaMili(st) << " miliseconds" << endl;
         }
     }
 }
