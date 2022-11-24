@@ -213,6 +213,7 @@ int main(int argc, char* argv[])
 
         auto frames = project.GetFrames();
 
+        /*
         //for (auto& frame : frames)
         //{
         //    //auto frame = frames[0];
@@ -375,7 +376,7 @@ int main(int argc, char* argv[])
         //    auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
         //    pMaterial->SetShader(pShader);
         //}
-
+        */
         
         for (auto& frame : frames)
         {

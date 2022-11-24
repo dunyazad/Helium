@@ -109,7 +109,7 @@ namespace ArtificialNature {
 		return intersectX || intersectY || intersectZ;
 	}
 
-	bool HeOctreeGeometry::GetRayInersectingOcrees(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, vector<HeOctreeGeometry*>& intersectingOctrees)
+	bool HeOctreeGeometry::GetRayInersectingOctrees(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, vector<HeOctreeGeometry*>& intersectingOctrees)
 	{
 		if (IntersectRay(rayOrigin, rayDirection) == false)
 		{
@@ -123,7 +123,7 @@ namespace ArtificialNature {
 			{
 				if (subvolumes[i] != nullptr)
 				{
-					subvolumes[i]->GetRayInersectingOcrees(rayOrigin, rayDirection, intersectingOctrees);
+					subvolumes[i]->GetRayInersectingOctrees(rayOrigin, rayDirection, intersectingOctrees);
 				}
 			}
 

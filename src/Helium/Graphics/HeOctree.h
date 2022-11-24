@@ -16,7 +16,7 @@ namespace ArtificialNature {
 		void AddTriangle(int faceIndex, const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
 
 		bool IntersectRay(const glm::vec3& rayOrigin, const glm::vec3& rayDirection) const;
-		bool GetRayInersectingOcrees(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, vector<HeOctreeGeometry*>& intersectingOctrees);
+		bool GetRayInersectingOctrees(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, vector<HeOctreeGeometry*>& intersectingOctrees);
 
 		inline const HeGeometry* GetGeometry() const { return geometry; }
 		inline const HeAABB* GetAABB() const { return aabb; }

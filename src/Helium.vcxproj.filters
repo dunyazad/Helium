@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Helium\Helium.cpp" />
-    <ClCompile Include="Helium\main.cpp" />
     <ClCompile Include="Helium\nanovg.c" />
     <ClCompile Include="Helium\Scene\HeCamera.cpp">
       <Filter>Scene</Filter>
@@ -109,6 +108,7 @@
     <ClCompile Include="Helium\Graphics\HeOctree.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Helium\main_debugging_frame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />

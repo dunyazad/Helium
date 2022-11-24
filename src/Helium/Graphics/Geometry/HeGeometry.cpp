@@ -239,8 +239,6 @@ namespace ArtificialNature {
 
 	vector<int> HeGeometry::RayIntersect(float screenX, float screenY, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix)
 	{
-		vector<int> pickedFaceIndices;
-
 		GLint viewport[4];
 		glGetIntegerv(GL_VIEWPORT, viewport);
 		float winX = (float)screenX;
@@ -254,89 +252,59 @@ namespace ArtificialNature {
 		auto rayOrigin = glm::vec3(glm::inverse(viewMatrix)[3]);
 		auto rayDirection = glm::normalize(pp - rayOrigin);
 
-		vector<tuple<float, int>> unorderedPickedFaceIndices;
-		auto nof = GetIndexCount() / 3;
-		for (size_t i = 0; i < nof; i++)
-		{
-			auto vi0 = GetIndex((int)i * 3);
-			auto vi1 = GetIndex((int)i * 3 + 1);
-			auto vi2 = GetIndex((int)i * 3 + 2);
-
-			auto& v0 = GetVertex(vi0);
-			auto& v1 = GetVertex(vi1);
-			auto& v2 = GetVertex(vi2);
-
-			glm::vec2 baricenter;
-			float distance = 0.0f;
-			if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baricenter, distance))
-			{
-				if (distance > 0) {
-					unorderedPickedFaceIndices.push_back(make_tuple(distance, (int)i));
-				}
-			}
-		}
-
-		struct PickedFacesLess {
-			inline bool operator() (const tuple<float, int>& a, const tuple<float, int>& b) {
-				return get<0>(a) < get<0>(b);
-			}
-		};
-
-		sort(unorderedPickedFaceIndices.begin(), unorderedPickedFaceIndices.end(), PickedFacesLess());
-
-		for (auto& t : unorderedPickedFaceIndices)
-		{
-			if (get<1>(t) > 0.0f)
-			{
-				pickedFaceIndices.push_back(get<1>(t));
-			}
-		}
-
-		return pickedFaceIndices;
+		return RayIntersect(rayOrigin, rayDirection);
 	}
 
 	vector<int> HeGeometry::RayIntersect(const glm::vec3& rayOrigin, const glm::vec3& rayDirection)
 	{
 		vector<int> pickedFaceIndices;
 
-		vector<tuple<float, int>> unorderedPickedFaceIndices;
-		auto nof = GetIndexCount() / 3;
-		for (size_t i = 0; i < nof; i++)
+		vector<HeOctreeGeometry*> intersectingOctrees;
+		octree->GetRayInersectingOctrees(rayOrigin, rayDirection, intersectingOctrees);
+
+		if (intersectingOctrees.size() > 0)
 		{
-			auto vi0 = GetIndex((int)i * 3);
-			auto vi1 = GetIndex((int)i * 3 + 1);
-			auto vi2 = GetIndex((int)i * 3 + 2);
-
-			auto& v0 = GetVertex(vi0);
-			auto& v1 = GetVertex(vi1);
-			auto& v2 = GetVertex(vi2);
-
-			glm::vec2 baricenter;
-			float distance = 0.0f;
-			if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baricenter, distance))
+			vector<tuple<float, int>> unorderedPickedFaceIndices;
+			for (auto& ot : intersectingOctrees)
 			{
-				if (distance > 0) {
-					unorderedPickedFaceIndices.push_back(make_tuple(distance, (int)i));
+				for (auto& fi : ot->GetContainingFaceIndices())
+				{
+					auto vi0 = GetIndex((int)fi * 3);
+					auto vi1 = GetIndex((int)fi * 3 + 1);
+					auto vi2 = GetIndex((int)fi * 3 + 2);
+
+					auto& v0 = GetVertex(vi0);
+					auto& v1 = GetVertex(vi1);
+					auto& v2 = GetVertex(vi2);
+
+					glm::vec2 baricenter;
+					float distance = 0.0f;
+					if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baricenter, distance))
+					{
+						if (distance > 0) {
+							unorderedPickedFaceIndices.push_back(make_tuple(distance, (int)fi));
+						}
+					}
+				}
+			}
+
+			struct PickedFacesLess {
+				inline bool operator() (const tuple<float, int>& a, const tuple<float, int>& b) {
+					return get<0>(a) < get<0>(b);
+				}
+			};
+
+			sort(unorderedPickedFaceIndices.begin(), unorderedPickedFaceIndices.end(), PickedFacesLess());
+
+			for (auto& t : unorderedPickedFaceIndices)
+			{
+				if (get<1>(t) > 0.0f)
+				{
+					pickedFaceIndices.push_back(get<1>(t));
 				}
 			}
 		}
-
-		struct PickedFacesLess {
-			inline bool operator() (const tuple<float, int>& a, const tuple<float, int>& b) {
-				return get<0>(a) < get<0>(b);
-			}
-		};
-
-		sort(unorderedPickedFaceIndices.begin(), unorderedPickedFaceIndices.end(), PickedFacesLess());
-
-		for (auto& t : unorderedPickedFaceIndices)
-		{
-			if (get<1>(t) > 0.0f)
-			{
-				pickedFaceIndices.push_back(get<1>(t));
-			}
-		}
-
+	
 		return pickedFaceIndices;
 	}
 

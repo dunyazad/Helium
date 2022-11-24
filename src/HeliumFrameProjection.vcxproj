@@ -116,7 +116,7 @@
     <ClCompile Include="Helium\Graphics\Texture\HeCubemapTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeTexture.cpp" />
     <ClCompile Include="Helium\Helium.cpp" />
-    <ClCompile Include="Helium\main_remapping.cpp" />
+    <ClCompile Include="Helium\main_frame_projection.cpp" />
     <ClCompile Include="Helium\nanovg.c" />
     <ClCompile Include="Helium\Scene\HeCamera.cpp" />
     <ClCompile Include="Helium\Scene\HeCameraManipulator.cpp" />

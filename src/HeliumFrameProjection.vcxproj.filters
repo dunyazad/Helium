@@ -105,7 +105,10 @@
     <ClCompile Include="Helium\Core\HeTime.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\main_debugging_frame.cpp" />
+    <ClCompile Include="Helium\Graphics\HeOctree.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\main_frame_projection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
@@ -228,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="Helium\Core\HeTime.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\HeOctree.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

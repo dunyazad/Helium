@@ -454,7 +454,7 @@ public:
 
         vector<HeOctreeGeometry*> rio;
         const auto octree = const_cast<HeOctreeGeometry*>(geometry->GetOctree());
-        if (octree->GetRayInersectingOcrees(rayOrigin, rayDirection, rio))
+        if (octree->GetRayInersectingOctrees(rayOrigin, rayDirection, rio))
         {
             for (auto& o : rio)
             {
