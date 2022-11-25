@@ -27,7 +27,7 @@ namespace ArtificialNature {
 		const glm::vec3& GetVertex(int index) const;
 		size_t GetVertexCount();
 		void ClearVertices();
-
+		
 		void AddNormal(const glm::vec3& normal);
 		void SetNormal(int index, const glm::vec3& normal);
 		void SetNormals(const vector<glm::vec3>& normals);
@@ -71,6 +71,8 @@ namespace ArtificialNature {
 
 		inline const HeAABB* GetAABB() const { return aabb; }
 		inline const HeOctreeGeometry* GetOctree() const { return octree; }
+
+		inline size_t GetFaceCount() { return GetIndexCount() / 3; }
 
 	protected:
 		HeGeometry(const string& name);

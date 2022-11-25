@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libHelium", "src\libHelium.vcxproj", "{B572468D-A94C-4EDE-8082-F6DE865B19CD}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppHelium", "src\AppHelium.vcxproj", "{DBBC8267-5035-49DD-A0B7-63567F765D4C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeliumFrameProjection", "src\HeliumFrameProjection.vcxproj", "{B572468D-A94C-4EDE-8082-F6DE865B19CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{B572468D-A94C-4EDE-8082-F6DE865B19CD}.Debug|x64.Build.0 = Debug|x64
 		{B572468D-A94C-4EDE-8082-F6DE865B19CD}.Release|x64.ActiveCfg = Release|x64
 		{B572468D-A94C-4EDE-8082-F6DE865B19CD}.Release|x64.Build.0 = Release|x64
-		{DBBC8267-5035-49DD-A0B7-63567F765D4C}.Debug|x64.ActiveCfg = Debug|x64
-		{DBBC8267-5035-49DD-A0B7-63567F765D4C}.Debug|x64.Build.0 = Debug|x64
-		{DBBC8267-5035-49DD-A0B7-63567F765D4C}.Release|x64.ActiveCfg = Release|x64
-		{DBBC8267-5035-49DD-A0B7-63567F765D4C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

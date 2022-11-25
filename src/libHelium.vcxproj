@@ -13,19 +13,19 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0F4E8A8A-D886-48AC-8D4A-6FB19B1CDE3C}</ProjectGuid>
+    <ProjectGuid>{B572468D-A94C-4EDE-8082-F6DE865B19CD}</ProjectGuid>
     <RootNamespace>Helium</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -47,9 +47,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -116,7 +118,6 @@
     <ClCompile Include="Helium\Graphics\Texture\HeCubemapTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeTexture.cpp" />
     <ClCompile Include="Helium\Helium.cpp" />
-    <ClCompile Include="Helium\main_debugging_frame.cpp" />
     <ClCompile Include="Helium\nanovg.c" />
     <ClCompile Include="Helium\Scene\HeCamera.cpp" />
     <ClCompile Include="Helium\Scene\HeCameraManipulator.cpp" />

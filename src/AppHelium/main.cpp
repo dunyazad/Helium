@@ -1,27 +1,8 @@
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-#include <bullet/btBulletDynamicsCommon.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Helium.h"
-
+#include <Helium/Helium.h>
 using namespace ArtificialNature;
 
-#include <NanoVG/nanovg.h>
-#define NANOVG_GL3_IMPLEMENTATION
-#include <NanoVG/nanovg_gl.h>
-
-//#pragma comment(lib, "nanovg.lib")
-
-//const int mWidth = 1024;
-//const int mHeight = 1024;
-const int mWidth = 1024;
-const int mHeight = 1024;
-
-
-
+const int windowWidth = 1024;
+const int windowHeight = 1024;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -31,13 +12,70 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
 //void processInput(GLFWwindow* window);
 
 HeGraphics* gGraphics = nullptr;
-HeOrthogonalCamera* pCamera = nullptr;
-//HeCameraManipulatorFlight* pCameraManipulator = nullptr;
-HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
+//HeOrthogonalCamera* pCamera = nullptr;
+HePerspectiveCamera* pCamera = nullptr;
+HeCameraManipulatorFlight* pCameraManipulator = nullptr;
+//HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, bool asBoundingBox = false);
+class OnOff {
+public:
+    void AddSceneNode(HeSceneNode* node) {
+        nodes.push_back(node);
+    }
 
-int main(int argc, char* argv[])
+    void First()
+    {
+        nodes[index]->SetActive(false);
+        nodes[0]->SetActive(true);
+        index = 0;
+    }
+
+    void Last()
+    {
+        nodes[index]->SetActive(false);
+        nodes[nodes.size() - 1]->SetActive(true);
+        index = nodes.size() - 1;
+    }
+
+    void Next()
+    {
+        if (index + 1 < nodes.size()) {
+            HideAll();
+
+            nodes[index]->SetActive(false);
+            nodes[index + 1]->SetActive(true);
+            index++;
+        }
+    }
+
+    void Previous()
+    {
+        if (index > 0) {
+            HideAll();
+
+            nodes[index]->SetActive(false);
+            nodes[index - 1]->SetActive(true);
+            index--;
+        }
+    }
+
+    void HideAll()
+    {
+        for (auto& n : nodes)
+        {
+            n->SetActive(false);
+        }
+    }
+
+protected:
+    vector<HeSceneNode*> nodes;
+    int index = 0;
+};
+OnOff onoff;
+
+HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, vector<int>& faceFrameMapping, bool asBoundingBox = false);
+
+int main(int argc, char** argv)
 {
     // Load GLFW and Create a Window
     glfwInit();
@@ -48,18 +86,18 @@ int main(int argc, char* argv[])
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     //glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Window Visibility
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
-    auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
+    //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // Transparent Background
+    auto mWindow = glfwCreateWindow(windowWidth, windowHeight, "AppHelium", nullptr, nullptr);
 
     // Check for Valid Context
     if (mWindow == nullptr) {
         fprintf(stderr, "Failed to Create OpenGL Context");
         return EXIT_FAILURE;
     }
-    
+
     //glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE); // No Window Title Bar
 
-        // Create Context and Load OpenGL Functions
+    // Create Context and Load OpenGL Functions
     glfwMakeContextCurrent(mWindow);
     glfwSwapInterval(1); // Enable vsync
     //glfwSwapInterval(0); // Disable vsync
@@ -80,25 +118,24 @@ int main(int argc, char* argv[])
 
 
 
-    Helium helium("helium", mWidth, mHeight);
+    Helium helium("helium", windowWidth, windowHeight);
     gGraphics = helium.GetGraphics();
 
     auto pScene = helium.GetScene("Default Scene");
 
-    //HeOrthogonalCamera camera("Main Camera", &scene, 0, 0, mWidth, mHeight);
-    //pCamera = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, mWidth, mHeight);
-    pCamera = pScene->CreateOrthogonalCamera("Main Camera", 0, 0, mWidth, mHeight);
-    //HeCameraManipulatorFlight manipulator(pCamera);
+    pCamera = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+    //pCamera = pScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+    HeCameraManipulatorFlight manipulator(pCamera);
     pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
-    HeCameraManipulatorOrtho manipulator(pCamera);
+    //HeCameraManipulatorOrtho manipulator(pCamera);
     pCameraManipulator = &manipulator;
     pScene->SetMainCamera(pCamera);
 
-    /*
+
     {
         auto pNode = pScene->CreateSceneNode("Gizmo Node");
-        
-        #pragma region [Lines]
+
+#pragma region [Lines]
         auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
         pLines->Initialize();
         pLines->SetThickness(1);
@@ -120,7 +157,7 @@ int main(int argc, char* argv[])
         pLines->AddColor(glm::vec4(0, 0, 1, 1));
 
         auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
-        
+
         auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
         pMaterial->SetShader(pShader);
 
@@ -132,24 +169,71 @@ int main(int argc, char* argv[])
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        #pragma endregion
+#pragma endregion
     }
-    */
+
 
     {
-        //auto pNode = pScene->CreateSceneNode("Mesh");
+        auto pNode = pScene->CreateSceneNode("Mesh");
         auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+        //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
+
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
         //pNode->AddGeometry(pGeometry);
 
-        //auto pMaterial = gGraphics->GetMaterial("Mesh Material");
-        //pGeometry->SetMaterial(pMaterial);
+        auto pMaterial = gGraphics->GetMaterial("Mesh Material");
+        pGeometry->SetMaterial(pMaterial);
 
-        //auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
-        //pMaterial->SetShader(pShader);
+        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+        pMaterial->SetShader(pShader);
 
         //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
+    }
+
+    {
+        auto pGeometry = gGraphics->GetGeometry("Mesh");
+
+        auto pNode = pScene->CreateSceneNode("Debugging");
+
+        auto pLines = gGraphics->GetGeometryThickLines("Debugging");
+        pLines->Initialize();
+        pLines->SetThickness(1);
+        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+        pNode->AddGeometry(pLines);
+
+        auto pMaterial = gGraphics->GetMaterial("thick lines");
+
+        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        pMaterial->SetShader(pShader);
+
+        pLines->SetMaterial(pMaterial);
+
+        auto nof = pGeometry->GetFaceCount();
+        for (size_t fi = 0; fi < nof; fi++)
+        {
+            auto vi0 = pGeometry->GetIndex(fi * 3);
+            auto vi1 = pGeometry->GetIndex(fi * 3 + 1);
+            auto vi2 = pGeometry->GetIndex(fi * 3 + 2);
+
+            const auto& v0 = pGeometry->GetVertex(vi0);
+            const auto& v1 = pGeometry->GetVertex(vi1);
+            const auto& v2 = pGeometry->GetVertex(vi2);
+
+            pLines->AddVertex(v0);
+            pLines->AddVertex(v1);
+            pLines->AddVertex(v1);
+            pLines->AddVertex(v2);
+            pLines->AddVertex(v2);
+            pLines->AddVertex(v0);
+
+            pLines->AddColor(glm::vec4(1, 0, 1, 1));
+            pLines->AddColor(glm::vec4(1, 0, 1, 1));
+            pLines->AddColor(glm::vec4(1, 0, 1, 1));
+            pLines->AddColor(glm::vec4(1, 0, 1, 1));
+            pLines->AddColor(glm::vec4(1, 0, 1, 1));
+            pLines->AddColor(glm::vec4(1, 0, 1, 1));
+        }
     }
 
     {
@@ -175,20 +259,29 @@ int main(int argc, char* argv[])
         //    auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
         //    pMaterial->SetShader(pShader);
         //}
-        
+
         {
             vector<glm::vec2> uvs;
+            vector<int> faceFrameMapping;
 
             auto pNode = pScene->CreateSceneNode("bbMesh");
-            auto pGeometry = Flatten(project, from, "bbMesh", 1.0f, uvs, true);
+            auto pGeometry = Flatten(project, from, "bbMesh", 1.0f, uvs, faceFrameMapping, true);
             //pGeometry->SetFillMode(HeGeometry::Wireframe);
             pNode->AddGeometry(pGeometry);
-            auto nov = pGeometry->GetVertexCount();
-            for (size_t i = 0; i < nov; i++)
-            {
-                auto& v = pGeometry->GetVertex((int)i);
+            //auto nov = pGeometry->GetVertexCount();
+            //for (size_t i = 0; i < nov; i++)
+            //{
+            //    auto& v = pGeometry->GetVertex((int)i);
 
-                pGeometry->AddColor(glm::vec4(1, v.y / 36.0f, 0, 1));
+            //    pGeometry->AddColor(glm::vec4(1, v.y / 36.0f, 0, 1));
+            //}
+
+            auto nof = pGeometry->GetFaceCount();
+            for (size_t i = 0; i < nof; i++)
+            {
+                pGeometry->AddColor(glm::vec4(1, faceFrameMapping[i] / project.GetFrames().size(), 0, 1));
+                pGeometry->AddColor(glm::vec4(1, faceFrameMapping[i] / project.GetFrames().size(), 0, 1));
+                pGeometry->AddColor(glm::vec4(1, faceFrameMapping[i] / project.GetFrames().size(), 0, 1));
             }
 
             auto pMaterial = gGraphics->GetMaterial("vertex with color");
@@ -208,33 +301,6 @@ int main(int argc, char* argv[])
             //HeResourceIO::WriteOBJFile(gGraphics, from->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\WithUV.obj");
         }
     }
-
-    /* Multi texture test
-    {
-        auto pNode = pScene->CreateSceneNode("MultiTexture");
-        auto plane = gGraphics->GetGeometryPlane("MultiTexture", 1, 1, 10, 10, HePlaneType::XY);
-        plane->Initialize();
-        pNode->AddGeometry(plane);
-
-        auto pMaterial = gGraphics->GetMaterialMutiTexture("MultiTexture");
-        plane->SetMaterial(pMaterial);
-
-        auto pShader = gGraphics->GetShader("MultiTexture", "../../res/shader/mutiTexture.vs", "../../res/shader/mutiTexture.fs");
-        pMaterial->SetShader(pShader);
-
-        auto image0 = gGraphics->GetImage("texture0", "../../res/img/awesomeface.png");
-        image0->Initialize();
-        auto texture0 = gGraphics->GetTexture("texture0", image0);
-        texture0->Initialize();
-        pMaterial->AddTexture("texture0", texture0);
-
-        auto image1 = gGraphics->GetImage("texture1", "../../res/img/Owl.jpg");
-        image1->Initialize();
-        auto texture1 = gGraphics->GetTexture("texture1", image1);
-        texture1->Initialize();
-        pMaterial->AddTexture("texture1", texture1);
-    }
-    */
 
     auto lastTime = HeTime::Now();
     double accTime = 0.0;
@@ -268,12 +334,12 @@ int main(int argc, char* argv[])
         pScene->Render();
 
         gGraphics->Flush();
-        
+
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
     }
-    
+
     glfwTerminate();
     return EXIT_SUCCESS;
 }
@@ -324,7 +390,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
         gGraphics->SerialFrameCapture(fileNames, [&](int frameNumber) {
             pCamera->SetLocalPosition(pCamera->GetLocalPosition() + glm::vec3(0.0f, 1.0f, 0.0f));
-        });
+            });
+    }
+    else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        onoff.Previous();
+    }
+    else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        onoff.Next();
     }
 }
 
@@ -352,7 +426,7 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
     }
 }
 
-HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, bool asBoundingBox)
+HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, vector<int>& faceFrameMapping, bool asBoundingBox)
 {
     struct FlatteningInfo
     {
@@ -477,6 +551,7 @@ HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& na
     float maxY = 0.0f;
 
     uvs.resize(flatteningInfos.size() * 3);
+    faceFrameMapping.resize(flatteningInfos.size() * 3);
 
     for (auto& info : flatteningInfos)
     {
@@ -492,84 +567,126 @@ HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& na
         {
             auto frustum = frame->GetCameraInfo()->GetFrustum();
             vector<glm::vec3> vertices = { info.v0, info.v1, info.v2 };
-            if (frustum->ContainsAny(vertices)) {
+            if (frustum->ContainsAll(vertices)) {
 
                 auto ffd = glm::distance2(info.fc, frame->GetCameraInfo()->GetPosition());
                 if (ffd < distance2) {
                     distance2 = ffd;
                     nearestFrame = frame;
                 }
-                cout << "camera position : " << frame->GetCameraInfo()->GetPosition() << endl;
-                cout << "ffd: " << ffd << endl;
+                //cout << "camera position : " << frame->GetCameraInfo()->GetPosition() << endl;
+                //cout << "ffd: " << ffd << endl;
             }
         }
 
-        //glm::project()
-        glm::vec2 textureUV0 = nearestFrame->GetCameraInfo()->WorldToUV(info.v0);
-        glm::vec2 textureUV1 = nearestFrame->GetCameraInfo()->WorldToUV(info.v1);
-        glm::vec2 textureUV2 = nearestFrame->GetCameraInfo()->WorldToUV(info.v2);
+        if (nearestFrame != nullptr) {
+            //glm::project()
+            glm::vec2 textureUV0 = nearestFrame->GetCameraInfo()->WorldToUV(info.v0);
+            glm::vec2 textureUV1 = nearestFrame->GetCameraInfo()->WorldToUV(info.v1);
+            glm::vec2 textureUV2 = nearestFrame->GetCameraInfo()->WorldToUV(info.v2);
 
-        info.normalizedUV0.x += offsetX;
-        info.normalizedUV0.y += offsetY;
-        info.normalizedUV1.x += offsetX;
-        info.normalizedUV1.y += offsetY;
-        info.normalizedUV2.x += offsetX;
-        info.normalizedUV2.y += offsetY;
+            if (textureUV0.x < 0 || textureUV0.y < 0) {
+                cout << "Error. textureUV0: " << textureUV0 << endl;
+            }
+            if (textureUV1.x < 0 || textureUV1.y < 0) {
+                cout << "Error. textureUV1: " << textureUV1 << endl;
+            }
+            if (textureUV2.x < 0 || textureUV2.y < 0) {
+                cout << "Error. textureUV2: " << textureUV2 << endl;
+            }
 
-        if (info.normalizedUV0.x < 0 || info.normalizedUV0.y < 0) {
-            cout << "Error. stv0: " << info.normalizedUV0 << endl;
+            auto translatedUV0 = info.normalizedUV0;
+            auto translatedUV1 = info.normalizedUV1;
+            auto translatedUV2 = info.normalizedUV2;
+
+            translatedUV0.x += offsetX;
+            translatedUV0.y += offsetY;
+            translatedUV1.x += offsetX;
+            translatedUV1.y += offsetY;
+            translatedUV2.x += offsetX;
+            translatedUV2.y += offsetY;
+
+            if (translatedUV0.x < 0 || translatedUV0.y < 0) {
+                cout << "Error. translatedUV0: " << translatedUV0 << endl;
+            }
+            if (translatedUV1.x < 0 || translatedUV1.y < 0) {
+                cout << "Error. translatedUV1: " << translatedUV1 << endl;
+            }
+            if (translatedUV2.x < 0 || translatedUV2.y < 0) {
+                cout << "Error. translatedUV2: " << translatedUV2 << endl;
+            }
+
+            auto fi = info.faceIndex;
+            auto uvi0 = fi * 3;
+            auto uvi1 = fi * 3 + 1;
+            auto uvi2 = fi * 3 + 2;
+            uvs[uvi0].x = translatedUV0.x;
+            uvs[uvi0].y = translatedUV0.y;
+            uvs[uvi1].x = translatedUV1.x;
+            uvs[uvi1].y = translatedUV1.y;
+            uvs[uvi2].x = translatedUV2.x;
+            uvs[uvi2].y = translatedUV2.y;
+
+            faceFrameMapping[fi] = nearestFrame->GetFrameIndex();
+
+            if (asBoundingBox == false)
+            {
+                uvMesh->AddTriangle(translatedUV0, translatedUV1, translatedUV2);
+
+                uvMesh->AddUV(info.normalizedUV0);
+                uvMesh->AddUV(info.normalizedUV1);
+                uvMesh->AddUV(info.normalizedUV2);
+            }
+
+            offsetX += info.sizeX;
+            maxY = maxY > info.sizeY ? maxY : info.sizeY;
+
+            if (offsetX < 0) {
+                cout << "Error. offsetX < 0" << endl;
+            }
+
+            if (asBoundingBox)
+            {
+                HeAABB tempAABB;
+                //tempAABB.Extend(textureUV0);
+                //tempAABB.Extend(textureUV0);
+                //tempAABB.Extend(textureUV0);
+                tempAABB.Extend(translatedUV0);
+                tempAABB.Extend(translatedUV1);
+                tempAABB.Extend(translatedUV2);
+
+                auto tamin = tempAABB.GetMin();
+                auto tamax = tempAABB.GetMax();
+
+                uvMesh->AddTriangle(
+                    glm::vec3(tamin.x, tamin.y, 0),
+                    glm::vec3(tamin.x, tamax.y, 0),
+                    glm::vec3(tamax.x, tamax.y, 0));
+                uvMesh->AddTriangle(
+                    glm::vec3(tamin.x, tamin.y, 0),
+                    glm::vec3(tamax.x, tamax.y, 0),
+                    glm::vec3(tamax.x, tamin.y, 0));
+
+                HeAABB uvAABB;
+                uvAABB.Extend(info.normalizedUV0);
+                uvAABB.Extend(info.normalizedUV1);
+                uvAABB.Extend(info.normalizedUV2);
+
+                auto uvmin = uvAABB.GetMin();
+                auto uvmax = uvAABB.GetMax();
+
+                uvMesh->AddUV(glm::vec2(uvmin.x, uvmin.y));
+                uvMesh->AddUV(glm::vec2(uvmin.x, uvmax.y));
+                uvMesh->AddUV(glm::vec2(uvmax.x, uvmax.y));
+
+                uvMesh->AddUV(glm::vec2(uvmin.x, uvmin.y));
+                uvMesh->AddUV(glm::vec2(uvmax.x, uvmax.y));
+                uvMesh->AddUV(glm::vec2(uvmax.x, uvmin.y));
+            }
         }
-        if (info.normalizedUV1.x < 0 || info.normalizedUV1.y < 0) {
-            cout << "Error. stv1: " << info.normalizedUV1 << endl;
-        }
-        if (info.normalizedUV2.x < 0 || info.normalizedUV2.y < 0) {
-            cout << "Error. stv2: " << info.normalizedUV2 << endl;
-        }
-
-        auto fi = info.faceIndex;
-        auto uvi0 = fi * 3;
-        auto uvi1 = fi * 3 + 1;
-        auto uvi2 = fi * 3 + 2;
-        uvs[uvi0].x = info.normalizedUV0.x;
-        uvs[uvi0].y = info.normalizedUV0.y;
-        uvs[uvi1].x = info.normalizedUV1.x;
-        uvs[uvi1].y = info.normalizedUV1.y;
-        uvs[uvi2].x = info.normalizedUV2.x;
-        uvs[uvi2].y = info.normalizedUV2.y;
-
-        if (asBoundingBox == false)
+        else
         {
-            uvMesh->AddTriangle(info.normalizedUV0, info.normalizedUV1, info.normalizedUV2);
-        }
-
-        offsetX += info.sizeX;
-        maxY = maxY > info.sizeY ? maxY : info.sizeY;
-
-        if (offsetX < 0) {
-            cout << "Error. offsetX < 0" << endl;
-        }
-
-        if (asBoundingBox)
-        {
-            HeAABB tempAABB;
-            //tempAABB.Extend(textureUV0);
-            //tempAABB.Extend(textureUV0);
-            //tempAABB.Extend(textureUV0);
-            tempAABB.Extend(info.normalizedUV0);
-            tempAABB.Extend(info.normalizedUV1);
-            tempAABB.Extend(info.normalizedUV2);
-            
-            auto tamin = tempAABB.GetMin();
-            auto tamax = tempAABB.GetMax();
-            
-            uvMesh->AddTriangle(
-                glm::vec3(tamin.x, tamin.y, 0),
-                glm::vec3(tamin.x, tamax.y, 0),
-                glm::vec3(tamax.x, tamax.y, 0));
-            uvMesh->AddTriangle(
-                glm::vec3(tamin.x, tamin.y, 0),
-                glm::vec3(tamax.x, tamax.y, 0),
-                glm::vec3(tamax.x, tamin.y, 0));
+            cout << "Error. nearest frame is null" << endl;
         }
     }
 

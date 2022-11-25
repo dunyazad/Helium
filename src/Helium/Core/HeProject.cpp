@@ -177,8 +177,8 @@ namespace ArtificialNature {
 			float view_matrix[16]; memcpy(&view_matrix, buffer + index, 64); index += 64;
 			float local_to_world_matrix[16]; memcpy(&local_to_world_matrix, buffer + index, 64); index += 64;
 			float transform_matrix[16]; memcpy(&transform_matrix, buffer + index, 64); index += 64;
-			float projection_matrix[16]; memcpy(&projection_matrix, buffer + index, 64); index += 64;
-			float view_projection_matrix[16]; memcpy(&view_projection_matrix, buffer + index, 64); index += 64;
+			//float projection_matrix[16]; memcpy(&projection_matrix, buffer + index, 64); index += 64;
+			//float view_projection_matrix[16]; memcpy(&view_projection_matrix, buffer + index, 64); index += 64;
 
 			delete[] buffer;
 
@@ -211,9 +211,9 @@ namespace ArtificialNature {
 
 			this->transformMatrixInversed = glm::inverse(this->transformMatrix);
 
-			this->projectionMatrix = glm::transpose(glm::make_mat4(projection_matrix));
+			//this->projectionMatrix = glm::transpose(glm::make_mat4(projection_matrix));
 
-			this->viewProjectionMatrix = glm::make_mat4(view_projection_matrix);
+			//this->viewProjectionMatrix = glm::make_mat4(view_projection_matrix);
 
 			this->position = p;
 			this->rotation = r;
@@ -258,8 +258,8 @@ namespace ArtificialNature {
 			float view_matrix[16]; memcpy(&view_matrix, buffer + index, 64); index += 64;
 			float local_to_world_matrix[16]; memcpy(&local_to_world_matrix, buffer + index, 64); index += 64;
 			float transform_matrix[16]; memcpy(&transform_matrix, buffer + index, 64); index += 64;
-			float projection_matrix[16]; memcpy(&projection_matrix, buffer + index, 64); index += 64;
-			float view_projection_matrix[16]; memcpy(&view_projection_matrix, buffer + index, 64); index += 64;
+			//float projection_matrix[16]; memcpy(&projection_matrix, buffer + index, 64); index += 64;
+			//float view_projection_matrix[16]; memcpy(&view_projection_matrix, buffer + index, 64); index += 64;
 
 			delete[] buffer;
 
@@ -291,9 +291,9 @@ namespace ArtificialNature {
 
 			this->extrinsicMatrix = this->localToWorldMatrix;
 
-			this->projectionMatrix = glm::transpose(glm::make_mat4(projection_matrix));
+			//this->projectionMatrix = glm::transpose(glm::make_mat4(projection_matrix));
 
-			this->viewProjectionMatrix = glm::make_mat4(view_projection_matrix);
+			//this->viewProjectionMatrix = glm::make_mat4(view_projection_matrix);
 
 			this->position = p;
 			this->rotation = r;

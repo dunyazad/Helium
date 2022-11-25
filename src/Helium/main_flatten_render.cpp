@@ -35,7 +35,7 @@ HeOrthogonalCamera* pCamera = nullptr;
 //HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, bool asBoundingBox = false);
+HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, vector<int>& faceFrameMapping, bool asBoundingBox = false);
 
 int main(int argc, char* argv[])
 {
@@ -178,9 +178,10 @@ int main(int argc, char* argv[])
         
         {
             vector<glm::vec2> uvs;
+            vector<int> faceFrameMapping;
 
             auto pNode = pScene->CreateSceneNode("bbMesh");
-            auto pGeometry = Flatten(project, from, "bbMesh", 1.0f, uvs, true);
+            auto pGeometry = Flatten(project, from, "bbMesh", 1.0f, uvs, faceFrameMapping, true);
             //pGeometry->SetFillMode(HeGeometry::Wireframe);
             pNode->AddGeometry(pGeometry);
             auto nov = pGeometry->GetVertexCount();
@@ -352,7 +353,7 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
     }
 }
 
-HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, bool asBoundingBox)
+HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, vector<int>& faceFrameMapping, bool asBoundingBox)
 {
     struct FlatteningInfo
     {
@@ -477,6 +478,7 @@ HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& na
     float maxY = 0.0f;
 
     uvs.resize(flatteningInfos.size() * 3);
+    faceFrameMapping.resize(flatteningInfos.size() * 3);
 
     for (auto& info : flatteningInfos)
     {
@@ -547,6 +549,8 @@ HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& na
             uvs[uvi1].y = info.normalizedUV1.y;
             uvs[uvi2].x = info.normalizedUV2.x;
             uvs[uvi2].y = info.normalizedUV2.y;
+
+            faceFrameMapping[fi] = nearestFrame->GetFrameIndex();
 
             if (asBoundingBox == false)
             {

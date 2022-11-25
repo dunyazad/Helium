@@ -108,7 +108,6 @@
     <ClCompile Include="Helium\Graphics\HeOctree.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\main_debugging_frame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
