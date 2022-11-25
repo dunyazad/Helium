@@ -56,6 +56,10 @@ namespace ArtificialNature {
 		virtual vector<int> RayIntersect(float screenX, float screenY, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
 		virtual vector<int> RayIntersect(const glm::vec3& rayOrigin, const glm::vec3& rayDirection);
 
+		/* Todo
+		virtual vector<int> LineIntersect(const glm::vec3& p0, const glm::vec3& p1);
+		*/
+
 		virtual void PreDraw(HeCamera* camera);
 		virtual void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 		virtual void PostDraw(HeCamera* camera);

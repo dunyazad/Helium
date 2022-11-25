@@ -1,7 +1,6 @@
 #include <Helium/Core/HeResourceIO.h>
 
-#include <Helium/Graphics/HeGraphics.h>
-#include <Helium/Graphics/Geometry/Geometry.h>
+#include <Helium/Graphics/Graphics.h>
 #include <Helium/Core/HeFile.h>
 
 using namespace tinyply;
@@ -20,10 +19,10 @@ namespace ArtificialNature {
 		return q;
 	}
 
-	HeGeometry* HeResourceIO::ReadPoints(HeGraphics* pGraphics, const string& name, const string& filepath)
+	HeGeometry* HeResourceIO::ReadPoints(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
 		HeFile file;
-		file.Open(filepath, false);
+		file.Open(filename, false);
 
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		pGeometry->Initialize();
@@ -56,9 +55,9 @@ namespace ArtificialNature {
 		return pGeometry;
 	}
 
-	HeGeometry* HeResourceIO::ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filepath)
+	HeGeometry* HeResourceIO::ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
-		ifstream ifs(filepath);
+		ifstream ifs(filename);
 
 		string solid = "      ";
 		ifs.read(&solid[0], 6);
@@ -66,24 +65,24 @@ namespace ArtificialNature {
 		if (solid == "solid ")
 		{
 			ifs.close();
-			return ReadASCIISTLFile(pGraphics, name, filepath);
+			return ReadASCIISTLFile(pGraphics, name, filename);
 		}
 		else
 		{
 			ifs.close();
-			return ReadBinarySTLFile(pGraphics, name, filepath);
+			return ReadBinarySTLFile(pGraphics, name, filename);
 		}
 
 		return nullptr;
 	}
 
-	HeGeometry* HeResourceIO::ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filepath)
+	HeGeometry* HeResourceIO::ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		pGeometry->Initialize();
 
 		FILE* fp = nullptr;
-		fopen_s(&fp, filepath.c_str(), "rb");
+		fopen_s(&fp, filename.c_str(), "rb");
 		if (fp != nullptr)
 		{
 			char header[80];
@@ -111,12 +110,12 @@ namespace ArtificialNature {
 		return pGeometry;
 	}
 
-	HeGeometry* HeResourceIO::ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filepath)
+	HeGeometry* HeResourceIO::ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		pGeometry->Initialize();
 
-		ifstream ifs(filepath);
+		ifstream ifs(filename);
 		stringstream buffer;
 		buffer << ifs.rdbuf();
 
@@ -158,7 +157,7 @@ namespace ArtificialNature {
 		return pGeometry;
 	}
 
-	HeGeometry* HeResourceIO::ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filepath)
+	HeGeometry* HeResourceIO::ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		pGeometry->Initialize();
@@ -168,7 +167,7 @@ namespace ArtificialNature {
 		vector<glm::vec3> vertex_normals;
 		vector<tuple<glm::ivec3, glm::ivec3, glm::ivec3>> faces;
 
-		ifstream ifs(filepath);
+		ifstream ifs(filename);
 		stringstream buffer;
 		buffer << ifs.rdbuf();
 
@@ -222,11 +221,11 @@ namespace ArtificialNature {
 				auto& v1 = vertices[fi1[0] - 1];
 				auto& v2 = vertices[fi2[0] - 1];
 
-auto& vn0 = vertex_normals[fi0[2] - 1];
-auto& vn1 = vertex_normals[fi1[2] - 1];
-auto& vn2 = vertex_normals[fi2[2] - 1];
+				auto& vn0 = vertex_normals[fi0[2] - 1];
+				auto& vn1 = vertex_normals[fi1[2] - 1];
+				auto& vn2 = vertex_normals[fi2[2] - 1];
 
-pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
+				pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 			}
 			else
 			{
@@ -318,7 +317,7 @@ pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 		}
 	}
 
-	void HeResourceIO::WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filepath)
+	void HeResourceIO::WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		if (pGeometry == nullptr) {
@@ -326,7 +325,7 @@ pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 		}
 
 		FILE* fp = nullptr;
-		fopen_s(&fp, filepath.c_str(), "wb");
+		fopen_s(&fp, filename.c_str(), "wb");
 
 		if (fp != nullptr)
 		{
@@ -376,14 +375,14 @@ pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 		fclose(fp);
 	}
 
-	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filepath)
+	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		if (pGeometry == nullptr) {
 			return;
 		}
 
-		ofstream ofs(filepath);
+		ofstream ofs(filename);
 		stringstream ss;
 		ss.precision(4);
 
@@ -416,34 +415,134 @@ pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 		auto nof = (int)pGeometry->GetIndexCount() / 3;
 		for (int i = 0; i < nof; i++)
 		{
-			GLuint face[3] = { (GLuint)i * 3, (GLuint)i * 3 + 1, (GLuint)i * 3 + 2 };
+			GLuint face[3] = { (GLuint)i * 3 + 1, (GLuint)i * 3 + 2, (GLuint)i * 3 + 3 };
 		
 			if (has_uv && has_vn)
 			{
 				ss << "f "
-					<< face[0] + 1 << "/" << face[0] + 1 << "/" << face[0] + 1 << " "
-					<< face[1] + 1 << "/" << face[1] + 1 << "/" << face[1] + 1 << " "
-					<< face[2] + 1 << "/" << face[2] + 1 << "/" << face[2] + 1 << endl;
+					<< face[0] << "/" << face[0] << "/" << face[0] << " "
+					<< face[1] << "/" << face[1] << "/" << face[1] << " "
+					<< face[2] << "/" << face[2] << "/" << face[2] << endl;
 			}
 			else if (has_uv)
 			{
 				ss << "f "
-					<< face[0] + 1 << "/" << face[0] + 1 << " "
-					<< face[1] + 1 << "/" << face[1] + 1 << " "
-					<< face[2] + 1 << "/" << face[2] + 1 << endl;
+					<< face[0] << "/" << face[0] << " "
+					<< face[1] << "/" << face[1] << " "
+					<< face[2] << "/" << face[2] << endl;
 			}
 			else if (has_vn)
 			{
 				ss << "f "
-					<< face[0] + 1 << "//" << face[0] + 1 << " "
-					<< face[1] + 1 << "//" << face[1] + 1 << " "
-					<< face[2] + 1 << "//" << face[2] + 1 << endl;
+					<< face[0] << "//" << face[0] << " "
+					<< face[1] << "//" << face[1] << " "
+					<< face[2] << "//" << face[2] << endl;
 			}
 			else
 			{
-				ss << "f " << face[0] + 1 << " " << face[1] + 1 << " " << face[2] + 1 << endl;
+				ss << "f " << face[0] << " " << face[1] << " " << face[2] << endl;
 			}
 		}
+
+		ofs << ss.rdbuf();
+		ofs.close();
+	}
+
+	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const vector<HeTriangleSoupGeometry*>& geometries, const string& filename)
+	{
+		auto filepath = filesystem::path(filename);
+		auto directory = filepath.parent_path();
+		auto stem = filepath.stem();
+
+		ofstream ofs(filename);
+		stringstream ss;
+		ss.precision(4);
+
+		ss << "# MeshIO" << endl;
+		ss << "mtllib " << stem.string() + ".mtl" << endl;
+
+		ofstream mofs(directory / (stem.string() + ".mtl"));
+		stringstream mss;
+
+		int vertexOffset = 0;
+		for (auto& geometry : geometries)
+		{
+			ss << "o " << geometry->GetName() << endl;
+
+			auto material = dynamic_cast<HeMaterialSingleTexture*>(geometry->GetMaterial());
+			if (material != nullptr)
+			{
+				ss << "usemtl " << material->GetName() << endl;
+
+				auto texture = material->GetTexture();
+				auto image = texture->GetImage();
+				image->Write((directory / (image->GetName() + ".png")).string());
+
+				mss << "newmtl " << material->GetName() << endl;
+				mss << "map_Kd " << image->GetName() + ".png" << endl;
+			}
+
+			auto nov = (int)geometry->GetVertexCount();
+			for (int i = 0; i < nov; i++)
+			{
+				auto& v = geometry->GetVertex(i);
+				ss << "v " << v << endl;
+			}
+
+			auto nouv = (int)geometry->GetUVCount();
+			for (int i = 0; i < nouv; i++)
+			{
+				auto& uv = geometry->GetUV(i);
+				ss << "vt " << uv << endl;
+			}
+
+			auto non = (int)geometry->GetNormalCount();
+			for (int i = 0; i < non; i++)
+			{
+				auto& vn = geometry->GetNormal(i);
+				ss << "vn " << vn << endl;
+			}
+
+			bool has_uv = geometry->GetUVCount() != 0;
+			bool has_vn = geometry->GetNormalCount() != 0;
+
+			auto nof = (int)geometry->GetIndexCount() / 3;
+			for (int i = 0; i < nof; i++)
+			{
+				GLuint face[3] = { (GLuint)i * 3 + 1 + vertexOffset, (GLuint)i * 3 + 2 + vertexOffset, (GLuint)i * 3 + 3 + vertexOffset };
+
+				if (has_uv && has_vn)
+				{
+					ss << "f "
+						<< face[0]<< "/" << face[0] << "/" << face[0] << " "
+						<< face[1]<< "/" << face[1] << "/" << face[1] << " "
+						<< face[2]<< "/" << face[2] << "/" << face[2] << endl;
+				}
+				else if (has_uv)
+				{
+					ss << "f "
+						<< face[0] << "/" << face[0] << " "
+						<< face[1] << "/" << face[1] << " "
+						<< face[2] << "/" << face[2] << endl;
+				}
+				else if (has_vn)
+				{
+					ss << "f "
+						<< face[0] << "//" << face[0] << " "
+						<< face[1] << "//" << face[1] << " "
+						<< face[2] << "//" << face[2] << endl;
+				}
+				else
+				{
+					ss << "f " << face[0] << " " << face[1] << " " << face[2] << endl;
+				}
+			}
+
+			vertexOffset += nov;
+		}
+
+		mofs << mss.rdbuf();
+		mofs.close();
 
 		ofs << ss.rdbuf();
 		ofs.close();

@@ -4,8 +4,8 @@
 
 namespace ArtificialNature {
 
-	HeImage::HeImage(const string& name, const string& filePath, bool verticalFlip)
-		: HeObject(name), filePath(filePath), verticalFlip(verticalFlip)
+	HeImage::HeImage(const string& name, const string& filename, bool verticalFlip)
+		: HeObject(name), filename(filename), verticalFlip(verticalFlip)
 	{
 	}
 
@@ -16,11 +16,17 @@ namespace ArtificialNature {
 	void HeImage::Initialize()
 	{
 		stbi_set_flip_vertically_on_load(verticalFlip);
-		data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
+		data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
 	}
 
 	void HeImage::Terminate()
 	{
 		stbi_image_free(data);
+	}
+
+	void HeImage::Write(const string& outputFilename, bool verticalFlip)
+	{
+		stbi_flip_vertically_on_write(verticalFlip);
+		stbi_write_png(outputFilename.c_str(), this->width, this->height, this->nrChannels, this->data, this->width * this->nrChannels);
 	}
 }

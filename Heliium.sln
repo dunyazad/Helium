@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libHelium", "src\libHelium.vcxproj", "{B572468D-A94C-4EDE-8082-F6DE865B19CD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppHelium", "src\AppHelium.vcxproj", "{DBBC8267-5035-49DD-A0B7-63567F765D4C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B572468D-A94C-4EDE-8082-F6DE865B19CD} = {B572468D-A94C-4EDE-8082-F6DE865B19CD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

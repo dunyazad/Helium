@@ -17,6 +17,8 @@ namespace ArtificialNature {
 
 		void Resize(int width, int height);
 
+		inline HeImage* GetImage() const { return image; }
+
 		inline GLenum GetTarget() { return textureTarget; }
 		inline GLuint GetTextureID() { return textureID; }
 

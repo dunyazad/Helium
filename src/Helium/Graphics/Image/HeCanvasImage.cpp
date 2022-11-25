@@ -1,8 +1,5 @@
 #include <Helium/Graphics/Image/HeCanvasImage.h>
 
-#include <stb/stb_image.h>
-#include <stb/stb_image_write.h>
-
 namespace ArtificialNature {
 
 	HeCanvasImage::HeCanvasImage(const string& name, int width, int height)

@@ -21,8 +21,10 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
-
 using namespace std;
+
+#include <stb/stb_image.h>
+#include <stb/stb_image_write.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

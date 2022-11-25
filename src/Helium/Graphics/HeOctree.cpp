@@ -131,6 +131,80 @@ namespace ArtificialNature {
 		}
 	}
 
+	/*
+	bool HeOctreeGeometry::IntersectLine(const glm::vec3& p0, const glm::vec3& p1) const
+	{
+		if (aabb->Contains(p0)) {
+			return true;
+		}
+
+		if (aabb->Contains(p1)) {
+			return true;
+		}
+
+		auto vCenter = aabb->GetCenter();
+		const auto& vmin = aabb->GetMin();
+		const auto& vmax = aabb->GetMax();
+		bool positiveX = vCenter.x < rayOrigin.x;
+		bool positiveY = vCenter.y < rayOrigin.y;
+		bool positiveZ = vCenter.z < rayOrigin.z;
+		auto nearPoint = glm::vec3(positiveX ? vmax.x : vmin.x, positiveY ? vmax.y : vmin.y, positiveZ ? vmax.z : vmin.z);
+		HePlane planeX(nearPoint, positiveX ? glm::vec3(1, 0, 0) : glm::vec3(-1, 0, 0));
+		HePlane planeY(nearPoint, positiveY ? glm::vec3(0, 1, 0) : glm::vec3(0, -1, 0));
+		HePlane planeZ(nearPoint, positiveZ ? glm::vec3(0, 0, 1) : glm::vec3(0, 0, -1));
+
+		glm::vec3 planeXIntersection;
+		glm::vec3 planeYIntersection;
+		glm::vec3 planeZIntersection;
+
+		bool intersectX = false;
+		bool intersectY = false;
+		bool intersectZ = false;
+
+		if (planeX.RayIntersects(rayOrigin, rayDirection, planeXIntersection))
+		{
+			intersectX = (vmin.y <= planeXIntersection.y && planeXIntersection.y <= vmax.y) &&
+				(vmin.z <= planeXIntersection.z && planeXIntersection.z <= vmax.z);
+		}
+
+		if (planeY.RayIntersects(rayOrigin, rayDirection, planeYIntersection))
+		{
+			intersectY = (vmin.x <= planeYIntersection.x && planeYIntersection.x <= vmax.x) &&
+				(vmin.z <= planeYIntersection.z && planeYIntersection.z <= vmax.z);
+		}
+
+		if (planeZ.RayIntersects(rayOrigin, rayDirection, planeZIntersection))
+		{
+			intersectZ = (vmin.x <= planeZIntersection.x && planeZIntersection.x <= vmax.x) &&
+				(vmin.y <= planeZIntersection.y && planeZIntersection.y <= vmax.y);
+		}
+
+		return intersectX || intersectY || intersectZ;
+	}
+
+	bool HeOctreeGeometry::GetLineInersectingOctrees(const glm::vec3& p0, const glm::vec3& p1, vector<HeOctreeGeometry*>& intersectingOctrees)
+	{
+		if (IntersectLine(p0, p1) == false)
+		{
+			return false;
+		}
+		else
+		{
+			intersectingOctrees.push_back(this);
+
+			for (int i = 0; i < 8; i++)
+			{
+				if (subvolumes[i] != nullptr)
+				{
+					subvolumes[i]->GetLineInersectingOctrees(p0, p1, intersectingOctrees);
+				}
+			}
+
+			return true;
+		}
+	}
+	*/
+
 	void HeOctreeGeometry::CreateSub(int index)
 	{
 		bool x = index & 0b0001;

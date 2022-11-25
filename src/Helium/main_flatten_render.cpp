@@ -522,39 +522,47 @@ HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& na
                 cout << "Error. textureUV2: " << textureUV2 << endl;
             }
 
-            info.normalizedUV0.x += offsetX;
-            info.normalizedUV0.y += offsetY;
-            info.normalizedUV1.x += offsetX;
-            info.normalizedUV1.y += offsetY;
-            info.normalizedUV2.x += offsetX;
-            info.normalizedUV2.y += offsetY;
+            auto translatedUV0 = info.normalizedUV0;
+            auto translatedUV1 = info.normalizedUV1;
+            auto translatedUV2 = info.normalizedUV2;
 
-            if (info.normalizedUV0.x < 0 || info.normalizedUV0.y < 0) {
-                cout << "Error. stv0: " << info.normalizedUV0 << endl;
+            translatedUV0.x += offsetX;
+            translatedUV0.y += offsetY;
+            translatedUV1.x += offsetX;
+            translatedUV1.y += offsetY;
+            translatedUV2.x += offsetX;
+            translatedUV2.y += offsetY;
+
+            if (translatedUV0.x < 0 || translatedUV0.y < 0) {
+                cout << "Error. translatedUV0: " << translatedUV0 << endl;
             }
-            if (info.normalizedUV1.x < 0 || info.normalizedUV1.y < 0) {
-                cout << "Error. stv1: " << info.normalizedUV1 << endl;
+            if (translatedUV1.x < 0 || translatedUV1.y < 0) {
+                cout << "Error. translatedUV1: " << translatedUV1 << endl;
             }
-            if (info.normalizedUV2.x < 0 || info.normalizedUV2.y < 0) {
-                cout << "Error. stv2: " << info.normalizedUV2 << endl;
+            if (translatedUV2.x < 0 || translatedUV2.y < 0) {
+                cout << "Error. translatedUV2: " << translatedUV2 << endl;
             }
 
             auto fi = info.faceIndex;
             auto uvi0 = fi * 3;
             auto uvi1 = fi * 3 + 1;
             auto uvi2 = fi * 3 + 2;
-            uvs[uvi0].x = info.normalizedUV0.x;
-            uvs[uvi0].y = info.normalizedUV0.y;
-            uvs[uvi1].x = info.normalizedUV1.x;
-            uvs[uvi1].y = info.normalizedUV1.y;
-            uvs[uvi2].x = info.normalizedUV2.x;
-            uvs[uvi2].y = info.normalizedUV2.y;
+            uvs[uvi0].x = translatedUV0.x;
+            uvs[uvi0].y = translatedUV0.y;
+            uvs[uvi1].x = translatedUV1.x;
+            uvs[uvi1].y = translatedUV1.y;
+            uvs[uvi2].x = translatedUV2.x;
+            uvs[uvi2].y = translatedUV2.y;
 
             faceFrameMapping[fi] = nearestFrame->GetFrameIndex();
 
             if (asBoundingBox == false)
             {
-                uvMesh->AddTriangle(info.normalizedUV0, info.normalizedUV1, info.normalizedUV2);
+                uvMesh->AddTriangle(translatedUV0, translatedUV1, translatedUV2);
+
+                uvMesh->AddUV(info.normalizedUV0);
+                uvMesh->AddUV(info.normalizedUV1);
+                uvMesh->AddUV(info.normalizedUV2);
             }
 
             offsetX += info.sizeX;
@@ -570,9 +578,9 @@ HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& na
                 //tempAABB.Extend(textureUV0);
                 //tempAABB.Extend(textureUV0);
                 //tempAABB.Extend(textureUV0);
-                tempAABB.Extend(info.normalizedUV0);
-                tempAABB.Extend(info.normalizedUV1);
-                tempAABB.Extend(info.normalizedUV2);
+                tempAABB.Extend(translatedUV0);
+                tempAABB.Extend(translatedUV1);
+                tempAABB.Extend(translatedUV2);
 
                 auto tamin = tempAABB.GetMin();
                 auto tamax = tempAABB.GetMax();
@@ -585,6 +593,22 @@ HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& na
                     glm::vec3(tamin.x, tamin.y, 0),
                     glm::vec3(tamax.x, tamax.y, 0),
                     glm::vec3(tamax.x, tamin.y, 0));
+
+                HeAABB uvAABB;
+                uvAABB.Extend(info.normalizedUV0);
+                uvAABB.Extend(info.normalizedUV1);
+                uvAABB.Extend(info.normalizedUV2);
+
+                auto uvmin = uvAABB.GetMin();
+                auto uvmax = uvAABB.GetMax();
+
+                uvMesh->AddUV(glm::vec2(uvmin.x, uvmin.y));
+                uvMesh->AddUV(glm::vec2(uvmin.x, uvmax.y));
+                uvMesh->AddUV(glm::vec2(uvmax.x, uvmax.y));
+
+                uvMesh->AddUV(glm::vec2(uvmin.x, uvmin.y));
+                uvMesh->AddUV(glm::vec2(uvmax.x, uvmax.y));
+                uvMesh->AddUV(glm::vec2(uvmax.x, uvmin.y));
             }
         }
         else

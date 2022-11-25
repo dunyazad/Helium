@@ -15,8 +15,10 @@ namespace ArtificialNature {
 
 		bool Contains(const glm::vec3& point) const;
 
+		bool ContainsAny(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2) const;
 		bool ContainsAny(const vector<glm::vec3>& points) const;
 
+		bool ContainsAll(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2) const;
 		bool ContainsAll(const vector<glm::vec3>& points) const;
 
 		inline const glm::vec3& GetPosition() const { return position; }

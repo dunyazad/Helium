@@ -17,11 +17,13 @@ namespace ArtificialNature {
 		virtual void Initialize();
 		virtual void Terminate();
 
+		void Write(const string& outputFilename, bool verticalFlip = true);
+
 	protected:
-		HeImage(const string& name, const string& filePath, bool verticalFlip = true);
+		HeImage(const string& name, const string& filename, bool verticalFlip = true);
 		~HeImage();
 
-		string filePath;
+		string filename;
 
 		int width;
 		int height;

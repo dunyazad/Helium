@@ -8,18 +8,20 @@ namespace ArtificialNature {
 
 	class HeGraphics;
 	class HeGeometry;
+	class HeTriangleSoupGeometry;
 
 	class HeResourceIO
 	{
 	public:
-		static HeGeometry* ReadPoints(HeGraphics* pGraphics, const string& name, const string& filepath);
-		static HeGeometry* ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filepath);
-		static HeGeometry* ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filepath);
-		static HeGeometry* ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filepath);
-		static HeGeometry* ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filepath);
+		static HeGeometry* ReadPoints(HeGraphics* pGraphics, const string& name, const string& filename);
+		static HeGeometry* ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
+		static HeGeometry* ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
+		static HeGeometry* ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
+		static HeGeometry* ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filename);
 
-		static void WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filepath);
-		static void WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filepath);
+		static void WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
+		static void WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filename);
+		static void WriteOBJFile(HeGraphics* pGraphics, const vector<HeTriangleSoupGeometry*>& geometries, const string& filename);
 
 	protected:
 		static void ParseOneLine(

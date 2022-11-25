@@ -308,6 +308,61 @@ namespace ArtificialNature {
 		return pickedFaceIndices;
 	}
 
+	/*
+	vector<int> HeGeometry::LineIntersect(const glm::vec3& p0, const glm::vec3& p1)
+	{
+		vector<int> pickedFaceIndices;
+
+		vector<HeOctreeGeometry*> intersectingOctrees;
+		octree->GetRayInersectingOctrees(rayOrigin, rayDirection, intersectingOctrees);
+
+		if (intersectingOctrees.size() > 0)
+		{
+			vector<tuple<float, int>> unorderedPickedFaceIndices;
+			for (auto& ot : intersectingOctrees)
+			{
+				for (auto& fi : ot->GetContainingFaceIndices())
+				{
+					auto vi0 = GetIndex((int)fi * 3);
+					auto vi1 = GetIndex((int)fi * 3 + 1);
+					auto vi2 = GetIndex((int)fi * 3 + 2);
+
+					auto& v0 = GetVertex(vi0);
+					auto& v1 = GetVertex(vi1);
+					auto& v2 = GetVertex(vi2);
+
+					glm::vec2 baricenter;
+					float distance = 0.0f;
+					if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baricenter, distance))
+					{
+						if (distance > 0) {
+							unorderedPickedFaceIndices.push_back(make_tuple(distance, (int)fi));
+						}
+					}
+				}
+			}
+
+			struct PickedFacesLess {
+				inline bool operator() (const tuple<float, int>& a, const tuple<float, int>& b) {
+					return get<0>(a) < get<0>(b);
+				}
+			};
+
+			sort(unorderedPickedFaceIndices.begin(), unorderedPickedFaceIndices.end(), PickedFacesLess());
+
+			for (auto& t : unorderedPickedFaceIndices)
+			{
+				if (get<1>(t) > 0.0f)
+				{
+					pickedFaceIndices.push_back(get<1>(t));
+				}
+			}
+		}
+
+		return pickedFaceIndices;
+	}
+	*/
+
 	void HeGeometry::PreDraw(HeCamera* camera)
 	{
 

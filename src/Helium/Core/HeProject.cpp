@@ -130,11 +130,13 @@ namespace ArtificialNature {
 		delete this->cameraInfo;
 	}
 
-	void HeFrameInfo::LoadColorImage(HeGraphics* pGraphics)
+	HeImage* HeFrameInfo::LoadColorImage(HeGraphics* pGraphics)
 	{
 		stringstream ss;
 		ss << "frame" << frameIndex;
 		colorImage = pGraphics->GetImage(ss.str(), colorFile.string());
+		colorImage->Initialize();
+		return colorImage;
 	}
 
 	void HeFrameInfo::LoadDepthInfo()

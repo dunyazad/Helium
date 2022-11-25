@@ -76,6 +76,18 @@ namespace ArtificialNature {
 		return true;
 	}
 
+	bool HeFrustum::ContainsAny(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2) const
+	{
+		if (Contains(v0) == true)
+			return true;
+		if (Contains(v1) == true)
+			return true;
+		if (Contains(v2) == true)
+			return true;
+
+		return false;
+	}
+
 	bool HeFrustum::ContainsAny(const vector<glm::vec3>& points) const
 	{
 		for (auto& point : points)
@@ -87,6 +99,18 @@ namespace ArtificialNature {
 		}
 
 		return false;
+	}
+
+	bool HeFrustum::ContainsAll(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2) const
+	{
+		if (Contains(v0) == false)
+			return false;
+		if (Contains(v1) == false)
+			return false;
+		if (Contains(v2) == false)
+			return false;
+
+		return true;
 	}
 
 	bool HeFrustum::ContainsAll(const vector<glm::vec3>& points) const
