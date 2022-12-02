@@ -34,6 +34,7 @@ namespace ArtificialNature {
 		inline const filesystem::path& GetReconstructedPath() const { return this->reconstructedPath; }
 		inline const filesystem::path& GetSubVolumePath() const { return this->subVolumePath; }
 		inline const filesystem::path& GetUnwrapPath() const { return this->unwrapPath; }
+		inline const filesystem::path& GetResultPath() const { return this->resultPath; }
 		inline const vector<HeFrameInfo*>& GetFrames() const { return this->frames; }
 
 	protected:
@@ -50,6 +51,7 @@ namespace ArtificialNature {
 		filesystem::path reconstructedPath;
 		filesystem::path subVolumePath;
 		filesystem::path unwrapPath;
+		filesystem::path resultPath;
 
 		vector<HeFrameInfo*> frames;
 	};

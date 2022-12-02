@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppHelium", "src\AppHelium.
 		{B572468D-A94C-4EDE-8082-F6DE865B19CD} = {B572468D-A94C-4EDE-8082-F6DE865B19CD}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProjectTexture", "src\ProjectTexture.vcxproj", "{915F1CB2-4C26-4A60-B4A8-14F364871B33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -24,6 +26,10 @@ Global
 		{DBBC8267-5035-49DD-A0B7-63567F765D4C}.Debug|x64.Build.0 = Debug|x64
 		{DBBC8267-5035-49DD-A0B7-63567F765D4C}.Release|x64.ActiveCfg = Release|x64
 		{DBBC8267-5035-49DD-A0B7-63567F765D4C}.Release|x64.Build.0 = Release|x64
+		{915F1CB2-4C26-4A60-B4A8-14F364871B33}.Debug|x64.ActiveCfg = Debug|x64
+		{915F1CB2-4C26-4A60-B4A8-14F364871B33}.Debug|x64.Build.0 = Debug|x64
+		{915F1CB2-4C26-4A60-B4A8-14F364871B33}.Release|x64.ActiveCfg = Release|x64
+		{915F1CB2-4C26-4A60-B4A8-14F364871B33}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -42,6 +42,7 @@ namespace ArtificialNature {
 		this->reconstructedPath = rootPath / "reconstructed";
 		this->subVolumePath = rootPath / "subvolumes";
 		this->unwrapPath = rootPath / "unwrap";
+		this->resultPath = rootPath / "result";
 
 		CreateDirectoryIfNotExists(this->rootPath);
 		CreateDirectoryIfNotExists(this->cameraInfoPath);
@@ -54,6 +55,7 @@ namespace ArtificialNature {
 		CreateDirectoryIfNotExists(this->reconstructedPath);
 		CreateDirectoryIfNotExists(this->subVolumePath);
 		CreateDirectoryIfNotExists(this->unwrapPath);
+		CreateDirectoryIfNotExists(this->resultPath);
 
 		json reconstruction_info;
 		{

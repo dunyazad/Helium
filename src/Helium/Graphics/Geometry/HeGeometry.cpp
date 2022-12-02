@@ -239,6 +239,11 @@ namespace ArtificialNature {
 
 	vector<int> HeGeometry::RayIntersect(float screenX, float screenY, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix)
 	{
+		if (dirty == true) {
+			RebuildOctree();
+			dirty = false;
+		}
+
 		GLint viewport[4];
 		glGetIntegerv(GL_VIEWPORT, viewport);
 		float winX = (float)screenX;
@@ -257,6 +262,11 @@ namespace ArtificialNature {
 
 	vector<int> HeGeometry::RayIntersect(const glm::vec3& rayOrigin, const glm::vec3& rayDirection)
 	{
+		if (dirty == true) {
+			RebuildOctree();
+			dirty = false;
+		}
+
 		vector<int> pickedFaceIndices;
 
 		vector<HeOctreeGeometry*> intersectingOctrees;
@@ -308,13 +318,17 @@ namespace ArtificialNature {
 		return pickedFaceIndices;
 	}
 
-	/*
 	vector<int> HeGeometry::LineIntersect(const glm::vec3& p0, const glm::vec3& p1)
 	{
+		if (dirty == true) {
+			RebuildOctree();
+			dirty = false;
+		}
+
 		vector<int> pickedFaceIndices;
 
 		vector<HeOctreeGeometry*> intersectingOctrees;
-		octree->GetRayInersectingOctrees(rayOrigin, rayDirection, intersectingOctrees);
+		octree->GetLineInersectingOctrees(p0, p1, intersectingOctrees);
 
 		if (intersectingOctrees.size() > 0)
 		{
@@ -331,37 +345,17 @@ namespace ArtificialNature {
 					auto& v1 = GetVertex(vi1);
 					auto& v2 = GetVertex(vi2);
 
-					glm::vec2 baricenter;
-					float distance = 0.0f;
-					if (glm::intersectRayTriangle(rayOrigin, rayDirection, v0, v1, v2, baricenter, distance))
+					glm::vec3 intersection;
+					if (glm::intersectLineTriangle(p0, p1, v0, v1, v2, intersection))
 					{
-						if (distance > 0) {
-							unorderedPickedFaceIndices.push_back(make_tuple(distance, (int)fi));
-						}
+						pickedFaceIndices.push_back((int)fi);
 					}
-				}
-			}
-
-			struct PickedFacesLess {
-				inline bool operator() (const tuple<float, int>& a, const tuple<float, int>& b) {
-					return get<0>(a) < get<0>(b);
-				}
-			};
-
-			sort(unorderedPickedFaceIndices.begin(), unorderedPickedFaceIndices.end(), PickedFacesLess());
-
-			for (auto& t : unorderedPickedFaceIndices)
-			{
-				if (get<1>(t) > 0.0f)
-				{
-					pickedFaceIndices.push_back(get<1>(t));
 				}
 			}
 		}
 
 		return pickedFaceIndices;
 	}
-	*/
 
 	void HeGeometry::PreDraw(HeCamera* camera)
 	{

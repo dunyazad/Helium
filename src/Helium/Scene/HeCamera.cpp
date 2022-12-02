@@ -65,9 +65,12 @@ namespace ArtificialNature {
 
 	void HePerspectiveCamera::Update(float dt)
 	{
+		//auto vm = glm::lookAt(localPosition, targetPosition, upDirection);
+		//localRotation = glm::quat_cast(glm::inverse(vm));
+
 		HeSceneNode::Update(dt);
 
-		viewMatrix = glm::lookAt(localPosition, targetPosition, upDirection);
+		viewMatrix = glm::inverse(absoluteTransform);
 
 		projectionMatrix = glm::perspective(45.0f, aspectRatio, 0.1f, 10000.0f);
 	}

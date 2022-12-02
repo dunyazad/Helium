@@ -109,8 +109,6 @@ int main(int argc, char** argv)
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
-
-
     glEnable(GL_MULTISAMPLE);
 
 
@@ -127,7 +125,6 @@ int main(int argc, char** argv)
     pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
     //HeCameraManipulatorOrtho manipulator(pCamera);
     pCameraManipulator = &manipulator;
-    pCameraManipulator->ApplyManipulation();
     pScene->SetMainCamera(pCamera);
 
 
@@ -235,6 +232,7 @@ int main(int argc, char** argv)
         }
     }*/
 
+    
     {
         HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
 
@@ -273,39 +271,73 @@ int main(int argc, char** argv)
             const auto& v1 = mesh->GetVertex(vi1);
             const auto& v2 = mesh->GetVertex(vi2);
             auto fc = (v0 + v1 + v2) / 3.0f;
+            auto fn = mesh->GetNormal(vi0);
 
             HeFrameInfo* nearestFrame = nullptr;
             float nearestDistance2 = FLT_MAX;
+
+            HeFrameInfo* perpendicularFrame = nullptr;
+            float dotBetweenCameraAndFaceNormal = FLT_MAX;
+
+            HeFrameInfo* nearUVCenterFrame = nullptr;
+            float uvCenterDistance2 = FLT_MAX;
             for (auto& frame : project.GetFrames())
             {
                 auto cameraInfo = frame->GetCameraInfo();
+                auto cameraFront = glm::vec3(cameraInfo->GetViewMatrix()[3]);
                 auto frustum = cameraInfo->GetFrustum();
+
+
                 if (frustum->ContainsAll(v0, v1, v2))
                 {
-                    //mesh->RayIntersect()
+                    //if ((mesh->LineIntersect(cameraInfo->GetPosition(), v0).size() == 0) &&
+                    //    (mesh->LineIntersect(cameraInfo->GetPosition(), v1).size() == 0) &&
+                    //    (mesh->LineIntersect(cameraInfo->GetPosition(), v2).size() == 0))
+                    //{
+                        auto ffd = glm::distance2(fc, frame->GetCameraInfo()->GetPosition());
+                        if (ffd < nearestDistance2) {
+                            nearestDistance2 = ffd;
+                            nearestFrame = frame;
+                        }
 
-                    auto ffd = glm::distance2(fc, frame->GetCameraInfo()->GetPosition());
-                    if (ffd < nearestDistance2) {
-                        nearestDistance2 = ffd;
-                        nearestFrame = frame;
-                    }
+                        auto dot = glm::dot(cameraFront, fn);
+                        if (dotBetweenCameraAndFaceNormal > dot) {
+                            dotBetweenCameraAndFaceNormal = dot;
+                            perpendicularFrame = frame;
+                        }
+
+                        auto uv0 = cameraInfo->WorldToUV(v0);
+                        auto uv1 = cameraInfo->WorldToUV(v1);
+                        auto uv2 = cameraInfo->WorldToUV(v2);
+
+                        auto d0 = glm::distance2(uv0, glm::vec2(0.5f, 0.5f));
+                        auto d1 = glm::distance2(uv0, glm::vec2(0.5f, 0.5f));
+                        auto d2 = glm::distance2(uv0, glm::vec2(0.5f, 0.5f));
+                        auto meand = (d0 + d1 + d2) / 3;
+
+                        if (uvCenterDistance2 > meand) {
+                            uvCenterDistance2 = meand;
+                            nearUVCenterFrame = frame;
+                        }
+                    //}
                 }
             }
 
-            if (nearestFrame != nullptr)
+            if (nearUVCenterFrame != nullptr)
             {
-                auto cameraInfo = nearestFrame->GetCameraInfo();
+                auto cameraInfo = nearUVCenterFrame->GetCameraInfo();
                 auto uv0 = cameraInfo->WorldToUV(v0);
                 auto uv1 = cameraInfo->WorldToUV(v1);
                 auto uv2 = cameraInfo->WorldToUV(v2);
 
-                auto pGeometry = frameGeometries[nearestFrame->GetFrameIndex()];
+                auto pGeometry = frameGeometries[nearUVCenterFrame->GetFrameIndex()];
                 pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
             }
         }
 
-        HeResourceIO::WriteOBJFile(gGraphics, frameGeometries, "D:\\temp\\test.obj");
+        //HeResourceIO::WriteOBJFile(gGraphics, frameGeometries, "D:\\temp\\test.obj");
     }
+    
 
     auto lastTime = HeTime::Now();
     double accTime = 0.0;

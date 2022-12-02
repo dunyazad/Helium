@@ -58,6 +58,8 @@ namespace ArtificialNature {
 	HeGeometry* HeResourceIO::ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
 	{
 		ifstream ifs(filename);
+		if (ifs.is_open() == false)
+			return nullptr;
 
 		string solid = "      ";
 		ifs.read(&solid[0], 6);

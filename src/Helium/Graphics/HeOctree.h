@@ -18,10 +18,8 @@ namespace ArtificialNature {
 		bool IntersectRay(const glm::vec3& rayOrigin, const glm::vec3& rayDirection) const;
 		bool GetRayInersectingOctrees(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, vector<HeOctreeGeometry*>& intersectingOctrees);
 
-		/* Todo
 		bool IntersectLine(const glm::vec3& p0, const glm::vec3& p1) const;
-		bool GetLineInersectingOctrees(const glm::vec3& p0, const glm::vec3& p0, vector<HeOctreeGeometry*>& intersectingOctrees);
-		*/
+		bool GetLineInersectingOctrees(const glm::vec3& p0, const glm::vec3& p1, vector<HeOctreeGeometry*>& intersectingOctrees);
 
 		inline const HeGeometry* GetGeometry() const { return geometry; }
 		inline const HeAABB* GetAABB() const { return aabb; }

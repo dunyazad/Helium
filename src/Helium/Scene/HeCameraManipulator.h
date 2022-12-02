@@ -58,13 +58,6 @@ namespace ArtificialNature {
 		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
 		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
 		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
-
-		void ApplyManipulation();
-
-	protected:
-		float distance = 10.0f;
-		float rotationH = glm::radians<float>(45.0f);
-		float rotationV = glm::radians<float>(45.0f);
 	};
 
 	class HeCameraManipulatorTrackball : public HeCameraManipulatorBase

@@ -131,7 +131,6 @@ namespace ArtificialNature {
 		}
 	}
 
-	/*
 	bool HeOctreeGeometry::IntersectLine(const glm::vec3& p0, const glm::vec3& p1) const
 	{
 		if (aabb->Contains(p0)) {
@@ -145,9 +144,9 @@ namespace ArtificialNature {
 		auto vCenter = aabb->GetCenter();
 		const auto& vmin = aabb->GetMin();
 		const auto& vmax = aabb->GetMax();
-		bool positiveX = vCenter.x < rayOrigin.x;
-		bool positiveY = vCenter.y < rayOrigin.y;
-		bool positiveZ = vCenter.z < rayOrigin.z;
+		bool positiveX = vCenter.x < p0.x;
+		bool positiveY = vCenter.y < p0.y;
+		bool positiveZ = vCenter.z < p0.z;
 		auto nearPoint = glm::vec3(positiveX ? vmax.x : vmin.x, positiveY ? vmax.y : vmin.y, positiveZ ? vmax.z : vmin.z);
 		HePlane planeX(nearPoint, positiveX ? glm::vec3(1, 0, 0) : glm::vec3(-1, 0, 0));
 		HePlane planeY(nearPoint, positiveY ? glm::vec3(0, 1, 0) : glm::vec3(0, -1, 0));
@@ -161,19 +160,19 @@ namespace ArtificialNature {
 		bool intersectY = false;
 		bool intersectZ = false;
 
-		if (planeX.RayIntersects(rayOrigin, rayDirection, planeXIntersection))
+		if (planeX.LineIntersects(p0, p1, planeXIntersection))
 		{
 			intersectX = (vmin.y <= planeXIntersection.y && planeXIntersection.y <= vmax.y) &&
 				(vmin.z <= planeXIntersection.z && planeXIntersection.z <= vmax.z);
 		}
 
-		if (planeY.RayIntersects(rayOrigin, rayDirection, planeYIntersection))
+		if (planeY.LineIntersects(p0, p1, planeYIntersection))
 		{
 			intersectY = (vmin.x <= planeYIntersection.x && planeYIntersection.x <= vmax.x) &&
 				(vmin.z <= planeYIntersection.z && planeYIntersection.z <= vmax.z);
 		}
 
-		if (planeZ.RayIntersects(rayOrigin, rayDirection, planeZIntersection))
+		if (planeZ.LineIntersects(p0, p1, planeZIntersection))
 		{
 			intersectZ = (vmin.x <= planeZIntersection.x && planeZIntersection.x <= vmax.x) &&
 				(vmin.y <= planeZIntersection.y && planeZIntersection.y <= vmax.y);
@@ -203,7 +202,6 @@ namespace ArtificialNature {
 			return true;
 		}
 	}
-	*/
 
 	void HeOctreeGeometry::CreateSub(int index)
 	{

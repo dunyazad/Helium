@@ -90,9 +90,11 @@
     <ClCompile Include="Helium\Core\HeFile.cpp" />
     <ClCompile Include="Helium\Core\HeliumCommon.cpp" />
     <ClCompile Include="Helium\Core\HeObject.cpp" />
+    <ClCompile Include="Helium\Core\HePerformance.cpp" />
     <ClCompile Include="Helium\Core\HeProject.cpp" />
     <ClCompile Include="Helium\Core\HeResourceIO.cpp" />
     <ClCompile Include="Helium\Core\HeTime.cpp" />
+    <ClCompile Include="Helium\Core\HeWindow.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometry.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HePlaneGeometry.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeSkyboxGeometry.cpp" />
@@ -129,9 +131,11 @@
     <ClInclude Include="Helium\Core\HeFile.h" />
     <ClInclude Include="Helium\Core\HeliumCommon.h" />
     <ClInclude Include="Helium\Core\HeObject.h" />
+    <ClInclude Include="Helium\Core\HePerformance.h" />
     <ClInclude Include="Helium\Core\HeProject.h" />
     <ClInclude Include="Helium\Core\HeResourceIO.h" />
     <ClInclude Include="Helium\Core\HeTime.h" />
+    <ClInclude Include="Helium\Core\HeWindow.h" />
     <ClInclude Include="Helium\Graphics\Geometry\Geometry.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometry.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HePlaneGeometry.h" />

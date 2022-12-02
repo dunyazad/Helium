@@ -90,7 +90,6 @@ namespace ArtificialNature {
 	HeCameraManipulatorFlight::HeCameraManipulatorFlight(HeCamera* camera)
 		: HeCameraManipulatorBase(camera)
 	{
-		ApplyManipulation();
 	}
 
 	void HeCameraManipulatorFlight::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -106,53 +105,39 @@ namespace ArtificialNature {
 
 		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		{
-			rotationH = 0;
-			rotationV = 0;
-
-			ApplyManipulation();
+			camera->SetLocalPosition(glm::vec3(0, 0, 0));
+			camera->SetLocalRotation(glm::identity<glm::quat>());
 		}
 
 		if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto front = camera->GetCameraFront() * (distance / 20.0f);
-
+			auto front = camera->GetCameraFront();
 			camera->SetLocalPosition(camera->GetLocalPosition() + front);
-			camera->SetTargetPosition(camera->GetTargetPosition() + front);
 		}
 		if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto front = camera->GetCameraFront() * (distance / 20.0f);
-
+			auto front = camera->GetCameraFront();
 			camera->SetLocalPosition(camera->GetLocalPosition() - front);
-			camera->SetTargetPosition(camera->GetTargetPosition() - front);
 		}
 		if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto right = camera->GetCameraRight() * (distance / 20.0f);
-
+			auto right = camera->GetCameraRight();
 			camera->SetLocalPosition(camera->GetLocalPosition() - right);
-			camera->SetTargetPosition(camera->GetTargetPosition() - right);
 		}
 		if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto right = camera->GetCameraRight() * (distance / 20.0f);
-
+			auto right = camera->GetCameraRight();
 			camera->SetLocalPosition(camera->GetLocalPosition() + right);
-			camera->SetTargetPosition(camera->GetTargetPosition() + right);
 		}
 		if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto up = camera->GetCameraUp() * (distance / 20.0f);
-
+			auto up = camera->GetCameraUp();
 			camera->SetLocalPosition(camera->GetLocalPosition() + up);
-			camera->SetTargetPosition(camera->GetTargetPosition() + up);
 		}
 		if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			auto up = camera->GetCameraUp() * (distance / 20.0f);
-
+			auto up = camera->GetCameraUp();
 			camera->SetLocalPosition(camera->GetLocalPosition() - up);
-			camera->SetTargetPosition(camera->GetTargetPosition() - up);
 		}
 	}
 
@@ -168,20 +153,9 @@ namespace ArtificialNature {
 			lastMouseRightPositionX = xpos;
 			lastMouseRightPositionY = ypos;
 
-			rotationH -= (float)(offsetX * 0.005);
-			rotationV += (float)(offsetY * 0.005);
-
-			if (rotationV <= -glm::radians<float>(89))
-			{
-				rotationV = -glm::radians<float>(89);
-			}
-
-			if (rotationV >= glm::radians<float>(89))
-			{
-				rotationV = glm::radians<float>(89);
-			}
-
-			ApplyManipulation();
+			auto rotationH = glm::angleAxis(glm::radians((float)-offsetX * 0.1f), camera->GetCameraUp());
+			auto rotationV = glm::angleAxis(glm::radians((float)-offsetY * 0.1f), camera->GetCameraRight());
+			camera->SetLocalRotation(rotationH * rotationV * camera->GetLocalRotation());
 		}
 	}
 
@@ -230,38 +204,25 @@ namespace ArtificialNature {
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
 		{
 			if (yoffset < 0) {
-				distance = distance * 1.2f;
+				auto front = camera->GetCameraFront();
+				camera->SetLocalPosition(camera->GetLocalPosition() - front);
 			}
 			else {
-				distance = distance * 0.8f;
+				auto front = camera->GetCameraFront();
+				camera->SetLocalPosition(camera->GetLocalPosition() + front);
 			}
 		}
 		else
 		{
 			if (yoffset < 0) {
-				distance = distance * 1.1f;
+				auto front = camera->GetCameraFront();
+				camera->SetLocalPosition(camera->GetLocalPosition() - front * 0.1f);
 			}
 			else {
-				distance = distance * 0.9f;
+				auto front = camera->GetCameraFront();
+				camera->SetLocalPosition(camera->GetLocalPosition() + front * 0.1f);
 			}
 		}
-
-		if (distance <= glm::epsilon<float>())
-		{
-			distance = glm::epsilon<float>();
-		}
-
-		ApplyManipulation();
-	}
-
-	void HeCameraManipulatorFlight::ApplyManipulation()
-	{
-		auto rh = glm::angleAxis(rotationH, glm::vec3(0, 1, 0));
-		auto rv = glm::angleAxis(-rotationV, rh * glm::vec3(1, 0, 0));
-
-		auto& targetPosition = camera->GetTargetPosition();
-		auto position = targetPosition + (rv * rh) * glm::vec3(0, 0, distance);
-		camera->SetLocalPosition(position);
 	}
 
 	HeCameraManipulatorTrackball::HeCameraManipulatorTrackball(HeCamera* camera)

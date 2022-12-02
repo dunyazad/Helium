@@ -108,6 +108,12 @@
     <ClCompile Include="Helium\Graphics\HeOctree.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Helium\Core\HeWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\HePerformance.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
@@ -233,6 +239,12 @@
     </ClInclude>
     <ClInclude Include="Helium\Graphics\HeOctree.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Core\HeWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Core\HePerformance.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

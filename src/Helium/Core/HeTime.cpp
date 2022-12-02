@@ -2,24 +2,24 @@
 
 namespace ArtificialNature {
 
-	time_point<system_clock> HeTime::Now()
+	time_point<high_resolution_clock> HeTime::Now()
 	{
-		return system_clock::now();
+		return high_resolution_clock::now();
 	}
 
-	double HeTime::DeltaNano(const time_point<system_clock>& t)
+	double HeTime::DeltaNano(const time_point<high_resolution_clock>& t)
 	{
-		return double(duration_cast<nanoseconds>(system_clock::now() - t).count());
+		return double(duration_cast<nanoseconds>(high_resolution_clock::now() - t).count());
 	}
 
-	double HeTime::DeltaMicro(const time_point<system_clock>& t)
+	double HeTime::DeltaMicro(const time_point<high_resolution_clock>& t)
 	{
-		return double(duration_cast<nanoseconds>(system_clock::now() - t).count()) / 1000.0;
+		return double(duration_cast<nanoseconds>(high_resolution_clock::now() - t).count()) / 1000.0;
 	}
 
-	double HeTime::DeltaMili(const time_point<system_clock>& t)
+	double HeTime::DeltaMili(const time_point<high_resolution_clock>& t)
 	{
-		return double(duration_cast<nanoseconds>(system_clock::now() - t).count()) / 1000000.0;
+		return double(duration_cast<nanoseconds>(high_resolution_clock::now() - t).count()) / 1000000.0;
 	}
 
 }
