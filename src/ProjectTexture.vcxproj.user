@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerWorkingDirectory>C:\Users\Mickey\Desktop\spacecapture\Server</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>"default" "2022-12-01_13-31-57" "C:\Users\Mickey\Desktop\spacecapture\Server/projects/default/2022-12-01_13-31-57/reconstructed/04_Fixed.stl" "D:/Projects/3dobj_viewer/backend/objs/default/2022-12-01_13-31-57/result.obj"</LocalDebuggerCommandArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerWorkingDirectory>D:\Workspace\Reconstruct</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>"default" "data" "D:\Workspace\Reconstruct\projects\default\data\reconstructed\04_Fixed.stl" "D:\Workspace\Reconstruct\projects\default\data\result\result.obj"</LocalDebuggerCommandArguments>
+  </PropertyGroup>
+</Project>
