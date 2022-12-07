@@ -86,24 +86,24 @@ namespace ArtificialNature {
 		return geometries[name];
 	}
 
-	HePlaneGeometry* HeGraphics::GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type)
+	HeGeometryPlane* HeGraphics::GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type)
 	{
 		if (geometries.count(name) == 0)
 		{
-			geometries[name] = new HePlaneGeometry(name, columnLength, rowLength, colomns, rows, type);
+			geometries[name] = new HeGeometryPlane(name, columnLength, rowLength, colomns, rows, type);
 		}
 
-		return dynamic_cast<HePlaneGeometry*>(geometries[name]);
+		return dynamic_cast<HeGeometryPlane*>(geometries[name]);
 	}
 
-	HeSkyboxGeometry* HeGraphics::GetSkyboxGeometry(const string& name)
+	HeGeometrySkybox* HeGraphics::GetSkyboxGeometry(const string& name)
 	{
 		if (geometries.count(name) == 0)
 		{
-			geometries[name] = new HeSkyboxGeometry(name);
+			geometries[name] = new HeGeometrySkybox(name);
 		}
 
-		return dynamic_cast<HeSkyboxGeometry*>(geometries[name]);
+		return dynamic_cast<HeGeometrySkybox*>(geometries[name]);
 	}
 
 	HeThickLines* HeGraphics::GetGeometryThickLines(const string& name)
@@ -116,14 +116,14 @@ namespace ArtificialNature {
 		return dynamic_cast<HeThickLines*>(geometries[name]);
 	}
 
-	HeTriangleSoupGeometry* HeGraphics::GetGeometryTriangleSoup(const string& name)
+	HeGeometryTriangleSoup* HeGraphics::GetGeometryTriangleSoup(const string& name)
 	{
 		if (geometries.count(name) == 0)
 		{
-			geometries[name] = new HeTriangleSoupGeometry(name);
+			geometries[name] = new HeGeometryTriangleSoup(name);
 		}
 
-		return dynamic_cast<HeTriangleSoupGeometry*>(geometries[name]);
+		return dynamic_cast<HeGeometryTriangleSoup*>(geometries[name]);
 	}
 
 	HeShader* HeGraphics::GetShader(const string& name)

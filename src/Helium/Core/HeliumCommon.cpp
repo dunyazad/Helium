@@ -110,7 +110,6 @@ namespace ArtificialNature {
 
 		return result;
 	}
-
 }
 
 namespace glm {

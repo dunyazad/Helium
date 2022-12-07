@@ -5,6 +5,7 @@
 namespace ArtificialNature {
 	class HeGraphics;
 	class HeSceneNode;
+	class HeSceneNodeImgui;
 	class HeCamera;
 	class HeOrthogonalCamera;
 	class HePerspectiveCamera;
@@ -18,9 +19,12 @@ namespace ArtificialNature {
 		inline void SetMainCamera(HeCamera* camera) { mainCamera = camera; }
 
 		void Update(float dt);
+		void UpdateImgui(float dt);
 		void Render();
+		void RenderImgui();
 
 		HeSceneNode* CreateSceneNode(const string& name);
+		HeSceneNodeImgui* CreateSceneNodeImgui(const string& name);
 		HeOrthogonalCamera* CreateOrthogonalCamera(const string& name, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		HePerspectiveCamera* CreatePerspectiveCamera(const string& name, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 
@@ -35,6 +39,7 @@ namespace ArtificialNature {
 	private:
 		HeGraphics* graphics = nullptr;
 		HeSceneNode* rootNode = nullptr;
+		HeSceneNode* imguiRootNode = nullptr;
 		HeCamera* mainCamera = nullptr;
 
 	public:

@@ -17,6 +17,9 @@ namespace ArtificialNature {
 		inline HeGraphics* GetGraphics() const { return graphics; }
 		inline const map<string, HeScene*> GetScenes() const { return scenes; }
 
+		void InitializeImgui(GLFWwindow* window);
+		void TerminateImgui();
+
 	private:
 		int windowWidth;
 		int windowHeight;

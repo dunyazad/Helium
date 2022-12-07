@@ -6,10 +6,10 @@
 namespace ArtificialNature {
 
 	class HeGeometry;
-	class HePlaneGeometry;
-	class HeSkyboxGeometry;
+	class HeGeometryPlane;
+	class HeGeometrySkybox;
 	class HeThickLines;
-	class HeTriangleSoupGeometry;
+	class HeGeometryTriangleSoup;
 
 	class HeShader;
 	class HeMaterial;
@@ -30,10 +30,10 @@ namespace ArtificialNature {
 		~HeGraphics();
 
 		HeGeometry* GetGeometry(const string& name);
-		HePlaneGeometry* GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
-		HeSkyboxGeometry* GetSkyboxGeometry(const string& name);
+		HeGeometryPlane* GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
+		HeGeometrySkybox* GetSkyboxGeometry(const string& name);
 		HeThickLines* GetGeometryThickLines(const string& name);
-		HeTriangleSoupGeometry* GetGeometryTriangleSoup(const string& name);
+		HeGeometryTriangleSoup* GetGeometryTriangleSoup(const string& name);
 
 		HeShader* GetShader(const string& name);
 		HeShader* GetShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);

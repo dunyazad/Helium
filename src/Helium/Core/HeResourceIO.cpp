@@ -450,7 +450,7 @@ namespace ArtificialNature {
 		ofs.close();
 	}
 
-	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const vector<HeTriangleSoupGeometry*>& geometries, const string& filename)
+	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const vector<HeGeometryTriangleSoup*>& geometries, const string& filename)
 	{
 		auto filepath = filesystem::path(filename);
 		auto directory = filepath.parent_path();

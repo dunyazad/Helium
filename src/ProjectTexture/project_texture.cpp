@@ -1,3 +1,4 @@
+#define USING_FILES_SYSTEM
 #include <Helium/Helium.h>
 using namespace ArtificialNature;
 
@@ -82,7 +83,7 @@ int main(int argc, char** argv)
 
         cout << "number of frames " << project.GetFrames().size() << endl;
 
-        vector<HeTriangleSoupGeometry*> frameGeometries;
+        vector<HeGeometryTriangleSoup*> frameGeometries;
         for (auto& frame : project.GetFrames())
         {
             auto id = format("frame_{}", frame->GetFrameIndex());
@@ -108,9 +109,9 @@ int main(int argc, char** argv)
         auto nof = mesh->GetFaceCount();
         for (size_t fi = 0; fi < nof; fi++)
         {
-            auto vi0 = mesh->GetIndex(fi * 3);
-            auto vi1 = mesh->GetIndex(fi * 3 + 1);
-            auto vi2 = mesh->GetIndex(fi * 3 + 2);
+            auto vi0 = mesh->GetIndex((int)fi * 3);
+            auto vi1 = mesh->GetIndex((int)fi * 3 + 1);
+            auto vi2 = mesh->GetIndex((int)fi * 3 + 2);
 
             const auto& v0 = mesh->GetVertex(vi0);
             const auto& v1 = mesh->GetVertex(vi1);

@@ -41,7 +41,11 @@ using namespace std;
 #include <tinyply/tinyply.h>
 
 #include <ft2build.h>
-#include FT_FREETYPE_H 
+#include FT_FREETYPE_H
+
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 #include <json.hpp>
 using json = nlohmann::json;
@@ -71,7 +75,6 @@ namespace ArtificialNature {
 	float safe_stof(const string& input);
 
 	vector<string> split(const string& input, const string& delimiters, bool includeEmptyString = false);
-
 }
 
 namespace glm {

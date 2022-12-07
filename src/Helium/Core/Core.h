@@ -5,6 +5,7 @@
 #include <Helium/Core/HeTime.h>
 #include <Helium/Core/HeFile.h>
 #include <Helium/Core/HeResourceIO.h>
-#include <Helium/Core/HeProject.h>
 #include <Helium/Core/HePerformance.h>
 #include <Helium/Core/HeWindow.h>
+
+#include <Helium/Core/Project/Project.h>

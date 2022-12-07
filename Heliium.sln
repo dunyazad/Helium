@@ -11,6 +11,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppHelium", "src\AppHelium.
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProjectTexture", "src\ProjectTexture.vcxproj", "{915F1CB2-4C26-4A60-B4A8-14F364871B33}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B572468D-A94C-4EDE-8082-F6DE865B19CD} = {B572468D-A94C-4EDE-8082-F6DE865B19CD}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UVRemapping", "src\UVRemapping.vcxproj", "{9D98709F-6A04-4136-93F9-FA090F29C9CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B572468D-A94C-4EDE-8082-F6DE865B19CD} = {B572468D-A94C-4EDE-8082-F6DE865B19CD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +38,10 @@ Global
 		{915F1CB2-4C26-4A60-B4A8-14F364871B33}.Debug|x64.Build.0 = Debug|x64
 		{915F1CB2-4C26-4A60-B4A8-14F364871B33}.Release|x64.ActiveCfg = Release|x64
 		{915F1CB2-4C26-4A60-B4A8-14F364871B33}.Release|x64.Build.0 = Release|x64
+		{9D98709F-6A04-4136-93F9-FA090F29C9CA}.Debug|x64.ActiveCfg = Debug|x64
+		{9D98709F-6A04-4136-93F9-FA090F29C9CA}.Debug|x64.Build.0 = Debug|x64
+		{9D98709F-6A04-4136-93F9-FA090F29C9CA}.Release|x64.ActiveCfg = Release|x64
+		{9D98709F-6A04-4136-93F9-FA090F29C9CA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

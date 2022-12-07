@@ -72,16 +72,16 @@
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometry.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\Graphics\Geometry\HePlaneGeometry.cpp">
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryPlane.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\Graphics\Geometry\HeSkyboxGeometry.cpp">
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometrySkybox.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Helium\Graphics\Geometry\HeThickLines.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\Graphics\Geometry\HeTriangleSoupGeometry.cpp">
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Helium\Core\glad.c">
@@ -94,9 +94,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Helium\Core\HeObject.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Helium\Core\HeProject.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Helium\Core\HeResourceIO.cpp">
@@ -113,6 +110,39 @@
     </ClCompile>
     <ClCompile Include="Helium\Core\HePerformance.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\Project\HeCameraInfo.cpp">
+      <Filter>Core\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\Project\HeFrameInfo.cpp">
+      <Filter>Core\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\Project\HeProject.cpp">
+      <Filter>Core\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\imgui\imgui.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\imgui\imgui_demo.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\imgui\imgui_draw.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\imgui\imgui_tables.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\imgui\imgui_widgets.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Core\imgui\imgui_impl_glfw.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Scene\HeSceneNodeImgui.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,16 +234,16 @@
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometry.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Helium\Graphics\Geometry\HePlaneGeometry.h">
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryPlane.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Helium\Graphics\Geometry\HeSkyboxGeometry.h">
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometrySkybox.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Graphics\Geometry\HeThickLines.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Helium\Graphics\Geometry\HeTriangleSoupGeometry.h">
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Core\Core.h">
@@ -226,9 +256,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Core\HeObject.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Helium\Core\HeProject.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Core\HeResourceIO.h">
@@ -245,6 +272,27 @@
     </ClInclude>
     <ClInclude Include="Helium\Core\HePerformance.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Geometry\cuda_kernel.cuh">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Geometry\Geometry.cuh">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Core\Project\HeCameraInfo.h">
+      <Filter>Core\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Core\Project\HeFrameInfo.h">
+      <Filter>Core\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Core\Project\HeProject.h">
+      <Filter>Core\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Core\Project\Project.h">
+      <Filter>Core\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Scene\HeSceneNodeImgui.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -269,5 +317,19 @@
     <Filter Include="Graphics\Material">
       <UniqueIdentifier>{802a4fff-5530-4234-8092-b4c7d4702433}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Project">
+      <UniqueIdentifier>{3136d4aa-966b-40cf-a6da-53654e8abce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\imgui">
+      <UniqueIdentifier>{1093a0bf-89fc-45d6-88dc-0ee9bed80a17}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Helium\Graphics\Geometry\cuda_kernel.cu">
+      <Filter>Graphics\Geometry</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Helium\Graphics\Geometry\Geometry.cu">
+      <Filter>Graphics\Geometry</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

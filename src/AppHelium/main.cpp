@@ -1,3 +1,4 @@
+#define USING_FILES_SYSTEM
 #include <Helium/Helium.h>
 using namespace ArtificialNature;
 
@@ -12,6 +13,7 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
 //void processInput(GLFWwindow* window);
 
 HeGraphics* gGraphics = nullptr;
+HeScene* gScene = nullptr;
 //HeOrthogonalCamera* pCamera = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorFlight* pCameraManipulator = nullptr;
@@ -117,19 +119,19 @@ int main(int argc, char** argv)
     Helium helium("helium", windowWidth, windowHeight);
     gGraphics = helium.GetGraphics();
 
-    auto pScene = helium.GetScene("Default Scene");
+    gScene = helium.GetScene("Default Scene");
 
-    pCamera = pScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
-    //pCamera = pScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+    pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+    //pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
     HeCameraManipulatorFlight manipulator(pCamera);
     pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
     //HeCameraManipulatorOrtho manipulator(pCamera);
     pCameraManipulator = &manipulator;
-    pScene->SetMainCamera(pCamera);
+    gScene->SetMainCamera(pCamera);
 
-
+    
     {
-        auto pNode = pScene->CreateSceneNode("Gizmo Node");
+        auto pNode = gScene->CreateSceneNode("Gizmo Node");
 
 #pragma region [Lines]
         auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
@@ -170,7 +172,7 @@ int main(int argc, char** argv)
 
 
     {
-        auto pNode = pScene->CreateSceneNode("Mesh");
+        auto pNode = gScene->CreateSceneNode("Mesh");
         auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
         //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
 
@@ -184,13 +186,26 @@ int main(int argc, char** argv)
         auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
         pMaterial->SetShader(pShader);
 
+        //pGeometry->ClearNormals();
+        
+        //auto start = HeTime::Now();
+
+        //ComputeFaceNormals((HeGeometryTriangleSoup*)pGeometry);
+        //((HeGeometryTriangleSoup*)pGeometry)->ComputeFaceNormals();
+
+        //pGeometry->RayIntersect(glm::vec3(1, 1, 1), -glm::normalize(glm::vec3(1, 1, 1)));
+        //RayIntersect((HeGeometryTriangleSoup*)pGeometry, glm::vec3(1, 1, 1), -glm::normalize(glm::vec3(1, 1, 1)));
+
+        //cout << HeTime::DeltaMili(start) << " miliseconds" << endl;
+
         //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
+        //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Temp\\TestOBJ.obj");
     }
 
  /*   {
         auto pGeometry = gGraphics->GetGeometry("Mesh");
 
-        auto pNode = pScene->CreateSceneNode("Debugging");
+        auto pNode = gScene->CreateSceneNode("Debugging");
 
         auto pLines = gGraphics->GetGeometryThickLines("Debugging");
         pLines->Initialize();
@@ -236,11 +251,14 @@ int main(int argc, char** argv)
     {
         HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
 
-        vector<HeTriangleSoupGeometry*> frameGeometries;
+        vector<const HeCameraInfo*> cameraInfos;
+        vector<HeGeometryTriangleSoup*> frameGeometries;
         for (auto& frame : project.GetFrames())
         {
+            cameraInfos.push_back(frame->GetCameraInfo());
+
             auto id = format("frame_{}", frame->GetFrameIndex());
-            auto pNode = pScene->CreateSceneNode(id);
+            auto pNode = gScene->CreateSceneNode(id);
             onoff.AddSceneNode(pNode);
             auto pGeometry = gGraphics->GetGeometryTriangleSoup(id);
             pGeometry->Initialize();
@@ -258,6 +276,10 @@ int main(int argc, char** argv)
             pTexture->Initialize();
             pMaterial->SetTexture(pTexture);
         }
+
+        auto start = HeTime::Now();
+        ComputeOcclusionInfo((HeGeometryTriangleSoup*)(gGraphics->GetGeometry("Mesh")), cameraInfos);
+        cout << HeTime::DeltaMili(start) << " miliseconds" << endl;
 
         auto mesh = gGraphics->GetGeometry("Mesh");
         auto nof = mesh->GetFaceCount();
@@ -365,10 +387,10 @@ int main(int argc, char** argv)
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //pScene->GetSceneNode("Plane")->SetActive(true);
+        //gScene->GetSceneNode("Plane")->SetActive(true);
 
-        pScene->Update((float)delta);
-        pScene->Render();
+        gScene->Update((float)delta);
+        gScene->Render();
 
         gGraphics->Flush();
 
@@ -418,10 +440,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         //image->CaptureFrame("capture.png");
 
         vector<string> fileNames;
-        for (size_t i = 0; i < 37; i++)
+        for (size_t i = 0; i < 256; i++)
         {
             stringstream ss;
-            ss << "CaptureFileName_" << i << ".png";
+            ss << "texture_" << i << ".png";
             fileNames.push_back(ss.str());
         }
 

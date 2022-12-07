@@ -8,7 +8,7 @@ namespace ArtificialNature {
 
 	class HeGraphics;
 	class HeGeometry;
-	class HeTriangleSoupGeometry;
+	class HeGeometryTriangleSoup;
 
 	class HeResourceIO
 	{
@@ -21,7 +21,7 @@ namespace ArtificialNature {
 
 		static void WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
 		static void WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filename);
-		static void WriteOBJFile(HeGraphics* pGraphics, const vector<HeTriangleSoupGeometry*>& geometries, const string& filename);
+		static void WriteOBJFile(HeGraphics* pGraphics, const vector<HeGeometryTriangleSoup*>& geometries, const string& filename);
 
 	protected:
 		static void ParseOneLine(

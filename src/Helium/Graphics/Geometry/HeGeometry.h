@@ -76,6 +76,12 @@ namespace ArtificialNature {
 
 		inline size_t GetFaceCount() { return GetIndexCount() / 3; }
 
+		inline HeVertexBufferObject<glm::vec3>* GetVBO() { return vbo; }
+		inline HeVertexBufferObject<glm::vec3>* GetVNBO() { return vnbo; }
+		inline HeVertexBufferObject<GLuint>* GetIBO() { return ibo; }
+		inline HeVertexBufferObject<glm::vec4>* GetCBO() { return cbo; }
+		inline HeVertexBufferObject<glm::vec2>* GetUVBO() { return uvbo; }
+
 	protected:
 		HeGeometry(const string& name);
 		~HeGeometry();
@@ -100,6 +106,7 @@ namespace ArtificialNature {
 
 	public:
 		friend class HeGraphics;
+		friend class HeCUDAInterface;
 	};
 
 }

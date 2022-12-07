@@ -33,6 +33,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 11.8.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -91,15 +92,24 @@
     <ClCompile Include="Helium\Core\HeliumCommon.cpp" />
     <ClCompile Include="Helium\Core\HeObject.cpp" />
     <ClCompile Include="Helium\Core\HePerformance.cpp" />
-    <ClCompile Include="Helium\Core\HeProject.cpp" />
     <ClCompile Include="Helium\Core\HeResourceIO.cpp" />
     <ClCompile Include="Helium\Core\HeTime.cpp" />
     <ClCompile Include="Helium\Core\HeWindow.cpp" />
+    <ClCompile Include="Helium\Core\imgui\imgui.cpp" />
+    <ClCompile Include="Helium\Core\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Helium\Core\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Helium\Core\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Helium\Core\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Helium\Core\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Helium\Core\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Helium\Core\Project\HeCameraInfo.cpp" />
+    <ClCompile Include="Helium\Core\Project\HeFrameInfo.cpp" />
+    <ClCompile Include="Helium\Core\Project\HeProject.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometry.cpp" />
-    <ClCompile Include="Helium\Graphics\Geometry\HePlaneGeometry.cpp" />
-    <ClCompile Include="Helium\Graphics\Geometry\HeSkyboxGeometry.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryPlane.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometrySkybox.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeThickLines.cpp" />
-    <ClCompile Include="Helium\Graphics\Geometry\HeTriangleSoupGeometry.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.cpp" />
     <ClCompile Include="Helium\Graphics\HeAABB.cpp" />
     <ClCompile Include="Helium\Graphics\HeFrameBufferObject.cpp" />
     <ClCompile Include="Helium\Graphics\HeFrustum.cpp" />
@@ -125,6 +135,7 @@
     <ClCompile Include="Helium\Scene\HeCameraManipulator.cpp" />
     <ClCompile Include="Helium\Scene\HeScene.cpp" />
     <ClCompile Include="Helium\Scene\HeSceneNode.cpp" />
+    <ClCompile Include="Helium\Scene\HeSceneNodeImgui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Core\Core.h" />
@@ -132,16 +143,21 @@
     <ClInclude Include="Helium\Core\HeliumCommon.h" />
     <ClInclude Include="Helium\Core\HeObject.h" />
     <ClInclude Include="Helium\Core\HePerformance.h" />
-    <ClInclude Include="Helium\Core\HeProject.h" />
     <ClInclude Include="Helium\Core\HeResourceIO.h" />
     <ClInclude Include="Helium\Core\HeTime.h" />
     <ClInclude Include="Helium\Core\HeWindow.h" />
+    <ClInclude Include="Helium\Core\Project\HeCameraInfo.h" />
+    <ClInclude Include="Helium\Core\Project\HeFrameInfo.h" />
+    <ClInclude Include="Helium\Core\Project\HeProject.h" />
+    <ClInclude Include="Helium\Core\Project\Project.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\cuda_kernel.cuh" />
+    <ClInclude Include="Helium\Graphics\Geometry\Geometry.cuh" />
     <ClInclude Include="Helium\Graphics\Geometry\Geometry.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometry.h" />
-    <ClInclude Include="Helium\Graphics\Geometry\HePlaneGeometry.h" />
-    <ClInclude Include="Helium\Graphics\Geometry\HeSkyboxGeometry.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryPlane.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometrySkybox.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeThickLines.h" />
-    <ClInclude Include="Helium\Graphics\Geometry\HeTriangleSoupGeometry.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.h" />
     <ClInclude Include="Helium\Graphics\Graphics.h" />
     <ClInclude Include="Helium\Graphics\HeAABB.h" />
     <ClInclude Include="Helium\Graphics\HeFrameBufferObject.h" />
@@ -170,9 +186,15 @@
     <ClInclude Include="Helium\Scene\HeCameraManipulator.h" />
     <ClInclude Include="Helium\Scene\HeScene.h" />
     <ClInclude Include="Helium\Scene\HeSceneNode.h" />
+    <ClInclude Include="Helium\Scene\HeSceneNodeImgui.h" />
     <ClInclude Include="Helium\Scene\Scene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Helium\Graphics\Geometry\cuda_kernel.cu" />
+    <CudaCompile Include="Helium\Graphics\Geometry\Geometry.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 11.8.targets" />
   </ImportGroup>
 </Project>

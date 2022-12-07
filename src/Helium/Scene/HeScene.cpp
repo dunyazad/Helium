@@ -1,6 +1,7 @@
 #include <Helium/Scene/HeScene.h>
 
 #include <Helium/Scene/HeSceneNode.h>
+#include <Helium/Scene/HeSceneNodeImgui.h>
 #include <Helium/Scene/HeCamera.h>
 
 namespace ArtificialNature {
@@ -9,6 +10,7 @@ namespace ArtificialNature {
 		: HeObject(name), graphics(graphics)
 	{
 		rootNode = new HeSceneNode("Root Node", this);
+		imguiRootNode = new HeSceneNode("Imgui Root Node", this);
 	}
 
 	HeScene::~HeScene()
@@ -18,6 +20,12 @@ namespace ArtificialNature {
 			delete rootNode;
 			rootNode = nullptr;
 		}
+
+		if (imguiRootNode != nullptr)
+		{
+			delete imguiRootNode;
+			imguiRootNode = nullptr;
+		}
 	}
 
 	void HeScene::Update(float dt)
@@ -25,15 +33,32 @@ namespace ArtificialNature {
 		rootNode->Update(dt);
 	}
 
+	void HeScene::UpdateImgui(float dt)
+	{
+		imguiRootNode->Update(dt);
+	}
+
 	void HeScene::Render()
 	{
 		rootNode->Render(mainCamera);
+	}
+
+	void HeScene::RenderImgui()
+	{
+		imguiRootNode->Render(mainCamera);
 	}
 
 	HeSceneNode* HeScene::CreateSceneNode(const string& name)
 	{
 		auto pNode = new HeSceneNode(name, this);
 		rootNode->AddChild(pNode);
+		return pNode;
+	}
+
+	HeSceneNodeImgui* HeScene::CreateSceneNodeImgui(const string& name)
+	{
+		auto pNode = new HeSceneNodeImgui(name, this);
+		imguiRootNode->AddChild(pNode);
 		return pNode;
 	}
 
@@ -53,6 +78,10 @@ namespace ArtificialNature {
 
 	HeSceneNode* HeScene::GetSceneNode(const string& name)
 	{
-		return rootNode->GetSceneNode(name);
+		auto pNode = rootNode->GetSceneNode(name);
+		if (pNode == nullptr) {
+			pNode = imguiRootNode->GetSceneNode(name);
+		}
+		return pNode;
 	}
 }
