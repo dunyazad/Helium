@@ -15,7 +15,9 @@ namespace ArtificialNature {
 	class HeMaterial;
 	class HeMaterialSingleTexture;
 	class HeMaterialMutiTexture;
+	class HeMaterialTextureArray;
 	class HeTexture;
+	class HeTextureArray;
 	class HeCanvasTexture;
 	class HeCubemapTexture;
 	class HeImage;
@@ -42,9 +44,11 @@ namespace ArtificialNature {
 		HeMaterial* GetMaterial(const string& name);
 		HeMaterialSingleTexture* GetMaterialSingleTexture(const string& name);
 		HeMaterialMutiTexture* GetMaterialMutiTexture(const string& name);
+		HeMaterialTextureArray* GetMaterialTextureArray(const string& name);
 
 		HeTexture* GetTexture(const string& name, HeImage* image);
 		HeTexture* GetTexture(const string& name, int width, int height);
+		HeTextureArray* GetTextureArray(const string& name, const vector<HeImage*>& images);
 		HeCanvasTexture* GetCanvasTexture(const string& name, HeImage* image);
 		HeCubemapTexture* GetCubemapTexture(const string& name, const vector<HeImage*>& images);
 
@@ -73,6 +77,7 @@ namespace ArtificialNature {
 		map<string, HeShader*> shaders;
 		map<string, HeMaterial*> materials;
 		map<string, HeTexture*> textures;
+		map<string, HeTextureArray*> textureArrays;
 		map<string, HeImage*> images;
 		map<string, HeFrameBufferObject*> frameBuffers;
 

@@ -87,7 +87,4 @@ namespace ArtificialNature {
         FT_Done_FreeType(ft);
     }
 
-	void HeFontImage::Terminate()
-	{
-	}
 }

@@ -16,6 +16,15 @@ namespace ArtificialNature {
 
 	HeTexture::~HeTexture()
 	{
+		if (textureID != -1)
+		{
+			glDeleteTextures(1, &textureID);
+		}
+
+		if (textureData != nullptr) {
+			delete textureData;
+			textureData = nullptr;
+		}
 	}
 
 	void HeTexture::Initialize()
@@ -66,19 +75,6 @@ namespace ArtificialNature {
 					glTexImage2D(textureTarget, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
 				}
 			}
-		}
-	}
-
-	void HeTexture::Terminate()
-	{
-		if (textureID != -1)
-		{
-			glDeleteTextures(1, &textureID);
-		}
-
-		if (textureData != nullptr) {
-			delete textureData;
-			textureData = nullptr;
 		}
 	}
 

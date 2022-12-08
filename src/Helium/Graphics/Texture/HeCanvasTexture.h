@@ -9,7 +9,6 @@ namespace ArtificialNature {
 	{
 	public:
 		virtual void Initialize();
-		virtual void Terminate();
 
 		void Bind();
 		void Unbind();

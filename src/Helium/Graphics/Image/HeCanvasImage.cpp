@@ -12,18 +12,14 @@ namespace ArtificialNature {
 
 	HeCanvasImage::~HeCanvasImage()
 	{
-	}
-
-	void HeCanvasImage::Initialize()
-	{
-	}
-
-	void HeCanvasImage::Terminate()
-	{
 		if (data != nullptr)
 		{
 			delete data;
 		}
+	}
+	
+	void HeCanvasImage::Initialize()
+	{
 	}
 
 	void HeCanvasImage::CaptureFrame(const string& filepath, bool verticalFlip)

@@ -47,8 +47,4 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeCubemapTexture::Terminate()
-	{
-		HeTexture::Terminate();
-	}
 }

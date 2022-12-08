@@ -9,7 +9,6 @@ namespace ArtificialNature {
 	{
 	public:
 		virtual void Initialize();
-		virtual void Terminate();
 
 	protected:
 		HeCubemapTexture(const string& name, const vector<HeImage*>& images);

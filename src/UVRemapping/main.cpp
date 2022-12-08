@@ -282,10 +282,35 @@ int main(int argc, char** argv)
     */
 
 
+    {
+        vector<HeImage*> images;
+        for (size_t i = 0; i < 256; i++)
+        {
+            auto image = gGraphics->GetImage(format("texture_{}.png", i), format("D:\\Resources\\2D\\ImageScequence\\texture_{}.png", i));
+            image->Initialize();
+            images.push_back(image);
+        }
+        
+        auto pTextureArray = gGraphics->GetTextureArray("texture array", images);
+        pTextureArray->Initialize();
 
-    bool show_demo_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        auto pNode = gScene->CreateSceneNode("texture array plane");
+        auto pGeometry = gGraphics->GetGeometryPlane("texture array plane", 1, 1, 10, 10, HePlaneType::XY);
+        pGeometry->Initialize();
+        pNode->AddGeometry(pGeometry);
+
+        auto pMaterial = gGraphics->GetMaterialTextureArray("texture array plane");
+        
+        auto pShader = gGraphics->GetShader("textureArray", "../../res/shader/textureArray.vs", "../../res/shader/textureArray.fs");
+        pMaterial->SetShader(pShader);
+
+        pMaterial->SetTextureArray(pTextureArray);
+
+        pGeometry->SetMaterial(pMaterial);
+    }
+
+
+    int textureIndex = 0;
 
 
     auto lastTime = HeTime::Now();
@@ -314,7 +339,15 @@ int main(int argc, char** argv)
         //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //gScene->GetSceneNode("Plane")->SetActive(true);
+        {
+            auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
+            pMaterial->SetTextureIndex(textureIndex);
+
+            textureIndex++;
+            if (textureIndex > 255) {
+                textureIndex = 0;
+            }
+        }
 
         gScene->Update((float)delta);
         gScene->Render();

@@ -6,7 +6,7 @@ namespace ArtificialNature {
 
 	class HeImage;
 
-	class HeTexture : public HeObject
+	class HeTextureArray : public HeObject
 	{
 	public:
 		virtual void Initialize();
@@ -14,9 +14,7 @@ namespace ArtificialNature {
 		void Bind(GLenum textureSlot = GL_TEXTURE0);
 		void Unbind();
 
-		void Resize(int width, int height);
-
-		inline HeImage* GetImage() const { return image; }
+		inline const vector<HeImage*>& GetImage() const { return images; }
 
 		inline GLenum GetTarget() { return textureTarget; }
 		inline GLuint GetTextureID() { return textureID; }
@@ -27,18 +25,18 @@ namespace ArtificialNature {
 		inline bool HasAlpha() { return withAlpha; }
 
 	protected:
-		HeTexture(const string& name, HeImage* image);
-		HeTexture(const string& name, int width, int height);
-		~HeTexture();
+		HeTextureArray(const string& name, const vector<HeImage*>& images);
+		~HeTextureArray();
 
-		HeImage* image = nullptr;
+		vector<HeImage*> images;
 
 		bool withAlpha = true;
 		GLuint textureID = -1;
-		GLenum textureTarget = GL_TEXTURE_2D; // GL_TEXTURE_2D, GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_CUBE_MAP
+		GLenum textureTarget = GL_TEXTURE_2D_ARRAY;
 		GLenum format = GL_RGBA;
 		GLsizei width = 0;
 		GLsizei height = 0;
+		GLsizei depth = 0;
 		GLenum dataType = GL_UNSIGNED_BYTE;
 		unsigned char* textureData = nullptr;
 

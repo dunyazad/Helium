@@ -15,7 +15,6 @@ namespace ArtificialNature {
 		const unsigned char* Data() { return data; }
 
 		virtual void Initialize();
-		virtual void Terminate();
 
 		void Write(const string& outputFilename, bool verticalFlip = true);
 
@@ -25,11 +24,11 @@ namespace ArtificialNature {
 
 		string filename;
 
-		int width;
-		int height;
-		int nrChannels;
+		int width = 0;
+		int height = 0;
+		int nrChannels = 0;
 
-		unsigned char* data;
+		unsigned char* data = nullptr;
 
 		bool verticalFlip = true;
 	public:

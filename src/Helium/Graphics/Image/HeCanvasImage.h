@@ -11,7 +11,6 @@ namespace ArtificialNature {
 	{
 	public:
 		virtual void Initialize();
-		virtual void Terminate();
 
 		void CaptureFrame(const string& filepath, bool verticalFlip = true);
 

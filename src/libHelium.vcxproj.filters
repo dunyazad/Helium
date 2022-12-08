@@ -57,9 +57,6 @@
     <ClCompile Include="Helium\Graphics\Material\HeMaterialMutiTexture.cpp">
       <Filter>Graphics\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\Graphics\Material\HeMaterialSingleTexture.cpp">
-      <Filter>Graphics\Material</Filter>
-    </ClCompile>
     <ClCompile Include="Helium\Graphics\Image\HeCanvasImage.cpp">
       <Filter>Graphics\Image</Filter>
     </ClCompile>
@@ -144,6 +141,15 @@
     <ClCompile Include="Helium\Scene\HeSceneNodeImgui.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Helium\Graphics\Texture\HeTextureArray.cpp">
+      <Filter>Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Graphics\Material\HeMaterialTextureArray.cpp">
+      <Filter>Graphics\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Graphics\Material\HeMaterialSingleTexture.cpp">
+      <Filter>Graphics\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
@@ -208,9 +214,6 @@
       <Filter>Graphics\Material</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Graphics\Material\HeMaterialMutiTexture.h">
-      <Filter>Graphics\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Helium\Graphics\Material\HeMaterialSingleTexture.h">
       <Filter>Graphics\Material</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Graphics\Material\Material.h">
@@ -293,6 +296,15 @@
     </ClInclude>
     <ClInclude Include="Helium\Scene\HeSceneNodeImgui.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Texture\HeTextureArray.h">
+      <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Material\HeMaterialTextureArray.h">
+      <Filter>Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Material\HeMaterialSingleTexture.h">
+      <Filter>Graphics\Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

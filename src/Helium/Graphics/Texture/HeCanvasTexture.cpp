@@ -17,10 +17,5 @@ namespace ArtificialNature {
 	{
 		HeTexture::Initialize();
 	}
-
-	void HeCanvasTexture::Terminate()
-	{
-		HeTexture::Terminate();
-	}
-
+	
 }

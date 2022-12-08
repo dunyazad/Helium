@@ -125,10 +125,12 @@
     <ClCompile Include="Helium\Graphics\Material\HeMaterial.cpp" />
     <ClCompile Include="Helium\Graphics\Material\HeMaterialMutiTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Material\HeMaterialSingleTexture.cpp" />
+    <ClCompile Include="Helium\Graphics\Material\HeMaterialTextureArray.cpp" />
     <ClCompile Include="Helium\Graphics\stb_image.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeCanvasTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeCubemapTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeTexture.cpp" />
+    <ClCompile Include="Helium\Graphics\Texture\HeTextureArray.cpp" />
     <ClCompile Include="Helium\Helium.cpp" />
     <ClCompile Include="Helium\nanovg.c" />
     <ClCompile Include="Helium\Scene\HeCamera.cpp" />
@@ -176,10 +178,12 @@
     <ClInclude Include="Helium\Graphics\Material\HeMaterial.h" />
     <ClInclude Include="Helium\Graphics\Material\HeMaterialMutiTexture.h" />
     <ClInclude Include="Helium\Graphics\Material\HeMaterialSingleTexture.h" />
+    <ClInclude Include="Helium\Graphics\Material\HeMaterialTextureArray.h" />
     <ClInclude Include="Helium\Graphics\Material\Material.h" />
     <ClInclude Include="Helium\Graphics\Texture\HeCanvasTexture.h" />
     <ClInclude Include="Helium\Graphics\Texture\HeCubemapTexture.h" />
     <ClInclude Include="Helium\Graphics\Texture\HeTexture.h" />
+    <ClInclude Include="Helium\Graphics\Texture\HeTextureArray.h" />
     <ClInclude Include="Helium\Graphics\Texture\Texture.h" />
     <ClInclude Include="Helium\Helium.h" />
     <ClInclude Include="Helium\Scene\HeCamera.h" />

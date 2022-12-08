@@ -186,6 +186,16 @@ namespace ArtificialNature {
 		return dynamic_cast<HeMaterialMutiTexture*>(materials[name]);
 	}
 
+	HeMaterialTextureArray* HeGraphics::GetMaterialTextureArray(const string& name)
+	{
+		if (materials.count(name) == 0)
+		{
+			materials[name] = new HeMaterialTextureArray(name);
+		}
+
+		return dynamic_cast<HeMaterialTextureArray*>(materials[name]);
+	}
+
 	HeTexture* HeGraphics::GetTexture(const string& name, HeImage* image)
 	{
 		if (textures.count(name) == 0)
@@ -204,6 +214,16 @@ namespace ArtificialNature {
 		}
 
 		return textures[name];
+	}
+
+	HeTextureArray* HeGraphics::GetTextureArray(const string& name, const vector<HeImage*>& images)
+	{
+		if (textureArrays.count(name) == 0)
+		{
+			textureArrays[name] = new HeTextureArray(name, images);
+		}
+
+		return textureArrays[name];
 	}
 
 	HeCanvasTexture* HeGraphics::GetCanvasTexture(const string& name, HeImage* image)

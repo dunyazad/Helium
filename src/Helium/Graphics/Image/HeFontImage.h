@@ -11,7 +11,6 @@ namespace ArtificialNature {
 	{
 	public:
 		virtual void Initialize();
-		virtual void Terminate();
 
 	protected:
 		HeFontImage(const string& name, const string& fontFilePath);
