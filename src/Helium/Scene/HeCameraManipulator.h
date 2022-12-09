@@ -36,6 +36,8 @@ namespace ArtificialNature {
 
 		double lastMousePositionX = 0.0;
 		double lastMousePositionY = 0.0;
+
+		bool wireframeMode = false;
 	};
 
 	class HeCameraManipulatorOrtho : public HeCameraManipulatorBase

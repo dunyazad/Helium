@@ -150,6 +150,9 @@
     <ClCompile Include="Helium\Graphics\Material\HeMaterialSingleTexture.cpp">
       <Filter>Graphics\Material</Filter>
     </ClCompile>
+    <ClCompile Include="Helium\Graphics\Material\HeMaterialReprojection.cpp">
+      <Filter>Graphics\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
@@ -304,6 +307,9 @@
       <Filter>Graphics\Material</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Graphics\Material\HeMaterialSingleTexture.h">
+      <Filter>Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Material\HeMaterialReprojection.h">
       <Filter>Graphics\Material</Filter>
     </ClInclude>
   </ItemGroup>

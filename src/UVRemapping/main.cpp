@@ -19,6 +19,8 @@ HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 //HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
+HeThickLines* pDebugGeometry = nullptr;
+
 class OnOff {
 public:
     void AddSceneNode(HeSceneNode* node) {
@@ -135,10 +137,10 @@ int main(int argc, char** argv)
     pCameraManipulator = &manipulator;
     gScene->SetMainCamera(pCamera);
 
-    {
+ /*   {
         auto pNode = gScene->CreateSceneNodeImgui("imgui");
         pNode->SetText("0");
-    }
+    }*/
 
     {
         auto pNode = gScene->CreateSceneNode("Gizmo Node");
@@ -180,7 +182,33 @@ int main(int argc, char** argv)
 #pragma endregion
     }
 
-    /*
+    {
+        auto pNode = gScene->CreateSceneNode("Debug");
+
+#pragma region [Lines]
+        auto pLines = gGraphics->GetGeometryThickLines("Debug");
+        pLines->Initialize();
+        pLines->SetThickness(1);
+        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+        pNode->AddGeometry(pLines);
+
+        pDebugGeometry = pLines;
+
+        auto pMaterial = gGraphics->GetMaterial("Debug");
+
+        auto pShader = gGraphics->GetShader("Debug", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        pMaterial->SetShader(pShader);
+
+        pLines->SetMaterial(pMaterial);
+
+        glEnable(GL_LINE_SMOOTH);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#pragma endregion
+    }
+
     {
         auto pNode = gScene->CreateSceneNode("Mesh");
         auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
@@ -188,7 +216,7 @@ int main(int argc, char** argv)
 
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
-       // pNode->AddGeometry(pGeometry);
+        //pNode->AddGeometry(pGeometry);
 
         auto pMaterial = gGraphics->GetMaterial("Mesh Material");
         pGeometry->SetMaterial(pMaterial);
@@ -196,6 +224,135 @@ int main(int argc, char** argv)
         auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
         pMaterial->SetShader(pShader);
     }
+
+    {
+        //HeProject project(argv[1], argv[2]);
+        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+
+        vector<HeGeometryTriangleSoup*> frameGeometries;
+        for (auto& frame : project.GetFrames())
+        {
+            auto id = format("frame_{}", frame->GetFrameIndex());
+            auto pNode = gScene->CreateSceneNode(id);
+            auto pGeometry = gGraphics->GetGeometryTriangleSoup(id);
+            pGeometry->Initialize();
+            frameGeometries.push_back(pGeometry);
+            pNode->AddGeometry(pGeometry);
+
+            auto pMaterial = gGraphics->GetMaterialSingleTexture(id);
+            pGeometry->SetMaterial(pMaterial);
+
+            auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+            pMaterial->SetShader(pShader);
+
+            auto image = frame->LoadColorImage(gGraphics);
+            auto pTexture = gGraphics->GetTexture(id, image);
+            pTexture->Initialize();
+            pMaterial->SetTexture(pTexture);
+
+
+
+
+
+
+
+            //auto cameraInfo = frame->GetCameraInfo();
+            //auto cameraFront = glm::vec3(cameraInfo->GetRotation()[2]);
+
+            //pDebugGeometry->AddVertex(cameraInfo->GetPosition());
+            //pDebugGeometry->AddVertex(cameraInfo->GetPosition() + cameraFront);
+
+            //pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+            //pDebugGeometry->AddColor(glm::vec4(1, 1, 0, 1));
+        }
+
+        auto mesh = gGraphics->GetGeometry("Mesh");
+        auto nof = mesh->GetFaceCount();
+        for (size_t fi = 0; fi < nof; fi++)
+        {
+            auto vi0 = mesh->GetIndex((int)fi * 3);
+            auto vi1 = mesh->GetIndex((int)fi * 3 + 1);
+            auto vi2 = mesh->GetIndex((int)fi * 3 + 2);
+
+            const auto& v0 = mesh->GetVertex(vi0);
+            const auto& v1 = mesh->GetVertex(vi1);
+            const auto& v2 = mesh->GetVertex(vi2);
+            auto fc = (v0 + v1 + v2) / 3.0f;
+            auto fn = mesh->GetNormal(vi0);
+
+            HeFrameInfo* nearestFrame = nullptr;
+            float nearestDistance2 = FLT_MAX;
+
+            HeFrameInfo* perpendicularFrame = nullptr;
+            float dotBetweenCameraAndFaceNormal = FLT_MAX;
+
+            HeFrameInfo* nearUVCenterFrame = nullptr;
+            float uvCenterDistance2 = FLT_MAX;
+            for (auto& frame : project.GetFrames())
+            {
+                auto cameraInfo = frame->GetCameraInfo();
+                auto cameraFront = glm::vec3(cameraInfo->GetViewMatrix()[3]);
+                auto frustum = cameraInfo->GetFrustum();
+
+                if (frustum->ContainsAll(v0, v1, v2))
+                {
+                    auto ffd = glm::distance2(fc, frame->GetCameraInfo()->GetPosition());
+                    if (ffd < nearestDistance2) {
+                        nearestDistance2 = ffd;
+                        nearestFrame = frame;
+                    }
+
+                    auto dot = glm::dot(cameraFront, fn);
+                    if (dotBetweenCameraAndFaceNormal > dot) {
+                        dotBetweenCameraAndFaceNormal = dot;
+                        perpendicularFrame = frame;
+                    }
+
+                    auto uvc = cameraInfo->WorldToUV(fc);
+
+                    auto dc = glm::distance2(uvc, glm::vec2(0.5f, 0.5f));
+
+                    if (uvCenterDistance2 > dc) {
+                        uvCenterDistance2 = dc;
+                        nearUVCenterFrame = frame;
+                    }
+                }
+            }
+
+            //if (nearestFrame != nullptr)
+            //{
+            //    auto cameraInfo = nearestFrame->GetCameraInfo();
+            //    auto uv0 = cameraInfo->WorldToUV(v0);
+            //    auto uv1 = cameraInfo->WorldToUV(v1);
+            //    auto uv2 = cameraInfo->WorldToUV(v2);
+
+            //    auto pGeometry = frameGeometries[nearestFrame->GetFrameIndex()];
+            //    pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
+            //}
+            //if (perpendicularFrame != nullptr)
+            //{
+            //    auto cameraInfo = perpendicularFrame->GetCameraInfo();
+            //    auto uv0 = cameraInfo->WorldToUV(v0);
+            //    auto uv1 = cameraInfo->WorldToUV(v1);
+            //    auto uv2 = cameraInfo->WorldToUV(v2);
+
+            //    auto pGeometry = frameGeometries[perpendicularFrame->GetFrameIndex()];
+            //    pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
+            //}
+            if (nearUVCenterFrame != nullptr)
+            {
+                auto cameraInfo = nearUVCenterFrame->GetCameraInfo();
+                auto uv0 = cameraInfo->WorldToUV(v0);
+                auto uv1 = cameraInfo->WorldToUV(v1);
+                auto uv2 = cameraInfo->WorldToUV(v2);
+
+                auto pGeometry = frameGeometries[nearUVCenterFrame->GetFrameIndex()];
+                pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
+            }
+        }
+    }
+    
+    /*
     {
         auto pNode = gScene->CreateSceneNode("Temp");
         auto pGeometry = gGraphics->GetGeometryTriangleSoup("Temp");
@@ -281,33 +438,32 @@ int main(int argc, char** argv)
     }
     */
 
+    //{
+    //    vector<HeImage*> images;
+    //    for (size_t i = 0; i < 256; i++)
+    //    {
+    //        auto image = gGraphics->GetImage(format("texture_{}.png", i), format("D:\\Resources\\2D\\ImageScequence\\texture_{}.png", i));
+    //        image->Initialize();
+    //        images.push_back(image);
+    //    }
+    //    
+    //    auto pTextureArray = gGraphics->GetTextureArray("texture array", images);
+    //    pTextureArray->Initialize();
 
-    {
-        vector<HeImage*> images;
-        for (size_t i = 0; i < 256; i++)
-        {
-            auto image = gGraphics->GetImage(format("texture_{}.png", i), format("D:\\Resources\\2D\\ImageScequence\\texture_{}.png", i));
-            image->Initialize();
-            images.push_back(image);
-        }
-        
-        auto pTextureArray = gGraphics->GetTextureArray("texture array", images);
-        pTextureArray->Initialize();
+    //    auto pNode = gScene->CreateSceneNode("texture array plane");
+    //    auto pGeometry = gGraphics->GetGeometryPlane("texture array plane", 1, 1, 10, 10, HePlaneType::XY);
+    //    pGeometry->Initialize();
+    //    pNode->AddGeometry(pGeometry);
 
-        auto pNode = gScene->CreateSceneNode("texture array plane");
-        auto pGeometry = gGraphics->GetGeometryPlane("texture array plane", 1, 1, 10, 10, HePlaneType::XY);
-        pGeometry->Initialize();
-        pNode->AddGeometry(pGeometry);
+    //    auto pMaterial = gGraphics->GetMaterialTextureArray("texture array plane");
+    //    
+    //    auto pShader = gGraphics->GetShader("textureArray", "../../res/shader/textureArray.vs", "../../res/shader/textureArray.fs");
+    //    pMaterial->SetShader(pShader);
 
-        auto pMaterial = gGraphics->GetMaterialTextureArray("texture array plane");
-        
-        auto pShader = gGraphics->GetShader("textureArray", "../../res/shader/textureArray.vs", "../../res/shader/textureArray.fs");
-        pMaterial->SetShader(pShader);
+    //    pMaterial->SetTextureArray(pTextureArray);
 
-        pMaterial->SetTextureArray(pTextureArray);
-
-        pGeometry->SetMaterial(pMaterial);
-    }
+    //    pGeometry->SetMaterial(pMaterial);
+    //}
 
 
     int textureIndex = 0;
@@ -339,7 +495,7 @@ int main(int argc, char** argv)
         //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        {
+ /*       {
             auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
             pMaterial->SetTextureIndex(textureIndex);
 
@@ -347,7 +503,7 @@ int main(int argc, char** argv)
             if (textureIndex > 255) {
                 textureIndex = 0;
             }
-        }
+        }*/
 
         gScene->Update((float)delta);
         gScene->Render();
@@ -383,28 +539,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         pCameraManipulator->OnKey(window, key, scancode, action, mods);
     }
 
-    if (key == '1' && action == GLFW_RELEASE)
-    {
-        auto pGeometry = gGraphics->GetGeometry("Mesh");
-        if (pGeometry != nullptr)
-        {
-            if (pGeometry->GetFillMode() == HeGeometry::FillMode::Fill)
-            {
-                pGeometry->SetFillMode(HeGeometry::FillMode::Wireframe);
-            }
-            else if (pGeometry->GetFillMode() == HeGeometry::FillMode::Wireframe)
-            {
-                pGeometry->SetFillMode(HeGeometry::FillMode::Fill);
-            }
-        }
-    }
-    else if (key == GLFW_KEY_C && action == GLFW_RELEASE)
+    if (key == GLFW_KEY_C && action == GLFW_RELEASE)
     {
         //auto image = gGraphics->GetCanvasImage("Capture", mWidth, mHeight);
         //image->CaptureFrame("capture.png");
 
         vector<string> fileNames;
-        for (size_t i = 0; i < 256; i++)
+        for (size_t i = 0; i < 1; i++)
         {
             stringstream ss;
             ss << "texture_" << i << ".png";

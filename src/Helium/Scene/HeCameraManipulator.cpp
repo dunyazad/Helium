@@ -97,12 +97,18 @@ namespace ArtificialNature {
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
 
-		if (key == GLFW_KEY_1 && action == GLFW_PRESS)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-		if (key == GLFW_KEY_2 && action == GLFW_PRESS)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+		if (key == GLFW_KEY_M && action == GLFW_PRESS)
+		{
+			if (wireframeMode) {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				wireframeMode = false;
+			}
+			else {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				wireframeMode = true;
+			}
+		}
+		
 		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		{
 			camera->SetLocalPosition(glm::vec3(0, 0, 0));

@@ -84,80 +84,80 @@ namespace ArtificialNature {
 
 	HeCameraInfo::HeCameraInfo(HeFrameInfo* frameInfo, const string& cameraInfoFile, const json& reconstructionInfo)
 	{
-		HeFile file;
-		if (file.Open(cameraInfoFile, true))
-		{
-			int size = file.GetFileLength();
-			char* buffer = new char[size];
-			file.Read(buffer, size);
-			file.Close();
+		//HeFile file;
+		//if (file.Open(cameraInfoFile, true))
+		//{
+		//	int size = file.GetFileLength();
+		//	char* buffer = new char[size];
+		//	file.Read(buffer, size);
+		//	file.Close();
 
-			int index = 0;
-			memcpy(&this->frameIndex, buffer + index, 4); index += 4;
-			memcpy(&this->imageWidth, buffer + index, 4); index += 4;
-			memcpy(&this->imageHeight, buffer + index, 4); index += 4;
+		//	int index = 0;
+		//	memcpy(&this->frameIndex, buffer + index, 4); index += 4;
+		//	memcpy(&this->imageWidth, buffer + index, 4); index += 4;
+		//	memcpy(&this->imageHeight, buffer + index, 4); index += 4;
 
-			memcpy(&this->fx, buffer + index, 4); index += 4;
-			memcpy(&this->fy, buffer + index, 4); index += 4;
-			memcpy(&this->ox, buffer + index, 4); index += 4;
-			memcpy(&this->oy, buffer + index, 4); index += 4;
+		//	memcpy(&this->fx, buffer + index, 4); index += 4;
+		//	memcpy(&this->fy, buffer + index, 4); index += 4;
+		//	memcpy(&this->ox, buffer + index, 4); index += 4;
+		//	memcpy(&this->oy, buffer + index, 4); index += 4;
 
-			float intrinsics[9]; memcpy(&intrinsics, buffer + index, 36); index += 36;
-			float view_matrix[16]; memcpy(&view_matrix, buffer + index, 64); index += 64;
-			float local_to_world_matrix[16]; memcpy(&local_to_world_matrix, buffer + index, 64); index += 64;
-			float transform_matrix[16]; memcpy(&transform_matrix, buffer + index, 64); index += 64;
-			//float projection_matrix[16]; memcpy(&projection_matrix, buffer + index, 64); index += 64;
-			//float view_projection_matrix[16]; memcpy(&view_projection_matrix, buffer + index, 64); index += 64;
+		//	float intrinsics[9]; memcpy(&intrinsics, buffer + index, 36); index += 36;
+		//	float view_matrix[16]; memcpy(&view_matrix, buffer + index, 64); index += 64;
+		//	float local_to_world_matrix[16]; memcpy(&local_to_world_matrix, buffer + index, 64); index += 64;
+		//	float transform_matrix[16]; memcpy(&transform_matrix, buffer + index, 64); index += 64;
+		//	//float projection_matrix[16]; memcpy(&projection_matrix, buffer + index, 64); index += 64;
+		//	//float view_projection_matrix[16]; memcpy(&view_projection_matrix, buffer + index, 64); index += 64;
 
-			delete[] buffer;
+		//	delete[] buffer;
 
-			glm::mat4 tm = glm::make_mat4(transform_matrix);
-			auto p = glm::vec3(glm::row(tm, 3));
-			auto r = glm::mat3(glm::transpose(tm)) * glm::mat3(glm::angleAxis(glm::radians(180.0f), glm::vec3(1, 0, 0)));
-			this->transformMatrix = glm::mat4(r);
-			this->transformMatrix[3] = glm::vec4(p, 1.0f);
-			this->transformMatrixInversed = glm::inverse(this->transformMatrix);
+		//	glm::mat4 tm = glm::make_mat4(transform_matrix);
+		//	auto p = glm::vec3(glm::row(tm, 3));
+		//	auto r = glm::mat3(glm::transpose(tm)) * glm::mat3(glm::angleAxis(glm::radians(180.0f), glm::vec3(1, 0, 0)));
+		//	this->transformMatrix = glm::mat4(r);
+		//	this->transformMatrix[3] = glm::vec4(p, 1.0f);
+		//	this->transformMatrixInversed = glm::inverse(this->transformMatrix);
 
-			this->viewMatrix = glm::make_mat4(view_matrix);
-			this->viewMatrixInversed = glm::inverse(this->viewMatrix);
+		//	this->viewMatrix = glm::make_mat4(view_matrix);
+		//	this->viewMatrixInversed = glm::inverse(this->viewMatrix);
 
-			//this->viewMatrix = glm::transpose(glm::make_mat4(view_matrix));
+		//	//this->viewMatrix = glm::transpose(glm::make_mat4(view_matrix));
 
-			glm::mat3 intrinsic_matrix = glm::make_mat3(intrinsics) / 7.5f;
-			intrinsic_matrix[2][2] = 1.0f;
+		//	glm::mat3 intrinsic_matrix = glm::make_mat3(intrinsics) / 7.5f;
+		//	intrinsic_matrix[2][2] = 1.0f;
 
-			this->intrinsicMatrix = intrinsic_matrix;
-			this->fx = this->intrinsicMatrix[0][0];
-			this->fy = this->intrinsicMatrix[1][1];
-			this->ox = this->intrinsicMatrix[0][2];
-			this->oy = this->intrinsicMatrix[1][2];
+		//	this->intrinsicMatrix = intrinsic_matrix;
+		//	this->fx = this->intrinsicMatrix[0][0];
+		//	this->fy = this->intrinsicMatrix[1][1];
+		//	this->ox = this->intrinsicMatrix[0][2];
+		//	this->oy = this->intrinsicMatrix[1][2];
 
 
-			this->localToWorldMatrix = glm::inverse(glm::flip_axes(this->viewMatrixInversed));
+		//	this->localToWorldMatrix = glm::inverse(glm::flip_axes(this->viewMatrixInversed));
 
-			//this->localToWorldMatrix = glm::inverse(this->viewMatrixInversed * flipMatrix);
+		//	//this->localToWorldMatrix = glm::inverse(this->viewMatrixInversed * flipMatrix);
 
-			this->extrinsicMatrix = this->localToWorldMatrix;
+		//	this->extrinsicMatrix = this->localToWorldMatrix;
 
-			//this->projectionMatrix = glm::transpose(glm::make_mat4(projection_matrix));
+		//	//this->projectionMatrix = glm::transpose(glm::make_mat4(projection_matrix));
 
-			//this->viewProjectionMatrix = glm::make_mat4(view_projection_matrix);
+		//	//this->viewProjectionMatrix = glm::make_mat4(view_projection_matrix);
 
-			this->position = p;
-			this->rotation = r;
+		//	this->position = p;
+		//	this->rotation = r;
 
-			auto r0 = glm::row(r, 0);
-			auto r1 = -glm::row(r, 1);
-			auto r2 = -glm::row(r, 2);
+		//	auto r0 = glm::row(r, 0);
+		//	auto r1 = -glm::row(r, 1);
+		//	auto r2 = -glm::row(r, 2);
 
-			glm::mat3 rr;
-			rr[0] = r0;
-			rr[1] = r1;
-			rr[2] = r2;
+		//	glm::mat3 rr;
+		//	rr[0] = r0;
+		//	rr[1] = r1;
+		//	rr[2] = r2;
 
-			//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
-			this->frustum = new HeFrustum(this->position, rr, this->imageWidth, this->imageHeight, this->fx, this->fy);
-		}
+		//	//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
+		//	this->frustum = new HeFrustum(this->position, rr, this->imageWidth, this->imageHeight, this->fx, this->fy);
+		//}
 
 		{
 			auto& info = reconstructionInfo["frames"][frameInfo->GetFrameIndex()];

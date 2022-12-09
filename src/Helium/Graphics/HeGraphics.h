@@ -16,6 +16,7 @@ namespace ArtificialNature {
 	class HeMaterialSingleTexture;
 	class HeMaterialMutiTexture;
 	class HeMaterialTextureArray;
+	class HeMaterialReprojection;
 	class HeTexture;
 	class HeTextureArray;
 	class HeCanvasTexture;
@@ -45,6 +46,7 @@ namespace ArtificialNature {
 		HeMaterialSingleTexture* GetMaterialSingleTexture(const string& name);
 		HeMaterialMutiTexture* GetMaterialMutiTexture(const string& name);
 		HeMaterialTextureArray* GetMaterialTextureArray(const string& name);
+		HeMaterialReprojection* GetMaterialReprojection(const string& name);
 
 		HeTexture* GetTexture(const string& name, HeImage* image);
 		HeTexture* GetTexture(const string& name, int width, int height);

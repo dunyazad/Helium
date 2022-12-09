@@ -196,6 +196,16 @@ namespace ArtificialNature {
 		return dynamic_cast<HeMaterialTextureArray*>(materials[name]);
 	}
 
+	HeMaterialReprojection* HeGraphics::GetMaterialReprojection(const string& name)
+	{
+		if (materials.count(name) == 0)
+		{
+			materials[name] = new HeMaterialReprojection(name);
+		}
+
+		return dynamic_cast<HeMaterialReprojection*>(materials[name]);
+	}
+
 	HeTexture* HeGraphics::GetTexture(const string& name, HeImage* image)
 	{
 		if (textures.count(name) == 0)

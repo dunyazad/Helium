@@ -124,6 +124,7 @@
     <ClCompile Include="Helium\Graphics\Image\HeImage.cpp" />
     <ClCompile Include="Helium\Graphics\Material\HeMaterial.cpp" />
     <ClCompile Include="Helium\Graphics\Material\HeMaterialMutiTexture.cpp" />
+    <ClCompile Include="Helium\Graphics\Material\HeMaterialReprojection.cpp" />
     <ClCompile Include="Helium\Graphics\Material\HeMaterialSingleTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Material\HeMaterialTextureArray.cpp" />
     <ClCompile Include="Helium\Graphics\stb_image.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Helium\Graphics\Image\Image.h" />
     <ClInclude Include="Helium\Graphics\Material\HeMaterial.h" />
     <ClInclude Include="Helium\Graphics\Material\HeMaterialMutiTexture.h" />
+    <ClInclude Include="Helium\Graphics\Material\HeMaterialReprojection.h" />
     <ClInclude Include="Helium\Graphics\Material\HeMaterialSingleTexture.h" />
     <ClInclude Include="Helium\Graphics\Material\HeMaterialTextureArray.h" />
     <ClInclude Include="Helium\Graphics\Material\Material.h" />

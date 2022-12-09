@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerWorkingDirectory>C:\Users\Mickey\Desktop\spacecapture\Server</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>D:\Workspace\Reconstruct</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>"default" "2022-12-01_13-31-57" "C:\Users\Mickey\Desktop\spacecapture\Server/projects/default/2022-12-01_13-31-57/reconstructed/04_Fixed.stl" "D:/Projects/3dobj_viewer/backend/objs/default/2022-12-01_13-31-57/result.obj"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>"default" "data" "C:\Users\Mickey\Desktop\spacecapture\Server\projects\default\2022-12-09_11-39-28\reconstructed\04_Fixed.stl" "C:\Users\Mickey\Desktop\spacecapture\Server\projects\default\2022-12-09_11-39-28\result\result.obj"</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerWorkingDirectory>D:\Workspace\Reconstruct</LocalDebuggerWorkingDirectory>
