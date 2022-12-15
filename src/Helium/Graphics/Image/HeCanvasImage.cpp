@@ -2,8 +2,8 @@
 
 namespace ArtificialNature {
 
-	HeCanvasImage::HeCanvasImage(const string& name, int width, int height)
-		: HeImage(name, "")
+	HeCanvasImage::HeCanvasImage(HeGraphics* pGraphics, const string& name, int width, int height)
+		: HeImage(pGraphics, name, "")
 	{
 		this->width = width;
 		this->height = height;

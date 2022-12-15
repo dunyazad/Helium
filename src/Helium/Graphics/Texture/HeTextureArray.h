@@ -21,6 +21,7 @@ namespace ArtificialNature {
 
 		inline GLsizei GetWidth() { return width; }
 		inline GLsizei GetHeight() { return height; }
+		inline GLsizei GetChannels() { return channels; }
 
 		inline bool HasAlpha() { return withAlpha; }
 
@@ -36,6 +37,7 @@ namespace ArtificialNature {
 		GLenum format = GL_RGBA;
 		GLsizei width = 0;
 		GLsizei height = 0;
+		GLsizei channels = 0;
 		GLsizei depth = 0;
 		GLenum dataType = GL_UNSIGNED_BYTE;
 		unsigned char* textureData = nullptr;

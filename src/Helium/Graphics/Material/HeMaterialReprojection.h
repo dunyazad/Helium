@@ -26,6 +26,8 @@ namespace ArtificialNature {
 		HeTextureArray* textureArray = nullptr;
 
 		int textureIndex = 0;
+
+
 	};
 
 }

@@ -209,22 +209,26 @@ namespace ArtificialNature {
 	{
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
 		{
-			if (yoffset < 0) {
+			if (yoffset < 0)
+			{
 				auto front = camera->GetCameraFront();
 				camera->SetLocalPosition(camera->GetLocalPosition() - front);
 			}
-			else {
+			else
+			{
 				auto front = camera->GetCameraFront();
 				camera->SetLocalPosition(camera->GetLocalPosition() + front);
 			}
 		}
 		else
 		{
-			if (yoffset < 0) {
+			if (yoffset < 0)
+			{
 				auto front = camera->GetCameraFront();
 				camera->SetLocalPosition(camera->GetLocalPosition() - front * 0.1f);
 			}
-			else {
+			else
+			{
 				auto front = camera->GetCameraFront();
 				camera->SetLocalPosition(camera->GetLocalPosition() + front * 0.1f);
 			}

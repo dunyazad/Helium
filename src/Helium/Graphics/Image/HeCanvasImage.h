@@ -7,6 +7,8 @@
 
 namespace ArtificialNature {
 
+	class HeGraphics;
+
 	class HeCanvasImage : public HeImage
 	{
 	public:
@@ -15,7 +17,7 @@ namespace ArtificialNature {
 		void CaptureFrame(const string& filepath, bool verticalFlip = true);
 
 	protected:
-		HeCanvasImage(const string& name, int width, int height);
+		HeCanvasImage(HeGraphics* pGraphics, const string& name, int width, int height);
 		~HeCanvasImage();
 
 	public:

@@ -28,10 +28,12 @@ namespace ArtificialNature {
 		{
 			return;
 		}
-
+		
 		width = images[0]->GetWidth();
 		height = images[0]->GetHeight();
 		depth = (GLsizei)images.size();
+		channels = images[0]->GetChannels();
+		if (channels == 3) format = GL_RGB;
 
 		int totalLength = 0;
 		for (auto& image : images)
@@ -57,7 +59,8 @@ namespace ArtificialNature {
 		GLfloat borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		glTexParameterfv(textureTarget, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-		glTexImage3D(textureTarget, 0, GL_RGBA, width, height, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage3D(textureTarget, 0, format, width, height, depth, 0, format, GL_UNSIGNED_BYTE, textureData);
 
 		glGenerateMipmap(textureTarget);
 

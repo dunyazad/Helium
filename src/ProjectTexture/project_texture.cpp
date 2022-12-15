@@ -1,4 +1,3 @@
-#define USING_FILES_SYSTEM
 #include <Helium/Helium.h>
 using namespace ArtificialNature;
 
@@ -109,9 +108,9 @@ int main(int argc, char** argv)
         auto nof = mesh->GetFaceCount();
         for (size_t fi = 0; fi < nof; fi++)
         {
-            auto vi0 = mesh->GetIndex((int)fi * 3);
-            auto vi1 = mesh->GetIndex((int)fi * 3 + 1);
-            auto vi2 = mesh->GetIndex((int)fi * 3 + 2);
+            auto vi0 = mesh->GetIndex(fi * 3);
+            auto vi1 = mesh->GetIndex(fi * 3 + 1);
+            auto vi2 = mesh->GetIndex(fi * 3 + 2);
 
             const auto& v0 = mesh->GetVertex(vi0);
             const auto& v1 = mesh->GetVertex(vi1);
@@ -122,17 +121,16 @@ int main(int argc, char** argv)
             HeFrameInfo* nearestFrame = nullptr;
             float nearestDistance2 = FLT_MAX;
 
-            //HeFrameInfo* perpendicularFrame = nullptr;
-            //float dotBetweenCameraAndFaceNormal = FLT_MAX;
+            HeFrameInfo* oppositeFacingFrame = nullptr;
+            float dotBetweenCameraAndFaceNormal = FLT_MAX;
 
-            //HeFrameInfo* nearUVCenterFrame = nullptr;
-            //float uvCenterDistance2 = FLT_MAX;
+            HeFrameInfo* nearUVCenterFrame = nullptr;
+            float uvCenterDistance2 = FLT_MAX;
             for (auto& frame : project.GetFrames())
             {
                 auto cameraInfo = frame->GetCameraInfo();
                 auto cameraFront = glm::vec3(cameraInfo->GetViewMatrix()[3]);
                 auto frustum = cameraInfo->GetFrustum();
-
 
                 if (frustum->ContainsAll(v0, v1, v2))
                 {
@@ -142,36 +140,51 @@ int main(int argc, char** argv)
                         nearestFrame = frame;
                     }
 
-                    //auto dot = glm::dot(cameraFront, fn);
-                    //if (dotBetweenCameraAndFaceNormal > dot) {
-                    //    dotBetweenCameraAndFaceNormal = dot;
-                    //    perpendicularFrame = frame;
-                    //}
+                    auto dot = glm::dot(cameraFront, fn);
+                    if (dotBetweenCameraAndFaceNormal > dot) {
+                        dotBetweenCameraAndFaceNormal = dot;
+                        oppositeFacingFrame = frame;
+                    }
 
-                    //auto uv0 = cameraInfo->WorldToUV(v0);
-                    //auto uv1 = cameraInfo->WorldToUV(v1);
-                    //auto uv2 = cameraInfo->WorldToUV(v2);
+                    auto uvc = cameraInfo->WorldToUV(fc);
 
-                    //auto d0 = glm::distance2(uv0, glm::vec2(0.5f, 0.5f));
-                    //auto d1 = glm::distance2(uv0, glm::vec2(0.5f, 0.5f));
-                    //auto d2 = glm::distance2(uv0, glm::vec2(0.5f, 0.5f));
-                    //auto meand = (d0 + d1 + d2) / 3;
+                    auto dc = glm::distance2(uvc, glm::vec2(0.5f, 0.5f));
 
-                    //if (uvCenterDistance2 > meand) {
-                    //    uvCenterDistance2 = meand;
-                    //    nearUVCenterFrame = frame;
-                    //}
+                    if (uvCenterDistance2 > dc) {
+                        uvCenterDistance2 = dc;
+                        nearUVCenterFrame = frame;
+                    }
                 }
             }
 
-            if (nearestFrame != nullptr)
+            //if (nearestFrame != nullptr)
+            //{
+            //    auto cameraInfo = nearestFrame->GetCameraInfo();
+            //    auto uv0 = cameraInfo->WorldToUV(v0);
+            //    auto uv1 = cameraInfo->WorldToUV(v1);
+            //    auto uv2 = cameraInfo->WorldToUV(v2);
+
+            //    auto pGeometry = frameGeometries[nearestFrame->GetFrameIndex()];
+            //    pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
+            //}
+            //if (oppositeFacingFrame != nullptr)
+            //{
+            //    auto cameraInfo = oppositeFacingFrame->GetCameraInfo();
+            //    auto uv0 = cameraInfo->WorldToUV(v0);
+            //    auto uv1 = cameraInfo->WorldToUV(v1);
+            //    auto uv2 = cameraInfo->WorldToUV(v2);
+
+            //    auto pGeometry = frameGeometries[oppositeFacingFrame->GetFrameIndex()];
+            //    pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
+            //}
+            if (nearUVCenterFrame != nullptr)
             {
-                auto cameraInfo = nearestFrame->GetCameraInfo();
+                auto cameraInfo = nearUVCenterFrame->GetCameraInfo();
                 auto uv0 = cameraInfo->WorldToUV(v0);
                 auto uv1 = cameraInfo->WorldToUV(v1);
                 auto uv2 = cameraInfo->WorldToUV(v2);
 
-                auto pGeometry = frameGeometries[nearestFrame->GetFrameIndex()];
+                auto pGeometry = frameGeometries[nearUVCenterFrame->GetFrameIndex()];
                 pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
             }
         }

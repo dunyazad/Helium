@@ -24,6 +24,8 @@
 using namespace std;
 
 #include <stb/stb_image.h>
+
+#define __STDC_LIB_EXT1__
 #include <stb/stb_image_write.h>
 
 #include <glad/glad.h>
@@ -75,6 +77,8 @@ namespace ArtificialNature {
 	float safe_stof(const string& input);
 
 	vector<string> split(const string& input, const string& delimiters, bool includeEmptyString = false);
+
+	unsigned int NextPowerOf2(unsigned int n);
 }
 
 namespace glm {

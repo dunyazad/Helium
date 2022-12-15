@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #define TINYPLY_IMPLEMENTATION
 #include <Helium/Core/HeliumCommon.h>
 
@@ -109,6 +111,18 @@ namespace ArtificialNature {
 		}
 
 		return result;
+	}
+
+	unsigned int NextPowerOf2(unsigned int n)
+	{
+		unsigned int p = 1;
+		if (n && !(n & (n - 1)))
+			return n;
+
+		while (p < n)
+			p <<= 1;
+
+		return p;
 	}
 }
 

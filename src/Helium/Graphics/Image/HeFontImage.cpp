@@ -1,10 +1,8 @@
 #include <Helium/Graphics/Image/HeFontImage.h>
 
-#include <stb/stb_image.h>
-
 namespace ArtificialNature {
-	HeFontImage::HeFontImage(const string& name, const string& fontFilePath)
-		: HeImage(name, ""), fontFilePath(fontFilePath)
+	HeFontImage::HeFontImage(HeGraphics* pGraphics, const string& name, const string& fontFilePath)
+		: HeImage(pGraphics, name, ""), fontFilePath(fontFilePath)
 	{
 	}
 

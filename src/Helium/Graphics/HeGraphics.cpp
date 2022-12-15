@@ -260,7 +260,7 @@ namespace ArtificialNature {
 	{
 		if (images.count(name) == 0)
 		{
-			images[name] = new HeImage(name, filePath, verticalFlip);
+			images[name] = new HeImage(this, name, filePath, verticalFlip);
 		}
 
 		return images[name];
@@ -270,7 +270,7 @@ namespace ArtificialNature {
 	{
 		if (images.count(name) == 0)
 		{
-			images[name] = new HeFontImage(name, fontFilePath);
+			images[name] = new HeFontImage(this, name, fontFilePath);
 		}
 
 		return dynamic_cast<HeFontImage*>(images[name]);
@@ -280,7 +280,7 @@ namespace ArtificialNature {
 	{
 		if (images.count(name) == 0)
 		{
-			images[name] = new HeCanvasImage(name, width, height);
+			images[name] = new HeCanvasImage(this, name, width, height);
 		}
 
 		return dynamic_cast<HeCanvasImage*>(images[name]);

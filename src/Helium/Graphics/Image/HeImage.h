@@ -5,6 +5,8 @@
 
 namespace ArtificialNature {
 
+	class HeGraphics;
+
 	class HeImage : public HeObject
 	{
 	public:
@@ -18,9 +20,13 @@ namespace ArtificialNature {
 
 		void Write(const string& outputFilename, bool verticalFlip = true);
 
+		static HeImage* ResizeToPOT(HeImage* from);
+
 	protected:
-		HeImage(const string& name, const string& filename, bool verticalFlip = true);
+		HeImage(HeGraphics* pGraphics, const string& name, const string& filename, bool verticalFlip = true);
 		~HeImage();
+
+		HeGraphics* pGraphics = nullptr;
 
 		string filename;
 
@@ -31,6 +37,11 @@ namespace ArtificialNature {
 		unsigned char* data = nullptr;
 
 		bool verticalFlip = true;
+
+		bool resizedToPOT = false;
+		float potResizedRatioW = 1.0f;
+		float potResizedRatioH = 1.0f;
+
 	public:
 		friend class HeGraphics;
 	};
