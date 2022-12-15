@@ -11,5 +11,9 @@ uniform int textureIndex;
 
 void main()
 {
-	FragColor = texture(textureArray, vec3(TexCoord.x, TexCoord.y, textureIndex));
+	float iu = floor(TexCoord.x);
+	float u = TexCoord.x - floor(TexCoord.x);
+	float iv = floor(TexCoord.y);
+	float v = TexCoord.y - floor(TexCoord.y);
+	FragColor = texture(textureArray, vec3(u, v, iu));
 }

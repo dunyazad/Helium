@@ -61,6 +61,9 @@ namespace ArtificialNature {
 		glm::mat4 projectionMatrix = glm::identity<glm::mat4>();
 		glm::mat4 viewProjectionMatrix = glm::identity<glm::mat4>();
 
+		float ambientColorTemperature = 0.0f;
+		float ambientIntensity = 0.0f;
+
 		glm::vec3 position = glm::vec3(0, 0, 0);
 		glm::mat3 rotation = glm::identity<glm::mat3>();
 
