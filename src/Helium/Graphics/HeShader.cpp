@@ -251,6 +251,13 @@ namespace ArtificialNature {
 		CheckGLError();
 	}
 
+	void HeShader::SetUniformFloatArray(const string& uniformName, const vector<float>& floatArray)
+	{
+		glUniform1fv(GetUniformLocation(uniformName), floatArray.size(), &floatArray[0]);
+
+		CheckGLError();
+	}
+
 	void HeShader::SetUniformFloatArray(const string& uniformName, float* floatArray, int elementCount)
 	{
 		glUniform1fv(GetUniformLocation(uniformName), elementCount, floatArray);
@@ -265,9 +272,23 @@ namespace ArtificialNature {
 		CheckGLError();
 	}
 
+	void HeShader::SetUniformVec2Array(const string& uniformName, const vector<glm::vec2>& vec2Array)
+	{
+		glUniform2fv(GetUniformLocation(uniformName), vec2Array.size(), (const float*)&vec2Array[0]);
+
+		CheckGLError();
+	}
+
 	void HeShader::SetUniformMat4(const string& uniformName, const glm::mat4& mat)
 	{
 		glUniformMatrix4fv(GetUniformLocation(uniformName), 1, false, (const float*)glm::value_ptr(mat));
+
+		CheckGLError();
+	}
+
+	void HeShader::SetUniformMat4Array(const string& uniformName, const vector<glm::mat4>& mats)
+	{
+		glUniformMatrix4fv(GetUniformLocation(uniformName), mats.size(), false, (const float*)&(mats[0]));
 
 		CheckGLError();
 	}

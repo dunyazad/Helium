@@ -226,6 +226,26 @@ namespace ArtificialNature {
 		return textures[name];
 	}
 
+	HeTextureFloatData* HeGraphics::GetTextureFloatData(const string& name, float* data, int dataLength)
+	{
+		if (textures.count(name) == 0)
+		{
+			textures[name] = new HeTextureFloatData(name, data, dataLength);
+		}
+
+		return dynamic_cast<HeTextureFloatData*>(textures[name]);
+	}
+
+	HeTextureFloatData* HeGraphics::GetTextureFloatData(const string& name, const vector<float>& data)
+	{
+		if (textures.count(name) == 0)
+		{
+			textures[name] = new HeTextureFloatData(name, data);
+		}
+
+		return dynamic_cast<HeTextureFloatData*>(textures[name]);
+	}
+
 	HeTextureArray* HeGraphics::GetTextureArray(const string& name, const vector<HeImage*>& images)
 	{
 		if (textureArrays.count(name) == 0)

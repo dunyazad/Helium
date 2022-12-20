@@ -131,6 +131,7 @@
     <ClCompile Include="Helium\Graphics\Texture\HeCubemapTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeTexture.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeTextureArray.cpp" />
+    <ClCompile Include="Helium\Graphics\Texture\HeTextureFloatData.cpp" />
     <ClCompile Include="Helium\Helium.cpp" />
     <ClCompile Include="Helium\nanovg.c" />
     <ClCompile Include="Helium\Scene\HeCamera.cpp" />
@@ -152,8 +153,6 @@
     <ClInclude Include="Helium\Core\Project\HeFrameInfo.h" />
     <ClInclude Include="Helium\Core\Project\HeProject.h" />
     <ClInclude Include="Helium\Core\Project\Project.h" />
-    <ClInclude Include="Helium\Graphics\Geometry\cuda_kernel.cuh" />
-    <ClInclude Include="Helium\Graphics\Geometry\Geometry.cuh" />
     <ClInclude Include="Helium\Graphics\Geometry\Geometry.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometry.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometryPlane.h" />
@@ -185,6 +184,7 @@
     <ClInclude Include="Helium\Graphics\Texture\HeCubemapTexture.h" />
     <ClInclude Include="Helium\Graphics\Texture\HeTexture.h" />
     <ClInclude Include="Helium\Graphics\Texture\HeTextureArray.h" />
+    <ClInclude Include="Helium\Graphics\Texture\HeTextureFloatData.h" />
     <ClInclude Include="Helium\Graphics\Texture\Texture.h" />
     <ClInclude Include="Helium\Helium.h" />
     <ClInclude Include="Helium\Scene\HeCamera.h" />
@@ -193,10 +193,6 @@
     <ClInclude Include="Helium\Scene\HeSceneNode.h" />
     <ClInclude Include="Helium\Scene\HeSceneNodeImgui.h" />
     <ClInclude Include="Helium\Scene\Scene.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="Helium\Graphics\Geometry\cuda_kernel.cu" />
-    <CudaCompile Include="Helium\Graphics\Geometry\Geometry.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

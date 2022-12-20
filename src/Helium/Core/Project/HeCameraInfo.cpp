@@ -176,8 +176,12 @@ namespace ArtificialNature {
 			this->transformMatrix[3] = glm::vec4(this->position, 1.0f);
 			this->transformMatrixInversed = glm::inverse(this->transformMatrix);
 
-			this->ambientColorTemperature = info["ambient_color_temperature"].get<float>();
-			this->ambientIntensity = info["ambient_intensity"].get<float>();
+			if (info.contains("ambient_color_temperature")) {
+				this->ambientColorTemperature = info["ambient_color_temperature"].get<float>();
+			}
+			if (info.contains("ambient_intensity")) {
+				this->ambientIntensity = info["ambient_intensity"].get<float>();
+			}
 
 			this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
 

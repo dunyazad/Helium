@@ -23,6 +23,9 @@ namespace ArtificialNature {
 
 		HeMaterial::Use(projection, view, model);
 
+		shader->SetUniformInt("textureArray", 0);
+		shader->SetUniformInt("customDataSampler", 1);
+
 		if (textureArray)
 		{
 			textureArray->Bind();
@@ -30,6 +33,11 @@ namespace ArtificialNature {
 			shader->SetUniformInt("textureIndex", textureIndex);
 
 			CheckGLError();
+		}
+
+		if (textureFloatData)
+		{
+			textureFloatData->Bind(GL_TEXTURE0 + 1);
 		}
 	}
 

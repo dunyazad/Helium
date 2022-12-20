@@ -150,6 +150,9 @@
     <ClCompile Include="Helium\Graphics\Material\HeMaterialReprojection.cpp">
       <Filter>Graphics\Material</Filter>
     </ClCompile>
+    <ClCompile Include="Helium\Graphics\Texture\HeTextureFloatData.cpp">
+      <Filter>Graphics\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
@@ -276,12 +279,6 @@
     <ClInclude Include="Helium\Core\HePerformance.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Helium\Graphics\Geometry\cuda_kernel.cuh">
-      <Filter>Graphics\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Helium\Graphics\Geometry\Geometry.cuh">
-      <Filter>Graphics\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Helium\Core\Project\HeCameraInfo.h">
       <Filter>Core\Project</Filter>
     </ClInclude>
@@ -308,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="Helium\Graphics\Material\HeMaterialReprojection.h">
       <Filter>Graphics\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Texture\HeTextureFloatData.h">
+      <Filter>Graphics\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -338,13 +338,5 @@
     <Filter Include="Core\imgui">
       <UniqueIdentifier>{1093a0bf-89fc-45d6-88dc-0ee9bed80a17}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="Helium\Graphics\Geometry\cuda_kernel.cu">
-      <Filter>Graphics\Geometry</Filter>
-    </CudaCompile>
-    <CudaCompile Include="Helium\Graphics\Geometry\Geometry.cu">
-      <Filter>Graphics\Geometry</Filter>
-    </CudaCompile>
   </ItemGroup>
 </Project>

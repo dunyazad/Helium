@@ -278,7 +278,7 @@ int main(int argc, char** argv)
         }
 
         auto start = HeTime::Now();
-        ComputeOcclusionInfo((HeGeometryTriangleSoup*)(gGraphics->GetGeometry("Mesh")), cameraInfos);
+        //ComputeOcclusionInfo((HeGeometryTriangleSoup*)(gGraphics->GetGeometry("Mesh")), cameraInfos);
         cout << HeTime::DeltaMili(start) << " miliseconds" << endl;
 
         auto mesh = gGraphics->GetGeometry("Mesh");

@@ -117,11 +117,6 @@ int main(int argc, char** argv)
 
     glEnable(GL_MULTISAMPLE);
 
-
-
-
-
-
     Helium helium("helium", windowWidth, windowHeight);
     gGraphics = helium.GetGraphics();
 
@@ -228,13 +223,34 @@ int main(int argc, char** argv)
     {
         //HeProject project(argv[1], argv[2]);
         HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+        vector<float> dataToFragmentShader;
+
         vector<HeImage*> colorImages;
-        for (auto& frame : project.GetFrames())
+        for (size_t i = 0; i < project.GetFrames().size(); i++)
         {
+            auto frame = project.GetFrames()[i];
+         
+            dataToFragmentShader.push_back(frame->GetCameraInfo()->GetFX());
+            dataToFragmentShader.push_back(frame->GetCameraInfo()->GetFY());
+            dataToFragmentShader.push_back(0.0f);
+            dataToFragmentShader.push_back(0.0f);
+
+            auto frameMatrix = frame->GetCameraInfo()->GetInversedTransformMatrix();
+            for (int j = 0; j < 4; j++) {
+                dataToFragmentShader.push_back(frameMatrix[j].x);
+                dataToFragmentShader.push_back(frameMatrix[j].y);
+                dataToFragmentShader.push_back(frameMatrix[j].z);
+                dataToFragmentShader.push_back(frameMatrix[j].w);
+            }
+
             auto image = frame->LoadColorImage(gGraphics);
             image->Initialize();
             colorImages.push_back(image);
         }
+
+        HeTextureFloatData* textureFloatData = gGraphics->GetTextureFloatData("float data", dataToFragmentShader);
+        textureFloatData->Initialize();
+
         HeTextureArray* colorTextures = gGraphics->GetTextureArray("color textures", colorImages);
         colorTextures->Initialize();
 
@@ -247,9 +263,20 @@ int main(int argc, char** argv)
         auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
         pGeometry->SetMaterial(pMaterial);
         pMaterial->SetTextureArray(colorTextures);
+        pMaterial->SetTextureFloatData(textureFloatData);
+
 
         auto pShader = gGraphics->GetShader("reprojection", "../../res/shader/reprojection.vs", "../../res/shader/reprojection.fs");
         pMaterial->SetShader(pShader);
+
+        pShader->Use();
+        pShader->SetUniformInt("screenWidth", windowWidth);
+        pShader->SetUniformInt("screenHeight", windowHeight);
+
+        pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
+        pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
+
+        pShader->SetUniformInt("frameCount", project.GetFrames().size());
 
         auto mesh = gGraphics->GetGeometryTriangleSoup("Mesh");
         auto nof = mesh->GetFaceCount();
@@ -305,7 +332,7 @@ int main(int argc, char** argv)
                 }
             }
 
-            //if (nearestFrame != nullptr)
+        //if (nearestFrame != nullptr)
         //{
         //    auto cameraInfo = nearestFrame->GetCameraInfo();
         //    auto uv0 = cameraInfo->WorldToUV(v0);
@@ -735,6 +762,8 @@ int main(int argc, char** argv)
 
     int textureIndex = 0;
 
+    int cnt = 0;
+
 
     auto lastTime = HeTime::Now();
     double accTime = 0.0;
@@ -762,15 +791,20 @@ int main(int argc, char** argv)
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //{
-        //    auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
-        //    pMaterial->SetTextureIndex(textureIndex);
+        if(cnt == 300)
+        {
+            auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+            //auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
+            pMaterial->SetTextureIndex(textureIndex);
 
-        //    textureIndex++;
-        //    if (textureIndex > 6) {
-        //        textureIndex = 0;
-        //    }
-        //}
+            textureIndex++;
+            if (textureIndex > 512) {
+                textureIndex = 0;
+            }
+
+            cnt = 0;
+        }
+        cnt++;
 
         gScene->Update((float)delta);
         gScene->Render();

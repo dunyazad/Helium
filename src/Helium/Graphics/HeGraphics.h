@@ -18,6 +18,7 @@ namespace ArtificialNature {
 	class HeMaterialTextureArray;
 	class HeMaterialReprojection;
 	class HeTexture;
+	class HeTextureFloatData;
 	class HeTextureArray;
 	class HeCanvasTexture;
 	class HeCubemapTexture;
@@ -50,6 +51,8 @@ namespace ArtificialNature {
 
 		HeTexture* GetTexture(const string& name, HeImage* image);
 		HeTexture* GetTexture(const string& name, int width, int height);
+		HeTextureFloatData* GetTextureFloatData(const string& name, float* data, int dataLength);
+		HeTextureFloatData* GetTextureFloatData(const string& name, const vector<float>& data);
 		HeTextureArray* GetTextureArray(const string& name, const vector<HeImage*>& images);
 		HeCanvasTexture* GetCanvasTexture(const string& name, HeImage* image);
 		HeCubemapTexture* GetCubemapTexture(const string& name, const vector<HeImage*>& images);

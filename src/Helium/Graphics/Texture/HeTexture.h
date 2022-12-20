@@ -14,7 +14,7 @@ namespace ArtificialNature {
 		void Bind(GLenum textureSlot = GL_TEXTURE0);
 		void Unbind();
 
-		void Resize(int width, int height);
+		virtual void Resize(int width, int height);
 
 		inline HeImage* GetImage() const { return image; }
 
