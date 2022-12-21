@@ -2,13 +2,14 @@
 
 out vec4 FragColor;
 
+in vec3 ourPosition;
 in vec4 ourColor;
 in vec2 TexCoord;
 
 uniform sampler2DArray textureArray;
 uniform sampler2D customDataSampler;
 
-uniform int textureIndex;
+uniform int incremental;
 
 uniform int screenWidth;
 uniform int screenHeight;
@@ -20,13 +21,14 @@ uniform int frameCount;
 uniform mat4 projection;
 uniform mat4 view;
 
-float FLT_EPSILON = 1.192092896e-07F;
+float FLT_EPSILON = 1.192092896e-06F;
+float FLT_MAX = 3.402823466e+38F;
 
 vec3 GetWorldPosition()
 {
 	vec4 ndc = vec4(
-		(gl_FragCoord.x / screenWidth - 0.5) * 2.0,
-		(gl_FragCoord.y / screenHeight - 0.5) * 2.0,
+		(gl_FragCoord.x / float(screenWidth) - 0.5) * 2.0,
+		(gl_FragCoord.y / float(screenHeight) - 0.5) * 2.0,
 		(gl_FragCoord.z - 0.5) * 2.0,
 		1.0);
 
@@ -35,20 +37,21 @@ vec3 GetWorldPosition()
 	// Convert NDC throuch inverse clip coordinates to view coordinates
 	vec4 clip = inverse_view_proj * ndc;
 	vec3 worldPosition = (clip / clip.w).xyz;
+	//vec3 worldPosition = clip.xyz;
 
 	return worldPosition;
 }
 
 float GetFX(int frameIndex)
 {
-	int index = frameIndex * (4 + 16);
+	int index = frameIndex * (1 + 3 + 9 + 16);
 	float fx = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 	return fx;
 }
 
-mat4 GetFrameMatrix(int frameIndex)
+mat4 GetFrameInverseMatrix(int frameIndex)
 {
-	int index = frameIndex * (4 + 16) + 4;
+	int index = frameIndex * (1 + 3 + 9 + 16) + 13;
 	mat4 m;
 	for(int i = 0; i < 4; i++) {
 		float e0 = texelFetch(customDataSampler, ivec2(index + i * 4, 0), 0).r;
@@ -63,16 +66,29 @@ mat4 GetFrameMatrix(int frameIndex)
 
 vec3 GetFramePosition(int frameIndex)
 {
-	return GetFrameMatrix(frameIndex)[3].xyz;
+	int index = frameIndex * (1 + 3 + 9 + 16) + 1;
+	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
+	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
+	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;
+	return vec3(x, y, z);
+}
+
+vec3 GetFrameDirection(int frameIndex)
+{
+	int index = frameIndex * (1 + 3 + 9 + 16) + 10;
+	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
+	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
+	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;
+	return vec3(x, y, z);
 }
 
 vec3 RayPlaneIntersection(vec3 planePoint, vec3 planeNormal, vec3 rayOrigin, vec3 rayDirection)
 {
 	float ndotu = dot(planeNormal, rayDirection);
 
-	if (abs(ndotu) < FLT_EPSILON) {
-		//cout << "No intersection or line is within plane." << endl;
-	}
+	//if (abs(ndotu) < FLT_EPSILON) {
+	//	//cout << "No intersection or line is within plane." << endl;
+	//}
 
 	vec3 w = rayOrigin - planePoint;
 	float si = -dot(planeNormal, w) / ndotu;
@@ -81,41 +97,65 @@ vec3 RayPlaneIntersection(vec3 planePoint, vec3 planeNormal, vec3 rayOrigin, vec
 
 vec2 WorldToUV(int frameIndex, vec3 worldPosition)
 {
-	vec4 ip4 = GetFrameMatrix(frameIndex) * vec4(worldPosition, 1);
+	vec4 ip4 = GetFrameInverseMatrix(frameIndex) * vec4(worldPosition, 1);
 	vec3 planePoint = vec3(0, 0, GetFX(frameIndex));
 	vec3 planeNormal = vec3(0, 0, 1);
 	vec3 rayOrigin = vec3(0, 0, 0);
 	vec3 rayDirection = normalize(vec3(ip4.x, ip4.y, ip4.z));
 	vec3 intersection = RayPlaneIntersection(planePoint, planeNormal, rayOrigin, rayDirection);
-	float u = ((intersection.x / (float(imageWidth) * 0.5f)) * 0.5f + 0.5f);
-	float v = 1 - ((intersection.y / (float(imageHeight) * 0.5f)) * 0.5f + 0.5f);
+	float u = ((intersection.x / ((float(imageWidth) / 7.5) * 0.5)) * 0.5 + 0.5);
+	float v = 1.0 - ((intersection.y / ((float(imageHeight) / 7.5) * 0.5)) * 0.5 + 0.5);
 	return vec2(u, v);
+}
+
+bool equals(float a, float b) {
+	if(abs(a - b) < FLT_EPSILON) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void main()
 {
 	vec3 worldPosition = GetWorldPosition();
 
-	float minimumDistance = 3.402823466e+38F;
-	int minimumDistanceFrame = 0;
+	//vec3 worldPosition = ourPosition;
+
+	//float minimumDistance = 3.402823466e+38F;
+	//int minimumDistanceFrame = 0;
+
+	int nearUVCenterFrame = 0;
+	float minimumUVCenterDistance = 3.402823466e+38F;
 
 	for(int i = 0; i < frameCount; i++)
 	{
-		vec3 framePosition = GetFramePosition(i);
-		float dist = distance(worldPosition, framePosition);
-		if (dist < minimumDistance)
+		//vec3 framePosition = GetFramePosition(i);
+		//float dist = distance(worldPosition, framePosition);
+		//if (dist < minimumDistance)
+		//{
+		//	minimumDistance = dist;
+		//	minimumDistanceFrame = i;
+		//}
+
+		vec2 uv = WorldToUV(i, worldPosition);
+		float uvCenterDistance = distance(uv, vec2(0.5, 0.5));
+		if (uvCenterDistance < minimumUVCenterDistance)
 		{
-			minimumDistance = dist;
-			minimumDistanceFrame = i;
+			nearUVCenterFrame = i;
+			minimumUVCenterDistance = uvCenterDistance;
 		}
 	}
 
-	vec2 uv = WorldToUV(minimumDistanceFrame, worldPosition);
-
+	//vec2 uv = WorldToUV(minimumDistanceFrame, worldPosition);
 	//FragColor = texture(textureArray, vec3(uv, minimumDistanceFrame));
-	FragColor = texture(textureArray, vec3(uv, 2));
 
-	//FragColor = vec4(wp.x, wp.y, GetFX(textureIndex % frameCount) , 1);
+	vec2 uv = WorldToUV(nearUVCenterFrame, worldPosition);
+	FragColor = texture(textureArray, vec3(uv, nearUVCenterFrame));
+
+	//FragColor = texture(textureArray, vec3(uv, 2)) + vec4(GetFrameDirection(incremental), 1);
+
+	//FragColor = vec4(wp.x, wp.y, GetFX(incremental % frameCount) , 1);
 
 	//FragColor = vec4(wp.x, wp.y, 0, 1);
 
@@ -134,8 +174,8 @@ void main()
 	//FragColor = texture(textureArray, vec3(u, v, frameIndex)) + asdf;
 
 
-	float float_texel = texelFetch(customDataSampler, ivec2(textureIndex, 0), 0).r;
-	FragColor = texelFetch(customDataSampler, ivec2(textureIndex, 0), 0);
+	float float_texel = texelFetch(customDataSampler, ivec2(incremental, 0), 0).r;
+	FragColor = texelFetch(customDataSampler, ivec2(incremental, 0), 0);
 
 	//FragColor = texture(textureArray, vec3(u, v, frameIndex));
 	*/

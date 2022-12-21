@@ -21,6 +21,8 @@ HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 
 HeThickLines* pDebugGeometry = nullptr;
 
+int capturedFrameCount = 0;
+
 class OnOff {
 public:
     void AddSceneNode(HeSceneNode* node) {
@@ -225,28 +227,40 @@ int main(int argc, char** argv)
         HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
         vector<float> dataToFragmentShader;
 
+        capturedFrameCount = project.GetFrames().size();
+
         vector<HeImage*> colorImages;
-        for (size_t i = 0; i < project.GetFrames().size(); i++)
+        for (size_t i = 0; i < capturedFrameCount; i++)
         {
             auto frame = project.GetFrames()[i];
          
             dataToFragmentShader.push_back(frame->GetCameraInfo()->GetFX());
-            dataToFragmentShader.push_back(frame->GetCameraInfo()->GetFY());
-            dataToFragmentShader.push_back(0.0f);
-            dataToFragmentShader.push_back(0.0f);
 
-            auto frameMatrix = frame->GetCameraInfo()->GetInversedTransformMatrix();
-            for (int j = 0; j < 4; j++) {
-                dataToFragmentShader.push_back(frameMatrix[j].x);
-                dataToFragmentShader.push_back(frameMatrix[j].y);
-                dataToFragmentShader.push_back(frameMatrix[j].z);
-                dataToFragmentShader.push_back(frameMatrix[j].w);
+            auto frameMatrix = frame->GetCameraInfo()->GetTransformMatrix();
+            auto framePosition = frame->GetCameraInfo()->GetPosition();
+            dataToFragmentShader.push_back(framePosition.x);
+            dataToFragmentShader.push_back(framePosition.y);
+            dataToFragmentShader.push_back(framePosition.z);
+
+            auto frameRotation = glm::value_ptr(frame->GetCameraInfo()->GetRotation());
+            for (int j = 0; j < 9; j++) {
+                dataToFragmentShader.push_back(frameRotation[j]);
+            }
+
+            auto frameInverseTransform = glm::value_ptr(frame->GetCameraInfo()->GetInversedTransformMatrix());
+            for (int j = 0; j < 16; j++) {
+                dataToFragmentShader.push_back(frameInverseTransform[j]);
             }
 
             auto image = frame->LoadColorImage(gGraphics);
             image->Initialize();
             colorImages.push_back(image);
         }
+
+        //for (size_t i = 0; i < dataToFragmentShader.size(); i++)
+        //{
+        //    printf("%4d : %f\n", i, dataToFragmentShader[i]);
+        //}
 
         HeTextureFloatData* textureFloatData = gGraphics->GetTextureFloatData("float data", dataToFragmentShader);
         textureFloatData->Initialize();
@@ -276,7 +290,7 @@ int main(int argc, char** argv)
         pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
         pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
 
-        pShader->SetUniformInt("frameCount", project.GetFrames().size());
+        pShader->SetUniformInt("frameCount", capturedFrameCount);
 
         auto mesh = gGraphics->GetGeometryTriangleSoup("Mesh");
         auto nof = mesh->GetFaceCount();
@@ -290,89 +304,7 @@ int main(int argc, char** argv)
             auto& v1 = mesh->GetVertex(vi1);
             auto& v2 = mesh->GetVertex(vi2);
 
-            auto fc = (v0 + v1 + v2) / 3.0f;
-            auto fn = mesh->GetNormal(vi0);
-
-            HeFrameInfo* nearestFrame = nullptr;
-            float nearestDistance2 = FLT_MAX;
-
-            HeFrameInfo* oppositeFacingFrame = nullptr;
-            float dotBetweenCameraAndFaceNormal = FLT_MAX;
-
-            HeFrameInfo* nearUVCenterFrame = nullptr;
-            float uvCenterDistance2 = FLT_MAX;
-            for (auto& frame : project.GetFrames())
-            {
-                auto cameraInfo = frame->GetCameraInfo();
-                auto cameraFront = glm::vec3(cameraInfo->GetViewMatrix()[3]);
-                auto frustum = cameraInfo->GetFrustum();
-
-                if (frustum->ContainsAll(v0, v1, v2))
-                {
-                    auto ffd = glm::distance2(fc, frame->GetCameraInfo()->GetPosition());
-                    if (ffd < nearestDistance2) {
-                        nearestDistance2 = ffd;
-                        nearestFrame = frame;
-                    }
-
-                    auto dot = glm::dot(cameraFront, fn);
-                    if (dotBetweenCameraAndFaceNormal > dot) {
-                        dotBetweenCameraAndFaceNormal = dot;
-                        oppositeFacingFrame = frame;
-                    }
-
-                    auto uvc = cameraInfo->WorldToUV(fc);
-
-                    auto dc = glm::distance2(uvc, glm::vec2(0.5f, 0.5f));
-
-                    if (uvCenterDistance2 > dc) {
-                        uvCenterDistance2 = dc;
-                        nearUVCenterFrame = frame;
-                    }
-                }
-            }
-
-        //if (nearestFrame != nullptr)
-        //{
-        //    auto cameraInfo = nearestFrame->GetCameraInfo();
-        //    auto uv0 = cameraInfo->WorldToUV(v0);
-        //    auto uv1 = cameraInfo->WorldToUV(v1);
-        //    auto uv2 = cameraInfo->WorldToUV(v2);
-
-        //    auto pGeometry = frameGeometries[nearestFrame->GetFrameIndex()];
-        //    pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
-        //}
-
-        //if (oppositeFacingFrame != nullptr)
-        //{
-        //    auto cameraInfo = oppositeFacingFrame->GetCameraInfo();
-        //    auto uv0 = cameraInfo->WorldToUV(v0);
-        //    auto uv1 = cameraInfo->WorldToUV(v1);
-        //    auto uv2 = cameraInfo->WorldToUV(v2);
-
-        //    auto pGeometry = frameGeometries[oppositeFacingFrame->GetFrameIndex()];
-        //    pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
-        //}
-
-            if (nearUVCenterFrame != nullptr)
-            {
-                auto cameraInfo = nearUVCenterFrame->GetCameraInfo();
-                auto uv0 = cameraInfo->WorldToUV(v0);
-                auto uv1 = cameraInfo->WorldToUV(v1);
-                auto uv2 = cameraInfo->WorldToUV(v2);
-
-                auto frameIndex = nearUVCenterFrame->GetFrameIndex();
-                uv0.x += frameIndex;
-                uv0.y += frameIndex;
-
-                uv1.x += frameIndex;
-                uv1.y += frameIndex;
-
-                uv2.x += frameIndex;
-                uv2.y += frameIndex;
-
-                pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
-            }
+            pGeometry->AddTriangle(v0, v1, v2);
         }
     }
     
@@ -760,7 +692,7 @@ int main(int argc, char** argv)
     */
 
 
-    int textureIndex = 0;
+    int incremental = 0;
 
     int cnt = 0;
 
@@ -791,15 +723,15 @@ int main(int argc, char** argv)
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if(cnt == 300)
+        if(cnt == 30)
         {
             auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
             //auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
-            pMaterial->SetTextureIndex(textureIndex);
+            pMaterial->SetIncremental(incremental);
 
-            textureIndex++;
-            if (textureIndex > 512) {
-                textureIndex = 0;
+            incremental++;
+            if (incremental > capturedFrameCount) {
+                incremental = 0;
             }
 
             cnt = 0;
@@ -831,6 +763,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     pCamera->SetAspectRatio((float)width / (float)height);
 
     //gGraphics->GetFrameBuffer("FrameBuffer")->Resize(width, height);
+
+    auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+    if (pMaterial)
+    {
+        auto pShader = pMaterial->GetShader();
+        pShader->SetUniformInt("screenWidth", width);
+        pShader->SetUniformInt("screenHeight", height);
+    }
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

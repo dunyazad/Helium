@@ -8,12 +8,14 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
+out vec3 ourPosition;
 out vec4 ourColor;
 out vec2 TexCoord;
 
 void main()
 {
 	gl_Position = projection * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	ourPosition = (model * vec4(aPos.x, aPos.y, aPos.z, 1.0)).xyz;
 	ourColor = aColor;
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 }

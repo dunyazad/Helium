@@ -30,7 +30,7 @@ namespace ArtificialNature {
 		{
 			textureArray->Bind();
 
-			shader->SetUniformInt("textureIndex", textureIndex);
+			shader->SetUniformInt("incremental", incremental);
 
 			CheckGLError();
 		}

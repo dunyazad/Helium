@@ -23,15 +23,14 @@ namespace ArtificialNature {
 		inline HeTextureArray* GetTextureArray() const { return textureArray; }
 		inline void SetTextureArray(HeTextureArray* textureArray) { this->textureArray = textureArray; }
 		
-		inline int GetTextureIndex() const { return textureIndex; }
-		inline void SetTextureIndex(int textureIndex) { this->textureIndex = textureIndex; }
+		inline int GetIncremental() const { return incremental; }
+		inline void SetIncremental(int incremental) { this->incremental = incremental; }
 
 	protected:
 		HeTextureFloatData* textureFloatData = nullptr;
 		HeTextureArray* textureArray = nullptr;
 
-		int textureIndex = 0;
-
+		int incremental = 0;
 	};
 
 }

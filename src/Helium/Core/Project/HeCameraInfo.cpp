@@ -161,6 +161,7 @@ namespace ArtificialNature {
 
 		{
 			auto& info = reconstructionInfo["frames"][frameInfo->GetFrameIndex()];
+			this->frameIndex = frameInfo->GetFrameIndex();
 			this->imageWidth = info["image_width"].get<int>();
 			this->imageHeight = info["image_height"].get<int>();
 			this->fx = info["fx"].get<float>();
