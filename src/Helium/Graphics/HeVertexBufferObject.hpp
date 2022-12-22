@@ -154,6 +154,17 @@ namespace ArtificialNature {
 				glEnableVertexAttribArray(attributeIndex);
 				CheckGLError();
 			}
+			else if (bufferType == NORMAL_BUFFER)
+			{
+				glBufferData(GL_ARRAY_BUFFER, sizeof(T) * elements.size(), &elements[0], GL_STATIC_DRAW);
+				CheckGLError();
+
+				glVertexAttribPointer(attributeIndex, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+				CheckGLError();
+
+				glEnableVertexAttribArray(attributeIndex);
+				CheckGLError();
+			}
 		}
 
 	private:

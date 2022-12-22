@@ -4,6 +4,7 @@ out vec4 FragColor;
 
 in vec3 ourPosition;
 in vec4 ourColor;
+in vec3 ourNormal;
 in vec2 TexCoord;
 
 uniform sampler2DArray textureArray;
@@ -108,6 +109,11 @@ vec2 WorldToUV(int frameIndex, vec3 worldPosition)
 	return vec2(u, v);
 }
 
+bool IsInsideOfFOV(vec2 uv)
+{
+	return (0.0 <= uv.x) && (uv.x <= 1.0) && (0.0 <= uv.y) && (uv.y <= 1.0);
+}
+
 bool equals(float a, float b) {
 	if(abs(a - b) < FLT_EPSILON) {
 		return true;
@@ -118,27 +124,37 @@ bool equals(float a, float b) {
 
 void main()
 {
+	FragColor = vec4(ourNormal, 1);
+	return;
+
 	vec3 worldPosition = GetWorldPosition();
 
 	//vec3 worldPosition = ourPosition;
 
-	//float minimumDistance = 3.402823466e+38F;
-	//int minimumDistanceFrame = 0;
+	float minimumDistance = FLT_MAX;
+	int minimumDistanceFrame = 0;
 
 	int nearUVCenterFrame = 0;
 	float minimumUVCenterDistance = 3.402823466e+38F;
 
+	float minimumAngle = FLT_MAX;
+	int minimumAngleFrame = 0;
+
 	for(int i = 0; i < frameCount; i++)
 	{
-		//vec3 framePosition = GetFramePosition(i);
-		//float dist = distance(worldPosition, framePosition);
-		//if (dist < minimumDistance)
-		//{
-		//	minimumDistance = dist;
-		//	minimumDistanceFrame = i;
-		//}
-
 		vec2 uv = WorldToUV(i, worldPosition);
+
+		if (IsInsideOfFOV(uv))
+		{
+			vec3 framePosition = GetFramePosition(i);
+			float dist = distance(worldPosition, framePosition);
+			if (dist < minimumDistance)
+			{
+				minimumDistance = dist;
+				minimumDistanceFrame = i;
+			}
+		}
+
 		float uvCenterDistance = distance(uv, vec2(0.5, 0.5));
 		if (uvCenterDistance < minimumUVCenterDistance)
 		{
@@ -147,36 +163,9 @@ void main()
 		}
 	}
 
-	//vec2 uv = WorldToUV(minimumDistanceFrame, worldPosition);
-	//FragColor = texture(textureArray, vec3(uv, minimumDistanceFrame));
+	vec2 uv = WorldToUV(minimumDistanceFrame, worldPosition);
+	FragColor = texture(textureArray, vec3(uv, minimumDistanceFrame));
 
-	vec2 uv = WorldToUV(nearUVCenterFrame, worldPosition);
-	FragColor = texture(textureArray, vec3(uv, nearUVCenterFrame));
-
-	//FragColor = texture(textureArray, vec3(uv, 2)) + vec4(GetFrameDirection(incremental), 1);
-
-	//FragColor = vec4(wp.x, wp.y, GetFX(incremental % frameCount) , 1);
-
-	//FragColor = vec4(wp.x, wp.y, 0, 1);
-
-	/*
-	float frameIndex = floor(TexCoord.x);
-	float u = TexCoord.x - floor(TexCoord.x);
-	float iv = floor(TexCoord.y);
-	float v = TexCoord.y - floor(TexCoord.y);
-
-	//float float_texel = float(texture2D(customDataSampler, TexCoord.xy));
-
-	//vec4 asdf = frameMatrices1[int(frameIndex)] * frameMatrices[int(frameIndex)] * vec4(u, v, frameIndex, 1) + fl * vec4(0, 0, float_texel, 1);
-
-	////vec4 asdf = vec4(focalLengths[0], 0, 0, 1);
-
-	//FragColor = texture(textureArray, vec3(u, v, frameIndex)) + asdf;
-
-
-	float float_texel = texelFetch(customDataSampler, ivec2(incremental, 0), 0).r;
-	FragColor = texelFetch(customDataSampler, ivec2(incremental, 0), 0);
-
-	//FragColor = texture(textureArray, vec3(u, v, frameIndex));
-	*/
+	//vec2 uv = WorldToUV(nearUVCenterFrame, worldPosition);
+	//FragColor = texture(textureArray, vec3(uv, nearUVCenterFrame));
 }
