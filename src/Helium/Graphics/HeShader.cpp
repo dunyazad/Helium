@@ -244,6 +244,13 @@ namespace ArtificialNature {
 		CheckGLError();
 	}
 
+	void HeShader::SetUniformIntArray(const string& uniformName, const vector<int>& intArray)
+	{
+		glUniform1iv(GetUniformLocation(uniformName), intArray.size(), &intArray[0]);
+
+		CheckGLError();
+	}
+
 	void HeShader::SetUniformFloat(const string& uniformName, float f)
 	{
 		glUniform1f(GetUniformLocation(uniformName), f);

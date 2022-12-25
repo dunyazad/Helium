@@ -65,6 +65,16 @@ public:
         }
     }
 
+    void On(int index)
+    {
+        if (-1 < index && index < nodes.size())
+        {
+            HideAll();
+
+            nodes[index]->SetActive(true);
+        }
+    }
+
     void HideAll()
     {
         for (auto& n : nodes)
@@ -242,10 +252,10 @@ int main(int argc, char** argv)
             dataToFragmentShader.push_back(framePosition.y);
             dataToFragmentShader.push_back(framePosition.z);
 
-            auto frameRotation = glm::value_ptr(frame->GetCameraInfo()->GetRotation());
-            for (int j = 0; j < 9; j++) {
-                dataToFragmentShader.push_back(frameRotation[j]);
-            }
+            auto frameDirection = frame->GetCameraInfo()->GetRotation()[2];
+            dataToFragmentShader.push_back(frameDirection.x);
+            dataToFragmentShader.push_back(frameDirection.y);
+            dataToFragmentShader.push_back(frameDirection.z);
 
             auto frameInverseTransform = glm::value_ptr(frame->GetCameraInfo()->GetInversedTransformMatrix());
             for (int j = 0; j < 16; j++) {
@@ -255,6 +265,96 @@ int main(int argc, char** argv)
             auto image = frame->LoadColorImage(gGraphics);
             image->Initialize();
             colorImages.push_back(image);
+
+
+			auto camera_info = frame->GetCameraInfo();
+			auto width = camera_info->GetImageWidth();
+			auto height = camera_info->GetImageHeight();
+			auto fx = camera_info->GetFX();
+			auto hiw = width * 0.5f;
+			auto hih = height * 0.5f;
+
+			auto cameraInfo = frame->GetCameraInfo();
+			auto frustum = cameraInfo->GetFrustum();
+			auto& nr = frustum->GetNormalizedRight();
+			auto& nu = frustum->GetNormalizedUp();
+			auto& nf = frustum->GetNormalizedFront();
+			auto& fp = frustum->GetPosition();
+
+            auto pNode = gScene->CreateSceneNode(format("frame{}", frame->GetFrameIndex()));
+            onoff.AddSceneNode(pNode);
+            {
+                auto pLines = gGraphics->GetGeometryThickLines(format("frame{}_Lines", frame->GetFrameIndex()));
+                pLines->Initialize();
+                pLines->SetThickness(1);
+                pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+                pNode->AddGeometry(pLines);
+
+                pLines->AddVertex(fp);
+                pLines->AddVertex(fp + nr * 0.1f);
+                pLines->AddVertex(fp);
+                pLines->AddVertex(fp + nu * 0.1f);
+                pLines->AddVertex(fp);
+                pLines->AddVertex(fp + nf * 0.1f);
+
+                pLines->AddColor(glm::vec4(1, 0, 0, 1));
+                pLines->AddColor(glm::vec4(1, 0, 0, 1));
+                pLines->AddColor(glm::vec4(0, 1, 0, 1));
+                pLines->AddColor(glm::vec4(0, 1, 0, 1));
+                pLines->AddColor(glm::vec4(0, 0, 1, 1));
+                pLines->AddColor(glm::vec4(0, 0, 1, 1));
+
+                auto length = sqrt(fx * fx + hiw * hiw) * 0.01f;
+                pLines->AddVertex(fp);
+                pLines->AddVertex(fp + frustum->GetDirectionLeftTop() * length);
+                pLines->AddVertex(fp);
+                pLines->AddVertex(fp + frustum->GetDirectionRightTop() * length);
+                pLines->AddVertex(fp);
+                pLines->AddVertex(fp + frustum->GetDirectionLeftBottom() * length);
+                pLines->AddVertex(fp);
+                pLines->AddVertex(fp + frustum->GetDirectionRightBottom() * length);
+
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+
+                pLines->AddVertex(fp + frustum->GetDirectionLeftTop() * length);
+                pLines->AddVertex(fp + frustum->GetDirectionRightTop() * length);
+                pLines->AddVertex(fp + frustum->GetDirectionRightTop() * length);
+                pLines->AddVertex(fp + frustum->GetDirectionRightBottom() * length);
+                pLines->AddVertex(fp + frustum->GetDirectionRightBottom() * length);
+                pLines->AddVertex(fp + frustum->GetDirectionLeftBottom() * length);
+                pLines->AddVertex(fp + frustum->GetDirectionLeftBottom() * length);
+                pLines->AddVertex(fp + frustum->GetDirectionLeftTop() * length);
+
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+                pLines->AddColor(glm::vec4(1, 1, 0, 1));
+
+                auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
+
+                auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+                pMaterial->SetShader(pShader);
+
+                pLines->SetMaterial(pMaterial);
+
+
+                glEnable(GL_LINE_SMOOTH);
+                glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            }
         }
 
         //for (size_t i = 0; i < dataToFragmentShader.size(); i++)
@@ -431,6 +531,7 @@ int main(int argc, char** argv)
             auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
             //auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
             pMaterial->SetIncremental(incremental);
+            onoff.On(incremental);
 
             incremental++;
             if (incremental > capturedFrameCount) {

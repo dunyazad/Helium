@@ -16,9 +16,12 @@ namespace ArtificialNature {
 			glDeleteTextures(1, &textureID);
 		}
 
-		if (textureData != nullptr) {
-			delete textureData;
-			textureData = nullptr;
+		for (auto& textureData : textureDatas)
+		{
+			if (textureData != nullptr) {
+				delete textureData;
+				textureData = nullptr;
+			}
 		}
 	}
 
@@ -28,29 +31,12 @@ namespace ArtificialNature {
 		{
 			return;
 		}
-		
+
 		width = images[0]->GetWidth();
 		height = images[0]->GetHeight();
 		depth = (GLsizei)images.size();
 		channels = images[0]->GetChannels();
 		if (channels == 3) format = GL_RGB;
-
-		int totalLength = 0;
-		for (auto& image : images)
-		{
-			totalLength += image->GetWidth() * image->GetHeight() * image->GetChannels();
-		}
-		
-		textureData = new unsigned char[totalLength];
-		memset(textureData, 255, totalLength);
-
-		int index = 0;
-		for (auto& image : images)
-		{
-			int length = image->GetWidth() * image->GetHeight() * image->GetChannels();
-			memcpy(textureData + index, image->Data(), length);
-			index += length;
-		}
 
 		glGenTextures(1, &textureID);
 
@@ -59,10 +45,9 @@ namespace ArtificialNature {
 		GLfloat borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		glTexParameterfv(textureTarget, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage3D(textureTarget, 0, format, width, height, depth, 0, format, GL_UNSIGNED_BYTE, textureData);
-
-		glGenerateMipmap(textureTarget);
+		//glTextureStorage3D(textureID, 0, format, width, height, images.size());
+		glTexStorage3D(textureTarget, 1, GL_RGBA8, width, height, images.size());
+		CheckGLError();
 
 		glTexParameteri(textureTarget, GL_TEXTURE_MAX_LEVEL, 4);
 
@@ -70,6 +55,25 @@ namespace ArtificialNature {
 		glTexParameterf(textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+
+		textureDatas.resize(images.size());
+		for (size_t i = 0; i < images.size(); i++)
+		{
+			auto image = images[i];
+			int length = image->GetWidth() * image->GetHeight() * image->GetChannels();
+			textureDatas[i] = new unsigned char[length];
+			auto textureData = textureDatas[i];
+			memcpy(textureData, image->Data(), length);
+
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			//glTexImage3D(textureTarget, 0, format, width, height, depth, 0, format, GL_UNSIGNED_BYTE, textureData);
+			glTexSubImage3D(textureTarget, 0, 0, 0, i, width, height, 1, format, GL_UNSIGNED_BYTE, textureData);
+
+			CheckGLError();
+		}
+
+		glGenerateMipmap(textureTarget);
 	}
 
 	void HeTextureArray::Bind(GLenum textureSlot)

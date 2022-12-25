@@ -40,7 +40,7 @@ namespace ArtificialNature {
 		GLsizei channels = 0;
 		GLsizei depth = 0;
 		GLenum dataType = GL_UNSIGNED_BYTE;
-		unsigned char* textureData = nullptr;
+		vector<unsigned char*> textureDatas;
 
 	public:
 		friend class HeGraphics;

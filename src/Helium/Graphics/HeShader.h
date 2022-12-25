@@ -13,6 +13,7 @@ namespace ArtificialNature {
 		GLint GetUniformLocation(const string& uniformName);
 
 		void SetUniformInt(const string& uniformName, int i);
+		void SetUniformIntArray(const string& uniformName, const vector<int>& intArray);
 		void SetUniformFloat(const string& uniformName, float f);
 		void SetUniformFloatArray(const string& uniformName, const vector<float>& floatArray);
 		void SetUniformFloatArray(const string& uniformName, float* floatArray, int elementCount);

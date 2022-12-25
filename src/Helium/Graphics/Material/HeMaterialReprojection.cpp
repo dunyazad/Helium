@@ -23,22 +23,23 @@ namespace ArtificialNature {
 
 		HeMaterial::Use(projection, view, model);
 
-		shader->SetUniformInt("textureArray", 0);
-		shader->SetUniformInt("customDataSampler", 1);
+		if (textureFloatData)
+		{
+			textureFloatData->Bind(GL_TEXTURE0);
+		}
+		shader->SetUniformInt("customDataSampler", 0);
+
+		shader->SetUniformInt("textureArray", 1);
 
 		if (textureArray)
 		{
-			textureArray->Bind();
+			textureArray->Bind(GL_TEXTURE0 + 1);
 
 			shader->SetUniformInt("incremental", incremental);
 
 			CheckGLError();
 		}
 
-		if (textureFloatData)
-		{
-			textureFloatData->Bind(GL_TEXTURE0 + 1);
-		}
 	}
 
 	void HeMaterialReprojection::StopUse()
