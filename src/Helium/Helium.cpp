@@ -83,4 +83,32 @@ namespace ArtificialNature {
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
+
+	void Helium::Run()
+	{
+		if (callbackOnPrepare)
+		{
+			callbackOnPrepare();
+		}
+
+		while (finished == false)
+		{
+			if (callbackOnFrame)
+			{
+				callbackOnFrame();
+			}
+		}
+
+		if (callbackOnTerminate)
+		{
+			callbackOnTerminate();
+		}
+	}
+
+	void Helium::Run(function<void()> callback)
+	{
+		callbackOnFrame = callback;
+
+		Run();
+	}
 }

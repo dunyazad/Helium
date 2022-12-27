@@ -8,11 +8,10 @@ namespace ArtificialNature {
 	{
 	public:
 		HeWindow();
-		~HeWindow();
-
+		virtual ~HeWindow();
 
 	protected:
-
+		GLFWwindow* glfwWindow = nullptr;
 	};
 
 }

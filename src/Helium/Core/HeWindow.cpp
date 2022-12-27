@@ -2,4 +2,14 @@
 
 namespace ArtificialNature {
 
+	HeWindow::HeWindow()
+	{
+
+	}
+
+	HeWindow::~HeWindow()
+	{
+
+	}
+
 }

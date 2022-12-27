@@ -132,6 +132,12 @@ int main(int argc, char** argv)
     Helium helium("helium", windowWidth, windowHeight);
     gGraphics = helium.GetGraphics();
 
+    helium.OnPrepare([&]() {
+        cout << "Helium::OnPrepare" << endl;
+    });
+
+    //helium.Run();
+
     helium.InitializeImgui(mWindow);
 
     gScene = helium.GetScene("Default Scene");

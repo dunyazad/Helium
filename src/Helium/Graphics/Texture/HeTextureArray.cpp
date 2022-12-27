@@ -46,7 +46,7 @@ namespace ArtificialNature {
 		glTexParameterfv(textureTarget, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 		//glTextureStorage3D(textureID, 0, format, width, height, images.size());
-		glTexStorage3D(textureTarget, 1, GL_RGBA8, width, height, images.size());
+		glTexStorage3D(textureTarget, 1, GL_RGBA8, width, height, (GLsizei)images.size());
 		CheckGLError();
 
 		glTexParameteri(textureTarget, GL_TEXTURE_MAX_LEVEL, 4);
@@ -55,7 +55,6 @@ namespace ArtificialNature {
 		glTexParameterf(textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
 
 		textureDatas.resize(images.size());
 		for (size_t i = 0; i < images.size(); i++)

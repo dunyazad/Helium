@@ -20,11 +20,23 @@ namespace ArtificialNature {
 		void InitializeImgui(GLFWwindow* window);
 		void TerminateImgui();
 
+		void Run();
+		void Run(function<void()> callback);
+
+		inline void OnPrepare(function<void()> callback) { callbackOnPrepare = callback; }
+		inline void OnTerminate(function<void()> callback) { callbackOnTerminate = callback; }
+
 	private:
 		int windowWidth;
 		int windowHeight;
 
 		HeGraphics* graphics = nullptr;
 		map<string, HeScene*> scenes;
+
+		function<void()> callbackOnPrepare;
+		function<void()> callbackOnFrame;
+		function<void()> callbackOnTerminate;
+
+		bool finished = false;
 	};
 }
