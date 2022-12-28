@@ -5,6 +5,8 @@ using namespace ArtificialNature;
 const int windowWidth = 1024;
 const int windowHeight = 1024;
 
+float controlValue = 0.5f;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos);
@@ -150,10 +152,10 @@ int main(int argc, char** argv)
     pCameraManipulator = &manipulator;
     gScene->SetMainCamera(pCamera);
 
-    //{
-    //    auto pNode = gScene->CreateSceneNodeImgui("imgui");
-    //    pNode->SetText("0");
-    //}
+    {
+        auto pNode = gScene->CreateSceneNodeImgui("imgui");
+        pNode->SetText("0");
+    }
 
     {
         auto pNode = gScene->CreateSceneNode("Gizmo Node");
@@ -396,6 +398,8 @@ int main(int argc, char** argv)
         pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
         pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
 
+        pShader->SetUniformFloat("controlValue", controlValue);
+
         pShader->SetUniformInt("frameCount", capturedFrameCount);
 
         auto mesh = gGraphics->GetGeometryTriangleSoup("Mesh");
@@ -410,12 +414,16 @@ int main(int argc, char** argv)
             auto& v1 = mesh->GetVertex(vi1);
             auto& v2 = mesh->GetVertex(vi2);
 
-            pGeometry->AddTriangle(v0, v1, v2);
-        }
+            auto d10 = glm::normalize(v0 - v1);
+            auto d12 = glm::normalize(v2 - v1);
+            auto fn = glm::normalize(glm::cross(d10, d12));
 
-        pGeometry->ComputeFaceNormals();
+            pGeometry->AddTriangle(v0, v1, v2, fn, fn, fn);
+        }
     }
     
+    
+
     /*
     {
         auto pNode = gScene->CreateSceneNode("Temp");
@@ -532,7 +540,7 @@ int main(int argc, char** argv)
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if(cnt == 30)
+        if(cnt == 1)
         {
             auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
             //auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
@@ -578,6 +586,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     if (pMaterial)
     {
         auto pShader = pMaterial->GetShader();
+        pShader->Use();
         pShader->SetUniformInt("screenWidth", width);
         pShader->SetUniformInt("screenHeight", height);
     }
@@ -618,6 +627,40 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         onoff.Next();
+    }
+    else if (key == GLFW_KEY_PAGE_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        controlValue += 0.01;
+
+        controlValue = controlValue > 0.0 ? controlValue : 0.0;
+        controlValue = controlValue < 1.0 ? controlValue : 1.0;
+
+        cout << "Control Value : " << controlValue << endl;
+
+        auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+        if (pMaterial)
+        {
+            auto pShader = pMaterial->GetShader();
+            pShader->Use();
+            pShader->SetUniformFloat("controlValue", controlValue);
+        }
+    }
+    else if (key == GLFW_KEY_PAGE_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        controlValue -= 0.01;
+
+        controlValue = controlValue > 0.0 ? controlValue : 0.0;
+        controlValue = controlValue < 1.0 ? controlValue : 1.0;
+
+        cout << "Control Value : " << controlValue << endl;
+
+        auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+        if (pMaterial)
+        {
+            auto pShader = pMaterial->GetShader();
+            pShader->Use();
+            pShader->SetUniformFloat("controlValue", controlValue);
+        }
     }
 }
 
