@@ -540,7 +540,7 @@ int main(int argc, char** argv)
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if(cnt == 20)
+        if(cnt == 1)
         {
             auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
             //auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));

@@ -43,6 +43,9 @@ namespace ArtificialNature {
 
 		inline const HeFrustum* GetFrustum() const { return frustum;}
 
+		inline float GetAmbientColorTemperature() const { return ambientColorTemperature; }
+		inline float GetAmbientIntensity() const { return ambientIntensity; }
+
 	protected:
 		int frameIndex = -1;
 		int imageWidth = 0;
