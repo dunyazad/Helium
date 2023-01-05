@@ -243,9 +243,9 @@ int main(int argc, char** argv)
     {
         //HeProject project(argv[1], argv[2]);
         HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+        capturedFrameCount = project.GetFrames().size();
         vector<float> dataToFragmentShader;
 
-        capturedFrameCount = project.GetFrames().size();
 
         vector<HeImage*> colorImages;
         for (size_t i = 0; i < capturedFrameCount; i++)

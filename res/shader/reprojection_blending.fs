@@ -341,7 +341,82 @@ uniform mat4 view;
 float FLT_EPSILON = 1.192092896e-06F;
 float FLT_MAX = 3.402823466e+38F;
 float PI = 3.14159265359;
-float PI2 = 6.2831853071;
+
+#define LUMINANCE_PRESERVATION 0.75
+
+#define EPSILON 1e-10
+
+float saturate(float v) {
+	return clamp(v, 0.0, 1.0);
+}
+vec2 saturate(vec2 v) {
+	return clamp(v, vec2(0.0), vec2(1.0));
+}
+vec3 saturate(vec3 v) {
+	return clamp(v, vec3(0.0), vec3(1.0));
+}
+vec4 saturate(vec4 v) {
+	return clamp(v, vec4(0.0), vec4(1.0));
+}
+
+vec3 ColorTemperatureToRGB(float temperatureInKelvins) {
+	vec3 retColor;
+
+	temperatureInKelvins = clamp(temperatureInKelvins, 1000.0, 40000.0) / 100.0;
+
+	if(temperatureInKelvins <= 66.0) {
+		retColor.r = 1.0;
+		retColor.g = saturate(0.39008157876901960784 * log(temperatureInKelvins) - 0.63184144378862745098);
+	} else {
+		float t = temperatureInKelvins - 60.0;
+		retColor.r = saturate(1.29293618606274509804 * pow(t, -0.1332047592));
+		retColor.g = saturate(1.12989086089529411765 * pow(t, -0.0755148492));
+	}
+
+	if(temperatureInKelvins >= 66.0)
+		retColor.b = 1.0;
+	else if(temperatureInKelvins <= 19.0)
+		retColor.b = 0.0;
+	else
+		retColor.b = saturate(0.54320678911019607843 * log(temperatureInKelvins - 10.0) - 1.19625408914);
+
+	return retColor;
+}
+
+float Luminance(vec3 color) {
+	float fmin = min(min(color.r, color.g), color.b);
+	float fmax = max(max(color.r, color.g), color.b);
+	return (fmax + fmin) / 2.0;
+}
+
+vec3 HUEtoRGB(float H) {
+	float R = abs(H * 6.0 - 3.0) - 1.0;
+	float G = 2.0 - abs(H * 6.0 - 2.0);
+	float B = 2.0 - abs(H * 6.0 - 4.0);
+	return saturate(vec3(R, G, B));
+}
+
+vec3 HSLtoRGB(in vec3 HSL) {
+	vec3 RGB = HUEtoRGB(HSL.x);
+	float C = (1.0 - abs(2.0 * HSL.z - 1.0)) * HSL.y;
+	return (RGB - 0.5) * C + vec3(HSL.z);
+}
+
+vec3 RGBtoHCV(vec3 RGB) {
+    // Based on work by Sam Hocevar and Emil Persson
+	vec4 P = (RGB.g < RGB.b) ? vec4(RGB.bg, -1.0, 2.0 / 3.0) : vec4(RGB.gb, 0.0, -1.0 / 3.0);
+	vec4 Q = (RGB.r < P.x) ? vec4(P.xyw, RGB.r) : vec4(RGB.r, P.yzx);
+	float C = Q.x - min(Q.w, Q.y);
+	float H = abs((Q.w - Q.y) / (6.0 * C + EPSILON) + Q.z);
+	return vec3(H, C, Q.x);
+}
+
+vec3 RGBtoHSL(vec3 RGB) {
+	vec3 HCV = RGBtoHCV(RGB);
+	float L = HCV.z - HCV.y * 0.5;
+	float S = HCV.y / (1.0 - abs(L * 2.0 - 1.0) + EPSILON);
+	return vec3(HCV.x, S, L);
+}
 
 vec3 GetWorldPosition() {
 	vec4 ndc = vec4((gl_FragCoord.x / float(screenWidth) - 0.5) * 2.0, (gl_FragCoord.y / float(screenHeight) - 0.5) * 2.0, (gl_FragCoord.z - 0.5) * 2.0, 1.0);
@@ -457,22 +532,6 @@ bool equals(float a, float b) {
 // 	return vec2(xyCenter.x + dx / factor, xyCenter.y + dy / factor);
 // }
 
-#define WithQuickAndDirtyLuminancePreservation        
-
-const float LuminancePreservationFactor = 1.0;
-
-// Valid from 1000 to 40000 K (and additionally 0 for pure full white)
-vec3 colorTemperatureToRGB(const in float temperature){
-  // Values from: http://blenderartists.org/forum/showthread.php?270332-OSL-Goodness&p=2268693&viewfull=1#post2268693   
-  mat3 m = (temperature <= 6500.0) ? mat3(vec3(0.0, -2902.1955373783176, -8257.7997278925690),
-	                                      vec3(0.0, 1669.5803561666639, 2575.2827530017594),
-	                                      vec3(1.0, 1.3302673723350029, 1.8993753891711275)) : 
-	 								 mat3(vec3(1745.0425298314172, 1216.6168361476490, -8257.7997278925690),
-   	                                      vec3(-2666.3474220535695, -2173.1012343082230, 2575.2827530017594),
-	                                      vec3(0.55995389139931482, 0.70381203140554553, 1.8993753891711275)); 
-  return mix(clamp(vec3(m[0] / (vec3(clamp(temperature, 1000.0, 40000.0)) + m[1]) + m[2]), vec3(0.0), vec3(1.0)), vec3(1.0), smoothstep(1000.0, 0.0, temperature));
-}
-
 void main() {
 	vec3 worldPosition = GetWorldPosition();
 
@@ -528,11 +587,9 @@ void main() {
 	}
 
 	vec4 fdt = texture(textureArray, vec3(frameDistanceFrameUV.x, frameDistanceFrameUV.y, frameDistanceFrame));
-	fdt = vec4(mix(fdt.xyz, fdt.xyz * colorTemperatureToRGB(6500), 0.995), 1);
 	// vec4 accumulatedColorFDT = fdt;
 
 	vec4 uvct = texture(textureArray, vec3(uvCenterFrameUV.x, uvCenterFrameUV.y, uvCenterFrame));
-	uvct = vec4(mix(uvct.xyz, uvct.xyz * colorTemperatureToRGB(6500), 0.995), 1);
 	vec4 accumulatedColorUV = fdt;
 
 	// vec4 nst = texture(textureArray, vec3(nearStraightFrameUV.x, nearStraightFrameUV.y, nearStraightFrame));
@@ -545,7 +602,6 @@ void main() {
 
 		if(IsInsideOfFOV(uv)) {
 			vec4 color = texture(textureArray, vec3(uv.x, uv.y, i));
-			color = vec4(mix(color.xyz, color.xyz * colorTemperatureToRGB(6500), 0.995), 1);
 
 			//float frameDistance = distance(worldPosition, GetFramePosition(i));
 			float ratioFrameDistance = (i == frameDistanceFrame ? 1 : 0);
@@ -556,10 +612,10 @@ void main() {
 
 			float ratioUV = 1 - pow(abs(sin(PI * (uvDistance / uvDistanceMax) / 2.0)), 3.0);
 			//float ratioUV = 1 - uvDistance / uvDistanceMax;
-			if(i != uvCenterFrame)
-			{
-				ratioUV = ratioUV * 0.02;
-			}
+			//if(i != uvCenterFrame)
+			//{
+			//	ratioUV = ratioUV * 0.2;
+			//}
 
 			vec3 worldNormal = normalize(GetFramePosition(i) - worldPosition);
 			float angle = acos(dot(frameDirection, worldNormal));
@@ -581,8 +637,8 @@ void main() {
 
 	//FragColor = mix(fdt, accumulatedColorUV, uvCenterDistance / uvDistanceMax);
 	// FragColor = mix(fdt, accumulatedColorUV, 1);
-	//FragColor = accumulatedColorUV;
-	FragColor = fdt;
+	FragColor = accumulatedColorUV;
+	//FragColor = fdt;
 
 	//FragColor = vec4(ratioAngle, 0, 0, 1);
 }

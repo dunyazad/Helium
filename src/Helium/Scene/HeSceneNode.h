@@ -33,6 +33,16 @@ namespace ArtificialNature {
 		inline void RemoveGeometry(HeGeometry* geometry) { this->geometries.erase(geometry); }
 
 		inline const set<HeGeometry*>& GetGeometries() { return geometries; }
+		inline HeGeometry* GetGeometry(const string& name) {
+			for (auto& geometry : geometries) {
+				if (geometry != nullptr) {
+					if (((HeObject*)geometry)->GetName() == name) {
+						return geometry;
+					}
+				}
+			}
+			return nullptr;
+		}
 
 		inline const glm::quat& GetLocalRotation() const { return localRotation; }
 		inline const glm::vec3& GetLocalPosition() const { return localPosition; }
