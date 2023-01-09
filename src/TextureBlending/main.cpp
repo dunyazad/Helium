@@ -2,8 +2,8 @@
 #include <Helium/Helium.h>
 using namespace ArtificialNature;
 
-const int windowWidth = 1024;
-const int windowHeight = 1024;
+int windowWidth = 1024;
+int windowHeight = 1024;
 
 float controlValue = 0.5f;
 
@@ -94,6 +94,11 @@ protected:
     size_t index = 0;
 };
 OnOff onoff;
+
+HeShader* pShaderByDistance = nullptr;
+HeShader* pShaderByUV = nullptr;
+HeShader* pShaderBlending = nullptr;
+HeShader* pShaderCustomBlending = nullptr;
 
 int main(int argc, char** argv)
 {
@@ -397,23 +402,75 @@ int main(int argc, char** argv)
         pMaterial->SetTextureArray(colorTextures);
         pMaterial->SetTextureFloatData(textureFloatData);
 
+        {
+            auto pShader = gGraphics->GetShader("by_distance", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/by_distance.fs");
+            pMaterial->SetShader(pShader);
+            pShaderByDistance = pShader;
 
-        auto pShader = gGraphics->GetShader("blending", "../../res/shader/blending.vs", "../../res/shader/blending.fs");
-        //auto pShader = gGraphics->GetShader("reprojection", "../../res/shader/reprojection.vs", "../../res/shader/reprojection.fs");
-        pMaterial->SetShader(pShader);
+            pShader->Use();
+            pShader->SetUniformInt("screenWidth", windowWidth);
+            pShader->SetUniformInt("screenHeight", windowHeight);
 
-        pShader->Use();
-        pShader->SetUniformInt("screenWidth", windowWidth);
-        pShader->SetUniformInt("screenHeight", windowHeight);
+            pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
+            pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
 
-        pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
-        pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
+            pShader->SetUniformFloat("controlValue", controlValue);
 
-        pShader->SetUniformFloat("controlValue", controlValue);
+            pShader->SetUniformInt("frameCount", capturedFrameCount);
 
-        pShader->SetUniformInt("frameCount", capturedFrameCount);
+            pShader->SetUniformFloatArray("controlValues", controlValues);
+        }
+        {
+            auto pShader = gGraphics->GetShader("by_uv", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/by_uv.fs");
+            pShaderByUV = pShader;
 
-        pShader->SetUniformFloatArray("controlValues", controlValues);
+            pShader->Use();
+            pShader->SetUniformInt("screenWidth", windowWidth);
+            pShader->SetUniformInt("screenHeight", windowHeight);
+
+            pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
+            pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
+
+            pShader->SetUniformFloat("controlValue", controlValue);
+
+            pShader->SetUniformInt("frameCount", capturedFrameCount);
+
+            pShader->SetUniformFloatArray("controlValues", controlValues);
+        }
+        {
+            auto pShader = gGraphics->GetShader("blending", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/blending.fs");
+            pShaderBlending = pShader;
+
+            pShader->Use();
+            pShader->SetUniformInt("screenWidth", windowWidth);
+            pShader->SetUniformInt("screenHeight", windowHeight);
+
+            pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
+            pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
+
+            pShader->SetUniformFloat("controlValue", controlValue);
+
+            pShader->SetUniformInt("frameCount", capturedFrameCount);
+
+            pShader->SetUniformFloatArray("controlValues", controlValues);
+        }
+        {
+            auto pShader = gGraphics->GetShader("custom_blending", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/custom_blending.fs");
+            pShaderCustomBlending = pShader;
+
+            pShader->Use();
+            pShader->SetUniformInt("screenWidth", windowWidth);
+            pShader->SetUniformInt("screenHeight", windowHeight);
+
+            pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
+            pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
+
+            pShader->SetUniformFloat("controlValue", controlValue);
+
+            pShader->SetUniformInt("frameCount", capturedFrameCount);
+
+            pShader->SetUniformFloatArray("controlValues", controlValues);
+        }
 
         auto mesh = gGraphics->GetGeometryTriangleSoup("Mesh");
         auto nof = mesh->GetFaceCount();
@@ -435,95 +492,6 @@ int main(int argc, char** argv)
         }
     }
     
-    
-
-    /*
-    {
-        auto pNode = gScene->CreateSceneNode("Temp");
-        auto pGeometry = gGraphics->GetGeometryTriangleSoup("Temp");
-        pGeometry->Initialize();
-        pNode->AddGeometry(pGeometry);
-
-        auto pMaterial = gGraphics->GetMaterial("Mesh Material");
-        pGeometry->SetMaterial(pMaterial);
-
-        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
-        pMaterial->SetShader(pShader);
-
-
-        struct RemappingInfo
-        {
-            int faceIndex;
-            glm::vec3 v0;
-            glm::vec3 v1;
-            glm::vec3 v2;
-            glm::vec3 fn;
-            glm::vec3 fc;
-            glm::vec3 xAxis;
-            glm::vec3 yAxis;
-            glm::vec3 zAxis;
-        };
-
-        auto mesh = gGraphics->GetGeometry("Mesh");
-        auto nof = mesh->GetFaceCount();
-        for (size_t i = 0; i < nof; i++)
-        {
-            auto vi0 = mesh->GetIndex((int)i * 3);
-            auto vi1 = mesh->GetIndex((int)i * 3 + 1);
-            auto vi2 = mesh->GetIndex((int)i * 3 + 2);
-
-            auto& v0 = mesh->GetVertex(vi0);
-            auto& v1 = mesh->GetVertex(vi1);
-            auto& v2 = mesh->GetVertex(vi2);
-
-            auto d01 = v1 - v0;
-            auto d21 = v1 - v2;
-            auto l01 = glm::length2(d01);
-            auto l21 = glm::length2(d21);
-            d01 = glm::normalize(d01);
-            d21 = glm::normalize(d21);
-            auto fn = glm::cross(d01, d21);
-            auto fc = glm::vec3();
-            auto xAxis = glm::vec3();
-            auto yAxis = glm::vec3();
-            auto zAxis = fn;
-
-            if (l01 > l21)
-            {
-                fc = v0;
-                xAxis = d01;
-                yAxis = glm::cross(zAxis, xAxis);
-            }
-            else
-            {
-                fc = v2;
-                xAxis = d21;
-                yAxis = glm::cross(zAxis, xAxis);
-            }
-
-            auto tm = glm::mat4();
-            tm[0] = glm::vec4(xAxis, 0);
-            tm[1] = glm::vec4(yAxis, 0);
-            tm[2] = glm::vec4(zAxis, 0);
-            tm[3] = glm::vec4(fc, 1);
-
-            auto im = glm::inverse(tm);
-
-            auto angle = glm::angle(glm::vec3(im[0]), glm::vec3(1, 0, 0));
-            auto angleAxis = glm::angleAxis(-angle, glm::vec3(0, 0, 1));
-
-            im = glm::mat4(glm::mat3_cast(angleAxis)) * im;
-
-            auto inv0 = im * glm::vec4(v0, 1);
-            auto inv1 = im * glm::vec4(v1, 1);
-            auto inv2 = im * glm::vec4(v2, 1);
-
-            pGeometry->AddTriangle(glm::vec3(inv0), glm::vec3(inv1), glm::vec3(inv2));
-        }
-    }
-    */
-
-
     int cnt = 0;
 
     auto lastTime = HeTime::Now();
@@ -594,19 +562,22 @@ int main(int argc, char** argv)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    windowWidth = width;
+    windowHeight = height;
 
-    pCamera->SetAspectRatio((float)width / (float)height);
+    glViewport(0, 0, windowWidth, windowHeight);
 
-    //gGraphics->GetFrameBuffer("FrameBuffer")->Resize(width, height);
+    pCamera->SetAspectRatio((float)windowWidth / (float)windowHeight);
+
+    //gGraphics->GetFrameBuffer("FrameBuffer")->Resize(windowWidth, height);
 
     auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
     if (pMaterial)
     {
         auto pShader = pMaterial->GetShader();
         pShader->Use();
-        pShader->SetUniformInt("screenWidth", width);
-        pShader->SetUniformInt("screenHeight", height);
+        pShader->SetUniformInt("screenWidth", windowWidth);
+        pShader->SetUniformInt("screenHeight", windowHeight);
     }
 }
 
@@ -645,6 +616,54 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         onoff.Next();
+    }
+    else if (key == GLFW_KEY_1 && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+        if (pMaterial)
+        {
+            pMaterial->SetShader(pShaderByDistance);
+            pShaderByDistance->Use();
+            pShaderByDistance->SetUniformInt("screenWidth", windowWidth);
+            pShaderByDistance->SetUniformInt("screenHeight", windowHeight);
+            cout << "by distance" << endl;
+        }
+    }
+    else if (key == GLFW_KEY_2 && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+        if (pMaterial)
+        {
+            pMaterial->SetShader(pShaderByUV);
+            pShaderByUV->Use();
+            pShaderByUV->SetUniformInt("screenWidth", windowWidth);
+            pShaderByUV->SetUniformInt("screenHeight", windowHeight);
+            cout << "by uv" << endl;
+        }
+    }
+    else if (key == GLFW_KEY_3 && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+        if (pMaterial)
+        {
+            pMaterial->SetShader(pShaderBlending);
+            pShaderBlending->Use();
+            pShaderBlending->SetUniformInt("screenWidth", windowWidth);
+            pShaderBlending->SetUniformInt("screenHeight", windowHeight);
+            cout << "blending" << endl;
+        }
+    }
+    else if (key == GLFW_KEY_4 && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+        if (pMaterial)
+        {
+            pMaterial->SetShader(pShaderCustomBlending);
+            pShaderCustomBlending->Use();
+            pShaderCustomBlending->SetUniformInt("screenWidth", windowWidth);
+            pShaderCustomBlending->SetUniformInt("screenHeight", windowHeight);
+            cout << "custom blending" << endl;
+        }
     }
     else if (key == GLFW_KEY_PAGE_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {

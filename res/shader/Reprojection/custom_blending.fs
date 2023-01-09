@@ -114,13 +114,42 @@ bool equals(float a, float b) {
 	}
 }
 
+// vec2 GetRadialDistortion(vec2 xy, vec2 xyCenter)
+// {
+// 	float RadialDistortionFactors[6];
+// 	for (int i = 0; i < 6; i++)
+// 	{
+// 		RadialDistortionFactors[i] = 0;
+// 	}
+
+// 	float dx = xy.x - xyCenter.x;
+// 	float dy = xy.y - xyCenter.y;
+
+// 	float rK1 = distance(xy, xyCenter);
+// 	float rK2 = rK1 * rK1;
+// 	float rK3 = rK2 * rK2;
+// 	float rK4 = rK3 * rK3;
+// 	float rK5 = rK4 * rK4;
+// 	float rK6 = rK5 * rK5;
+
+// 	float lastFactor = distance(xy, xyCenter);
+// 	float factor = 1.0f;
+// 	for (int i = 0; i < 6; i++)
+// 	{
+// 		factor = factor + RadialDistortionFactors[i] * lastFactor * lastFactor;
+// 		lastFactor = lastFactor * lastFactor;
+// 	}
+
+// 	return vec2(xyCenter.x + dx / factor, xyCenter.y + dy / factor);
+// }
+
 #define WithQuickAndDirtyLuminancePreservation        
 
 const float LuminancePreservationFactor = 1.0;
 
 // Valid from 1000 to 40000 K (and additionally 0 for pure full white)
 vec3 colorTemperatureToRGB(float temperature){
-  // Values from: http://blenderartists.org/forum/showthread.php?270332-OSL-Goodness&p=2268693&viewfull=1#post2268693   
+  // Values from: http://blenderartists.org/forum/showthread.php?270332-OSL-Goodness&p=2268693&viewfull=1#post2268693
   mat3 m = (temperature <= 6500.0) ? mat3(vec3(0.0, -2902.1955373783176, -8257.7997278925690),
 	                                      vec3(0.0, 1669.5803561666639, 2575.2827530017594),
 	                                      vec3(1.0, 1.3302673723350029, 1.8993753891711275)) : 
@@ -149,18 +178,76 @@ vec3 YUV2RGB(vec3 yuv)
 void main() {
 	vec3 worldPosition = GetWorldPosition();
 
-	vec4 accColor = vec4(0, 0, 0, 0);
+	float frameDistanceDistance = FLT_MAX;
+	float frameDistanceDifference = FLT_MAX;
+	int frameDistanceFrame = 0;
+	vec2 frameDistanceFrameUV;
+
+	float uvCenterDistance = FLT_MAX;
+	float uvCenterDistanceDifference = FLT_MAX;
+	int uvCenterFrame = 0;
+	vec2 uvCenterFrameUV;
+
+	float uvDistanceMax = distance(vec2(0.5, 0.5), vec2(1, 1));
+
 	for(int i = 0; i < frameCount; i++) {
 		vec2 uv = WorldToUV(i, worldPosition);
 		if(IsInsideOfFOV(uv)) {
 			vec3 worldNormal = normalize(GetFramePosition(i) - worldPosition);
 			vec3 frameDirection = GetFrameDirection(i);
 			float angle = acos(dot(frameDirection, worldNormal));
-			float frameDistance = distance(worldPosition, GetFramePosition(i));
-			float ratio = pow(cos(angle), 2) / pow(frameDistance, 2);
-			vec4 color = texture(textureArray, vec3(uv.x, uv.y, i));
-			accColor = mix(accColor, color, ratio);
+			if(abs(angle) < PI / 2) {
+				float frameDistance = distance(worldPosition, GetFramePosition(i));
+				if(frameDistance < frameDistanceDistance) {
+					frameDistanceDifference = frameDistanceDistance - frameDistance;
+					frameDistanceDistance = frameDistance;
+					frameDistanceFrame = i;
+					frameDistanceFrameUV = uv;
+				}
+
+				float uvDistance = distance(uv, vec2(0.5, 0.5));
+				if(uvDistance < 0.0000001)
+					uvDistance = 0.0000001;
+				if(uvDistance < uvCenterDistance) {
+					uvCenterDistanceDifference = uvCenterDistance - uvDistance;
+					uvCenterDistance = uvDistance;
+					uvCenterFrame = i;
+					uvCenterFrameUV = uv;
+				}
+			}
 		}
 	}
-	FragColor = accColor;
+
+	//vec4 rgb = texture(textureArray, vec3(frameDistanceFrameUV.x, frameDistanceFrameUV.y, frameDistanceFrame));
+	vec4 rgb = texture(textureArray, vec3(uvCenterFrameUV.x, uvCenterFrameUV.y, uvCenterFrame));
+	//vec4 yuv = vec4(RGB2YUV(rgb.xyz), 1);
+	//yuv.x = yuv.x * controlValues[frameDistanceFrame];
+	//FragColor = vec4(YUV2RGB(yuv.xyz), 1);
+
+	//FragColor = vec4(mix(rgb.xyz, colorTemperatureToRGB(6000 * controlValues[frameDistanceFrame]), 0.5), 1);
+	//FragColor = vec4(rgb.xyz * controlValues[frameDistanceFrame], 1);
+	FragColor = rgb;
+
+	vec4 accumulatedColor = rgb;
+	for(int i = 0; i < frameCount; i++) {
+		vec2 uv = WorldToUV(i, worldPosition);
+		float frameDistance = distance(GetFramePosition(i), worldPosition);
+
+		if(IsInsideOfFOV(uv)) {
+			vec4 color = texture(textureArray, vec3(uv.x, uv.y, i));
+			vec3 worldNormal = normalize(GetFramePosition(i) - worldPosition);
+			vec3 frameDirection = GetFrameDirection(i);
+			float angle = acos(dot(frameDirection, worldNormal));
+			if(abs(angle) < PI / 2) {
+				//float ratioUV = pow(cos(angle), 2) / pow(frameDistance, 2);// * pow(cos(angle), 2) / pow(uvDistance, 2);
+				float uvDistance = distance(uv, vec2(0.5, 0.5));
+				if(uvDistance < 0.0000001)
+					uvDistance = 0.0000001;
+				float ratioUV = 1 - pow(abs(sin(PI * (uvDistance / uvDistanceMax) / 2.0)), 3.0);
+				accumulatedColor = mix(accumulatedColor, color, ratioUV);
+			}
+		}
+	}
+
+	FragColor = mix(rgb, accumulatedColor, uvCenterDistance);
 }

@@ -7,8 +7,6 @@ in vec4 ourColor;
 in vec3 ourNormal;
 in vec2 TexCoord;
 
-uniform float controlValues[256];
-
 uniform sampler2D customDataSampler;
 uniform sampler2DArray textureArray;
 
@@ -114,12 +112,41 @@ bool equals(float a, float b) {
 	}
 }
 
+// vec2 GetRadialDistortion(vec2 xy, vec2 xyCenter)
+// {
+// 	float RadialDistortionFactors[6];
+// 	for (int i = 0; i < 6; i++)
+// 	{
+// 		RadialDistortionFactors[i] = 0;
+// 	}
+
+// 	float dx = xy.x - xyCenter.x;
+// 	float dy = xy.y - xyCenter.y;
+
+// 	float rK1 = distance(xy, xyCenter);
+// 	float rK2 = rK1 * rK1;
+// 	float rK3 = rK2 * rK2;
+// 	float rK4 = rK3 * rK3;
+// 	float rK5 = rK4 * rK4;
+// 	float rK6 = rK5 * rK5;
+
+// 	float lastFactor = distance(xy, xyCenter);
+// 	float factor = 1.0f;
+// 	for (int i = 0; i < 6; i++)
+// 	{
+// 		factor = factor + RadialDistortionFactors[i] * lastFactor * lastFactor;
+// 		lastFactor = lastFactor * lastFactor;
+// 	}
+
+// 	return vec2(xyCenter.x + dx / factor, xyCenter.y + dy / factor);
+// }
+
 #define WithQuickAndDirtyLuminancePreservation        
 
 const float LuminancePreservationFactor = 1.0;
 
 // Valid from 1000 to 40000 K (and additionally 0 for pure full white)
-vec3 colorTemperatureToRGB(float temperature){
+vec3 colorTemperatureToRGB(const in float temperature){
   // Values from: http://blenderartists.org/forum/showthread.php?270332-OSL-Goodness&p=2268693&viewfull=1#post2268693   
   mat3 m = (temperature <= 6500.0) ? mat3(vec3(0.0, -2902.1955373783176, -8257.7997278925690),
 	                                      vec3(0.0, 1669.5803561666639, 2575.2827530017594),
@@ -130,37 +157,39 @@ vec3 colorTemperatureToRGB(float temperature){
   return mix(clamp(vec3(m[0] / (vec3(clamp(temperature, 1000.0, 40000.0)) + m[1]) + m[2]), vec3(0.0), vec3(1.0)), vec3(1.0), smoothstep(1000.0, 0.0, temperature));
 }
 
-vec3 RGB2YUV(vec3 rgb)
-{
-	float y = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-	float u = (rgb.b - y) * 0.565;
-	float v = (rgb.r - y) * 0.713;
-	return vec3(y, u, v);
-}
-
-vec3 YUV2RGB(vec3 yuv)
-{
-	float r = yuv.x + 1.403 * yuv.z;
-	float g = yuv.x - 0.344 * yuv.y - 0.714 * yuv.z;
-	float b = yuv.x + 1.770 * yuv.y;
-	return vec3(r, g, b);
-}
-
 void main() {
 	vec3 worldPosition = GetWorldPosition();
 
-	vec4 accColor = vec4(0, 0, 0, 0);
+	int validFrame = 0;
+
+	float frameDistanceDistance = FLT_MAX;
+	int frameDistanceFrame = 0;
+	vec2 frameDistanceFrameUV;
+
+	float uvCenterDistance = FLT_MAX;
+	int uvCenterFrame = 0;
+	vec2 uvCenterFrameUV;
+
+	float uvDistanceMax = distance(vec2(0.5, 0.5), vec2(1, 1));
+
 	for(int i = 0; i < frameCount; i++) {
 		vec2 uv = WorldToUV(i, worldPosition);
 		if(IsInsideOfFOV(uv)) {
 			vec3 worldNormal = normalize(GetFramePosition(i) - worldPosition);
 			vec3 frameDirection = GetFrameDirection(i);
 			float angle = acos(dot(frameDirection, worldNormal));
-			float frameDistance = distance(worldPosition, GetFramePosition(i));
-			float ratio = pow(cos(angle), 2) / pow(frameDistance, 2);
-			vec4 color = texture(textureArray, vec3(uv.x, uv.y, i));
-			accColor = mix(accColor, color, ratio);
+			if(abs(angle) < PI / 2) {
+				float uvDistance = distance(uv, vec2(0.5, 0.5));
+				if(uvDistance < 0.0000001)
+					uvDistance = 0.0000001;
+				if(uvDistance < uvCenterDistance) {
+					uvCenterDistance = uvDistance;
+					uvCenterFrame = i;
+					uvCenterFrameUV = uv;
+				}
+			}
 		}
 	}
-	FragColor = accColor;
+
+	FragColor = texture(textureArray, vec3(uvCenterFrameUV.x, uvCenterFrameUV.y, uvCenterFrame));
 }
