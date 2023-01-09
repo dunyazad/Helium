@@ -710,9 +710,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             controlValues[selectedFrame] += 0.001;
         }
 
-        auto pShader = gGraphics->GetShader("blending");
-        pShader->Use();
-        pShader->SetUniformFloatArray("controlValues", controlValues);
+        pShaderByDistance->Use();
+        pShaderByDistance->SetUniformFloatArray("controlValues", controlValues);
+
+        pShaderByUV->Use();
+        pShaderByUV->SetUniformFloatArray("controlValues", controlValues);
+
+        pShaderBlending->Use();
+        pShaderBlending->SetUniformFloatArray("controlValues", controlValues);
+
+        pShaderCustomBlending->Use();
+        pShaderCustomBlending->SetUniformFloatArray("controlValues", controlValues);
 
         cout << "controlValues[" << selectedFrame << "] : " << controlValues[selectedFrame] << endl;
     }
@@ -727,9 +735,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             controlValues[selectedFrame] -= 0.001;
         }
 
-        auto pShader = gGraphics->GetShader("blending");
-        pShader->Use();
-        pShader->SetUniformFloatArray("controlValues", controlValues);
+        pShaderByDistance->Use();
+        pShaderByDistance->SetUniformFloatArray("controlValues", controlValues);
+
+        pShaderByUV->Use();
+        pShaderByUV->SetUniformFloatArray("controlValues", controlValues);
+
+        pShaderBlending->Use();
+        pShaderBlending->SetUniformFloatArray("controlValues", controlValues);
+
+        pShaderCustomBlending->Use();
+        pShaderCustomBlending->SetUniformFloatArray("controlValues", controlValues);
 
         cout << "controlValues[" << selectedFrame << "] : " << controlValues[selectedFrame] << endl;
     }

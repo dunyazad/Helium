@@ -177,10 +177,10 @@ int main(int argc, char** argv)
         auto pMaterial = gGraphics->GetMaterialSingleTexture("plane0");
         pGeometry->SetMaterial(pMaterial);
 
-        auto pShader = gGraphics->GetShader("colorAdjustment0", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment.fs");
+        auto pShader = gGraphics->GetShader("colorAdjustment0", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment_K.fs");
         pMaterial->SetShader(pShader);
 
-        auto pTexture = gGraphics->GetTexture("plane0", colorImages[1]);
+        auto pTexture = gGraphics->GetTexture("plane0", colorImages[87]);
         pTexture->Initialize();
         pMaterial->SetTexture(pTexture);
 
@@ -199,10 +199,10 @@ int main(int argc, char** argv)
         auto pMaterial = gGraphics->GetMaterialSingleTexture("plane1");
         pGeometry->SetMaterial(pMaterial);
 
-        auto pShader = gGraphics->GetShader("colorAdjustment1", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment.fs");
+        auto pShader = gGraphics->GetShader("colorAdjustment1", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment_K.fs");
         pMaterial->SetShader(pShader);
 
-        auto pTexture = gGraphics->GetTexture("plane1", colorImages[2]);
+        auto pTexture = gGraphics->GetTexture("plane1", colorImages[98]);
         pTexture->Initialize();
         pMaterial->SetTexture(pTexture);
 
