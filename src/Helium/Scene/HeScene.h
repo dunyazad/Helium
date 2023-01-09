@@ -31,6 +31,7 @@ namespace ArtificialNature {
 		HeSceneNode* GetSceneNode(const string& name);
 
 		inline HeGraphics* GetGraphics() { return graphics; }
+		inline HeSceneNodeImgui* GetSceneNodeIMGUI() { return imguiRootNode; }
 
 	protected:
 		HeScene(const string& name, HeGraphics* graphics);
@@ -39,7 +40,7 @@ namespace ArtificialNature {
 	private:
 		HeGraphics* graphics = nullptr;
 		HeSceneNode* rootNode = nullptr;
-		HeSceneNode* imguiRootNode = nullptr;
+		HeSceneNodeImgui* imguiRootNode = nullptr;
 		HeCamera* mainCamera = nullptr;
 
 	public:

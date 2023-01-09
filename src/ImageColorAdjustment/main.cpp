@@ -240,10 +240,15 @@ int main(int argc, char** argv)
         gScene->Update((float)delta);
         gScene->Render();
 
+        gGraphics->Flush();
+
+        {
+            auto pNode = gScene->GetSceneNodeIMGUI();
+            pNode->SetText(format("{}", frameCount));
+        }
+
         gScene->UpdateImgui((float)delta);
         gScene->RenderImgui();
-
-        gGraphics->Flush();
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
@@ -283,7 +288,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
 
         gGraphics->SerialFrameCapture(fileNames, [&](int frameNumber) {
-            auto pNode = dynamic_cast<HeSceneNodeImgui*>(gScene->GetSceneNode("imgui"));
+            auto pNode = gScene->GetSceneNodeIMGUI();
             if (pNode != nullptr) {
                 pNode->SetText(format("{}", frameNumber + 1));
             }

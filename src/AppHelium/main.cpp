@@ -394,6 +394,13 @@ int main(int argc, char** argv)
 
         gGraphics->Flush();
 
+        {
+            auto pNode = gScene->GetSceneNodeIMGUI();
+            pNode->SetText(format("{}", frameCount));
+        }
+
+        gScene->UpdateImgui((float)delta);
+        gScene->RenderImgui();
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();

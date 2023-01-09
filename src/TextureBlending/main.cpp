@@ -24,6 +24,10 @@ HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 HeThickLines* pDebugGeometry = nullptr;
 
 int capturedFrameCount = 0;
+int selectedFrame = -1;
+vector<HeFrameInfo*> frameInformations;
+vector<float> controlValues(256);
+HeProject* project = nullptr;
 
 class OnOff {
 public:
@@ -91,8 +95,6 @@ protected:
 };
 OnOff onoff;
 
-HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, vector<int>& faceFrameMapping, bool asBoundingBox = false);
-
 int main(int argc, char** argv)
 {
     // Load GLFW and Create a Window
@@ -151,6 +153,11 @@ int main(int argc, char** argv)
     //HeCameraManipulatorOrtho manipulator(pCamera);
     pCameraManipulator = &manipulator;
     gScene->SetMainCamera(pCamera);
+
+    for (auto& v : controlValues)
+    {
+        v = 1.0f;
+    }
 
     {
         auto pNode = gScene->CreateSceneNodeImgui("imgui");
@@ -242,15 +249,18 @@ int main(int argc, char** argv)
 
     {
         //HeProject project(argv[1], argv[2]);
-        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
-        capturedFrameCount = project.GetFrames().size();
+        project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+        capturedFrameCount = project->GetFrames().size();
         vector<float> dataToFragmentShader;
 
 
         vector<HeImage*> colorImages;
         for (size_t i = 0; i < capturedFrameCount; i++)
         {
-            auto frame = project.GetFrames()[i];
+            controlValues[i] = 1.0f;
+
+            auto frame = project->GetFrames()[i];
+            frameInformations.push_back(frame);
          
             dataToFragmentShader.push_back(frame->GetCameraInfo()->GetFX());
 
@@ -388,7 +398,8 @@ int main(int argc, char** argv)
         pMaterial->SetTextureFloatData(textureFloatData);
 
 
-        auto pShader = gGraphics->GetShader("reprojection", "../../res/shader/reprojection.vs", "../../res/shader/reprojection.fs");
+        auto pShader = gGraphics->GetShader("blending", "../../res/shader/blending.vs", "../../res/shader/blending.fs");
+        //auto pShader = gGraphics->GetShader("reprojection", "../../res/shader/reprojection.vs", "../../res/shader/reprojection.fs");
         pMaterial->SetShader(pShader);
 
         pShader->Use();
@@ -401,6 +412,8 @@ int main(int argc, char** argv)
         pShader->SetUniformFloat("controlValue", controlValue);
 
         pShader->SetUniformInt("frameCount", capturedFrameCount);
+
+        pShader->SetUniformFloatArray("controlValues", controlValues);
 
         auto mesh = gGraphics->GetGeometryTriangleSoup("Mesh");
         auto nof = mesh->GetFaceCount();
@@ -559,10 +572,15 @@ int main(int argc, char** argv)
         gScene->Update((float)delta);
         gScene->Render();
 
+        gGraphics->Flush();
+
+ /*       {
+            auto pNode = gScene->GetSceneNodeIMGUI();
+            pNode->SetText(format("{}", frameCount));
+        }*/
+
         gScene->UpdateImgui((float)delta);
         gScene->RenderImgui();
-
-        gGraphics->Flush();
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
@@ -662,6 +680,40 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             pShader->SetUniformFloat("controlValue", controlValue);
         }
     }
+    else if (key == GLFW_KEY_KP_ADD && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+        {
+            controlValues[selectedFrame] += 0.01;
+        }
+        else
+        {
+            controlValues[selectedFrame] += 0.001;
+        }
+
+        auto pShader = gGraphics->GetShader("blending");
+        pShader->Use();
+        pShader->SetUniformFloatArray("controlValues", controlValues);
+
+        cout << "controlValues[" << selectedFrame << "] : " << controlValues[selectedFrame] << endl;
+    }
+    else if (key == GLFW_KEY_KP_SUBTRACT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+    {
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+        {
+            controlValues[selectedFrame] -= 0.01;
+        }
+        else
+        {
+            controlValues[selectedFrame] -= 0.001;
+        }
+
+        auto pShader = gGraphics->GetShader("blending");
+        pShader->Use();
+        pShader->SetUniformFloatArray("controlValues", controlValues);
+
+        cout << "controlValues[" << selectedFrame << "] : " << controlValues[selectedFrame] << endl;
+    }
 }
 
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -678,6 +730,66 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
         pCameraManipulator->OnMouseButton(window, button, action, mods);
     }
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        auto pNode = gScene->GetSceneNode("NewMesh");
+        auto pGeometry = pNode->GetGeometry("NewMesh");
+        
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+
+        auto faceIndices = pGeometry->RayIntersect(xpos, ypos, gScene->GetMainCamera()->GetProjectionMatrix(), gScene->GetMainCamera()->GetViewMatrix());
+        //auto faceIndices = pGeometry->RayIntersect(gScene->GetMainCamera()->GetLocalPosition(), gScene->GetMainCamera()->GetCameraFront());
+        auto faceIndex = faceIndices[0];
+        auto vi0 = pGeometry->GetIndex(faceIndex * 3);
+        auto vi1 = pGeometry->GetIndex(faceIndex * 3 + 1);
+        auto vi2 = pGeometry->GetIndex(faceIndex * 3 + 2);
+
+        auto v0 = pGeometry->GetVertex(vi0);
+        auto v1 = pGeometry->GetVertex(vi1);
+        auto v2 = pGeometry->GetVertex(vi2);
+        auto vc = (v0 + v1 + v2) / 3.0f;
+        auto vn = pGeometry->GetNormal(vi0);
+
+        float dist = FLT_MAX;
+        int nearestFrame = 0;
+        for (auto& frame : frameInformations)
+        {
+            auto camera_info = frame->GetCameraInfo();
+            if (camera_info->GetFrustum()->ContainsAll(v0, v1, v2))
+            {
+                auto& position = camera_info->GetPosition();
+                auto distance2 = glm::distance2(vc, position);
+                if (distance2 < dist)
+                {
+                    dist = distance2;
+                    nearestFrame = frame->GetFrameIndex();
+                }
+            }
+        }
+        selectedFrame = nearestFrame;
+
+        gScene->GetSceneNodeIMGUI()->SetText(format("{}", selectedFrame));
+
+        {
+            auto pDebugNode = gScene->GetSceneNode("Debug");
+            auto pDebugGeometry = dynamic_cast<HeThickLines*>(pDebugNode->GetGeometry("Debug"));
+            pDebugGeometry->AddVertex(v0);
+            pDebugGeometry->AddVertex(v1);
+            pDebugGeometry->AddVertex(v1);
+            pDebugGeometry->AddVertex(v2);
+            pDebugGeometry->AddVertex(v2);
+            pDebugGeometry->AddVertex(v0);
+
+            pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+            pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+            pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+            pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+            pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+            pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
+        }
+    }
 }
 
 void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -686,271 +798,4 @@ void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
         pCameraManipulator->OnWheel(window, xoffset, yoffset);
     }
-}
-
-HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, vector<int>& faceFrameMapping, bool asBoundingBox)
-{
-    struct FlatteningInfo
-    {
-        int faceIndex = -1;
-        float sizeX = 0.0f;
-        float sizeY = 0.0f;
-        glm::vec3 v0;
-        glm::vec3 v1;
-        glm::vec3 v2;
-        glm::vec3 fn;
-        glm::vec3 fc;
-        glm::vec3 normalizedUV0;
-        glm::vec3 normalizedUV1;
-        glm::vec3 normalizedUV2;
-    };
-
-    vector<FlatteningInfo> flatteningInfos;
-
-    auto uvMesh = gGraphics->GetGeometryTriangleSoup(name);
-    uvMesh->Initialize();
-
-    vector<HeAABB> uvBoxes;
-
-    const auto& frames = project.GetFrames();
-
-    auto nof = from->GetIndexCount() / 3;
-    for (size_t i = 0; i < nof; i++)
-    {
-        auto vi0 = from->GetIndex((int)i * 3);
-        auto vi1 = from->GetIndex((int)i * 3 + 1);
-        auto vi2 = from->GetIndex((int)i * 3 + 2);
-
-        auto& v0 = from->GetVertex(vi0);
-        auto& v1 = from->GetVertex(vi1);
-        auto& v2 = from->GetVertex(vi2);
-
-        auto d10 = glm::normalize(v0 - v1);
-        auto d12 = glm::normalize(v2 - v1);
-        auto fn = glm::normalize(glm::cross(d10, d12));
-        auto fc = (v0 + v1 + v2) / 3.0f;
-
-        auto zAxis = glm::vec3(0, 0, 1);
-
-        auto angle = glm::angle(zAxis, fn);
-        auto degree = glm::degrees(angle);
-
-        auto axis = glm::normalize(glm::cross(fn, zAxis));
-        if ((degree - 180) < FLT_EPSILON) {
-            axis = glm::vec3(0, 1, 0);
-            //cout << "Flipped." << endl;
-        }
-        auto rotation = glm::angleAxis(angle, axis);
-
-        auto tv0 = rotation * (v0 - fc);
-        auto tv1 = rotation * (v1 - fc);
-        auto tv2 = rotation * (v2 - fc);
-
-        auto stv0 = glm::vec3(tv0.x * scale, tv0.y * scale, 0);
-        auto stv1 = glm::vec3(tv1.x * scale, tv1.y * scale, 0);
-        auto stv2 = glm::vec3(tv2.x * scale, tv2.y * scale, 0);
-
-        HeAABB aabb;
-        aabb.Extend(stv0);
-        aabb.Extend(stv1);
-        aabb.Extend(stv2);
-
-        //cout << fixed << aabb << endl;
-
-        auto size = aabb.GetSize();
-        auto center = aabb.GetCenter();
-        auto aabbmin = aabb.GetMin();
-        stv0.x -= aabbmin.x;
-        stv0.y -= aabbmin.y;
-        stv1.x -= aabbmin.x;
-        stv1.y -= aabbmin.y;
-        stv2.x -= aabbmin.x;
-        stv2.y -= aabbmin.y;
-
-        if (size.x == -FLT_MAX) {
-            printf("Error. size.x == -FLT_MAX\n");
-        }
-        if (size.y == -FLT_MAX) {
-            printf("Error. size.y == -FLT_MAX\n");
-        }
-        if (size.x == 0) {
-            printf("Error. size.x == 0\n");
-        }
-        if (size.y == 0) {
-            printf("Error. size.y == 0\n");
-        }
-
-        FlatteningInfo info;
-        HeAABB infoAABB;
-        infoAABB.Extend(stv0);
-        infoAABB.Extend(stv1);
-        infoAABB.Extend(stv2);
-        info.faceIndex = (int)i;
-        info.sizeX = infoAABB.GetSize().x;
-        info.sizeY = infoAABB.GetSize().y;
-        info.v0 = v0;
-        info.v1 = v1;
-        info.v2 = v2;
-        info.fn = fn;
-        info.fc = fc;
-        info.normalizedUV0 = stv0;
-        info.normalizedUV1 = stv1;
-        info.normalizedUV2 = stv2;
-
-        flatteningInfos.push_back(info);
-    }
-
-    struct FlatteningInfoLess {
-        inline bool operator() (const FlatteningInfo& a, const FlatteningInfo& b) {
-            return a.sizeY < b.sizeY;
-        }
-    };
-
-    sort(flatteningInfos.begin(), flatteningInfos.end(), FlatteningInfoLess());
-
-    float offsetX = 0.0f;
-    float offsetY = 0.0f;
-    float maxY = 0.0f;
-
-    uvs.resize(flatteningInfos.size() * 3);
-    faceFrameMapping.resize(flatteningInfos.size() * 3);
-
-    for (auto& info : flatteningInfos)
-    {
-        if (info.sizeX + offsetX > 1.0f * scale) {
-            offsetX = 0;
-            offsetY += maxY;
-            maxY = 0;
-        }
-
-        HeFrameInfo* nearestFrame = nullptr;
-        float distance2 = FLT_MAX;
-        for (auto& frame : frames)
-        {
-            auto frustum = frame->GetCameraInfo()->GetFrustum();
-            vector<glm::vec3> vertices = { info.v0, info.v1, info.v2 };
-            if (frustum->ContainsAll(vertices)) {
-
-                auto ffd = glm::distance2(info.fc, frame->GetCameraInfo()->GetPosition());
-                if (ffd < distance2) {
-                    distance2 = ffd;
-                    nearestFrame = frame;
-                }
-                //cout << "camera position : " << frame->GetCameraInfo()->GetPosition() << endl;
-                //cout << "ffd: " << ffd << endl;
-            }
-        }
-
-        if (nearestFrame != nullptr) {
-            //glm::project()
-            glm::vec2 textureUV0 = nearestFrame->GetCameraInfo()->WorldToUV(info.v0);
-            glm::vec2 textureUV1 = nearestFrame->GetCameraInfo()->WorldToUV(info.v1);
-            glm::vec2 textureUV2 = nearestFrame->GetCameraInfo()->WorldToUV(info.v2);
-
-            if (textureUV0.x < 0 || textureUV0.y < 0) {
-                cout << "Error. textureUV0: " << textureUV0 << endl;
-            }
-            if (textureUV1.x < 0 || textureUV1.y < 0) {
-                cout << "Error. textureUV1: " << textureUV1 << endl;
-            }
-            if (textureUV2.x < 0 || textureUV2.y < 0) {
-                cout << "Error. textureUV2: " << textureUV2 << endl;
-            }
-
-            auto translatedUV0 = info.normalizedUV0;
-            auto translatedUV1 = info.normalizedUV1;
-            auto translatedUV2 = info.normalizedUV2;
-
-            translatedUV0.x += offsetX;
-            translatedUV0.y += offsetY;
-            translatedUV1.x += offsetX;
-            translatedUV1.y += offsetY;
-            translatedUV2.x += offsetX;
-            translatedUV2.y += offsetY;
-
-            if (translatedUV0.x < 0 || translatedUV0.y < 0) {
-                cout << "Error. translatedUV0: " << translatedUV0 << endl;
-            }
-            if (translatedUV1.x < 0 || translatedUV1.y < 0) {
-                cout << "Error. translatedUV1: " << translatedUV1 << endl;
-            }
-            if (translatedUV2.x < 0 || translatedUV2.y < 0) {
-                cout << "Error. translatedUV2: " << translatedUV2 << endl;
-            }
-
-            auto fi = info.faceIndex;
-            auto uvi0 = fi * 3;
-            auto uvi1 = fi * 3 + 1;
-            auto uvi2 = fi * 3 + 2;
-            uvs[uvi0].x = translatedUV0.x;
-            uvs[uvi0].y = translatedUV0.y;
-            uvs[uvi1].x = translatedUV1.x;
-            uvs[uvi1].y = translatedUV1.y;
-            uvs[uvi2].x = translatedUV2.x;
-            uvs[uvi2].y = translatedUV2.y;
-
-            faceFrameMapping[fi] = nearestFrame->GetFrameIndex();
-
-            if (asBoundingBox == false)
-            {
-                uvMesh->AddTriangle(translatedUV0, translatedUV1, translatedUV2);
-
-                uvMesh->AddUV(info.normalizedUV0);
-                uvMesh->AddUV(info.normalizedUV1);
-                uvMesh->AddUV(info.normalizedUV2);
-            }
-
-            offsetX += info.sizeX;
-            maxY = maxY > info.sizeY ? maxY : info.sizeY;
-
-            if (offsetX < 0) {
-                cout << "Error. offsetX < 0" << endl;
-            }
-
-            if (asBoundingBox)
-            {
-                HeAABB tempAABB;
-                //tempAABB.Extend(textureUV0);
-                //tempAABB.Extend(textureUV0);
-                //tempAABB.Extend(textureUV0);
-                tempAABB.Extend(translatedUV0);
-                tempAABB.Extend(translatedUV1);
-                tempAABB.Extend(translatedUV2);
-
-                auto tamin = tempAABB.GetMin();
-                auto tamax = tempAABB.GetMax();
-
-                uvMesh->AddTriangle(
-                    glm::vec3(tamin.x, tamin.y, 0),
-                    glm::vec3(tamin.x, tamax.y, 0),
-                    glm::vec3(tamax.x, tamax.y, 0));
-                uvMesh->AddTriangle(
-                    glm::vec3(tamin.x, tamin.y, 0),
-                    glm::vec3(tamax.x, tamax.y, 0),
-                    glm::vec3(tamax.x, tamin.y, 0));
-
-                HeAABB uvAABB;
-                uvAABB.Extend(info.normalizedUV0);
-                uvAABB.Extend(info.normalizedUV1);
-                uvAABB.Extend(info.normalizedUV2);
-
-                auto uvmin = uvAABB.GetMin();
-                auto uvmax = uvAABB.GetMax();
-
-                uvMesh->AddUV(glm::vec2(uvmin.x, uvmin.y));
-                uvMesh->AddUV(glm::vec2(uvmin.x, uvmax.y));
-                uvMesh->AddUV(glm::vec2(uvmax.x, uvmax.y));
-
-                uvMesh->AddUV(glm::vec2(uvmin.x, uvmin.y));
-                uvMesh->AddUV(glm::vec2(uvmax.x, uvmax.y));
-                uvMesh->AddUV(glm::vec2(uvmax.x, uvmin.y));
-            }
-        }
-        else
-        {
-            cout << "Error. nearest frame is null" << endl;
-        }
-    }
-
-    return uvMesh;
 }

@@ -533,7 +533,7 @@ void main() {
 
 	vec4 uvct = texture(textureArray, vec3(uvCenterFrameUV.x, uvCenterFrameUV.y, uvCenterFrame));
 	uvct = vec4(mix(uvct.xyz, uvct.xyz * colorTemperatureToRGB(6500), 0.995), 1);
-	vec4 accumulatedColorUV = fdt;
+	vec4 accumulatedColorUV = uvct;
 
 	// vec4 nst = texture(textureArray, vec3(nearStraightFrameUV.x, nearStraightFrameUV.y, nearStraightFrame));
 	// vec4 accumulatedColorAngle = nst;
@@ -541,6 +541,7 @@ void main() {
 	for(int i = 0; i < frameCount; i++) {
 		vec2 uv = WorldToUV(i, worldPosition);
 		vec3 frameDirection = GetFrameDirection(i);
+		float frameDistance = distance(GetFramePosition(i), worldPosition);
 		//float angle = acos(dot(frameDirection, ourNormal));
 
 		if(IsInsideOfFOV(uv)) {
@@ -556,15 +557,17 @@ void main() {
 
 			float ratioUV = 1 - pow(abs(sin(PI * (uvDistance / uvDistanceMax) / 2.0)), 3.0);
 			//float ratioUV = 1 - uvDistance / uvDistanceMax;
-			if(i != uvCenterFrame)
-			{
-				ratioUV = ratioUV * 0.02;
-			}
+			//if(i != uvCenterFrame)
+			//{
+			//	ratioUV = ratioUV * 0.02;
+			//}
 
 			vec3 worldNormal = normalize(GetFramePosition(i) - worldPosition);
 			float angle = acos(dot(frameDirection, worldNormal));
 			//float ratioAngle = 1 - pow(abs(sin(PI * (angle / PI) / 2.0)), 3.0);
 			//float ratioAngle = clamp(abs(angle) / PI, 0, 1);
+
+			//ratioUV = pow(cos(angle), 2) / pow(frameDistance, 2);// * pow(cos(angle), 2) / pow(uvDistance, 2);
 
 			// accumulatedColorFDT = mix(accumulatedColorFDT, color, ratioFrameDistance);
 			if(abs(angle) < PI / 2) {
@@ -581,8 +584,8 @@ void main() {
 
 	//FragColor = mix(fdt, accumulatedColorUV, uvCenterDistance / uvDistanceMax);
 	// FragColor = mix(fdt, accumulatedColorUV, 1);
-	//FragColor = accumulatedColorUV;
-	FragColor = fdt;
+	FragColor = accumulatedColorUV;
+	//FragColor = fdt;
 
 	//FragColor = vec4(ratioAngle, 0, 0, 1);
 }

@@ -10,7 +10,7 @@ namespace ArtificialNature {
 		: HeObject(name), graphics(graphics)
 	{
 		rootNode = new HeSceneNode("Root Node", this);
-		imguiRootNode = new HeSceneNode("Imgui Root Node", this);
+		imguiRootNode = new HeSceneNodeImgui("imgui", this);
 	}
 
 	HeScene::~HeScene()
