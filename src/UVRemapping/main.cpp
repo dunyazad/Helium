@@ -19,7 +19,7 @@ HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 //HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-HeThickLines* pDebugGeometry = nullptr;
+HeGeometryThickLines* pDebugGeometry = nullptr;
 
 class OnOff {
 public:

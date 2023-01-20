@@ -106,9 +106,10 @@
     <ClCompile Include="Helium\Core\Project\HeFrameInfo.cpp" />
     <ClCompile Include="Helium\Core\Project\HeProject.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometry.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryBox.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometryPlane.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometrySkybox.cpp" />
-    <ClCompile Include="Helium\Graphics\Geometry\HeThickLines.cpp" />
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryThickLines.cpp" />
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.cpp" />
     <ClCompile Include="Helium\Graphics\HeAABB.cpp" />
     <ClCompile Include="Helium\Graphics\HeFrameBufferObject.cpp" />
@@ -155,9 +156,10 @@
     <ClInclude Include="Helium\Core\Project\Project.h" />
     <ClInclude Include="Helium\Graphics\Geometry\Geometry.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometry.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryBox.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometryPlane.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometrySkybox.h" />
-    <ClInclude Include="Helium\Graphics\Geometry\HeThickLines.h" />
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryThickLines.h" />
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.h" />
     <ClInclude Include="Helium\Graphics\Graphics.h" />
     <ClInclude Include="Helium\Graphics\HeAABB.h" />

@@ -3,6 +3,7 @@
 #include <Helium/Scene/HeSceneNode.h>
 #include <Helium/Scene/HeSceneNodeImgui.h>
 #include <Helium/Scene/HeCamera.h>
+#include <Helium/Scene/HeCameraManipulator.h>
 
 namespace ArtificialNature {
 
@@ -15,6 +16,12 @@ namespace ArtificialNature {
 
 	HeScene::~HeScene()
 	{
+		for (auto& kvp : cameraManipulators)
+		{
+			HeDelete(kvp.second);
+		}
+		cameraManipulators.clear();
+
 		if (rootNode != nullptr)
 		{
 			delete rootNode;
@@ -74,6 +81,54 @@ namespace ArtificialNature {
 		auto pNode = new HePerspectiveCamera(name, this, viewportX, viewportY, viewportWidth, viewportHeight);
 		rootNode->AddChild(pNode);
 		return pNode;
+	}
+
+	HeCameraManipulatorOrtho* HeScene::CreateCameraManipulatorOrtho(const string& name, HeCamera* camera)
+	{
+		auto pCamera = dynamic_cast<HeOrthogonalCamera*>(camera);
+		if (pCamera == nullptr)
+		{
+			return nullptr;
+		}
+
+		if (cameraManipulators.contains(name))
+		{
+			return dynamic_cast<HeCameraManipulatorOrtho*>(cameraManipulators[name]);
+		}
+		else
+		{
+			auto pManipulator = new HeCameraManipulatorOrtho(pCamera);
+			cameraManipulators[name] = pManipulator;
+			return pManipulator;
+		}
+	}
+
+	HeCameraManipulatorFlight* HeScene::CreateCameraManipulatoFlight(const string& name, HeCamera* camera)
+	{
+		if (cameraManipulators.contains(name))
+		{
+			return dynamic_cast<HeCameraManipulatorFlight*>(cameraManipulators[name]);
+		}
+		else
+		{
+			auto pManipulator = new HeCameraManipulatorFlight(camera);
+			cameraManipulators[name] = pManipulator;
+			return pManipulator;
+		}
+	}
+
+	HeCameraManipulatorTrackball* HeScene::CreateCameraManipulatorTrackball(const string& name, HeCamera* camera)
+	{
+		if (cameraManipulators.contains(name))
+		{
+			return dynamic_cast<HeCameraManipulatorTrackball*>(cameraManipulators[name]);
+		}
+		else
+		{
+			auto pManipulator = new HeCameraManipulatorTrackball(camera);
+			cameraManipulators[name] = pManipulator;
+			return pManipulator;
+		}
 	}
 
 	HeSceneNode* HeScene::GetSceneNode(const string& name)

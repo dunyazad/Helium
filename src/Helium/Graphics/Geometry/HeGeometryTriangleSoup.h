@@ -23,6 +23,7 @@ namespace ArtificialNature {
 			const glm::vec2& uv0, const glm::vec2& uv1, const glm::vec2& uv2,
 			const glm::vec3& vn0, const glm::vec3& vn1, const glm::vec3& vn2);
 		void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec4& color);
+		void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec4& color0, const glm::vec4& color1, const glm::vec4& color2);
 
 		void ComputeFaceNormals();
 

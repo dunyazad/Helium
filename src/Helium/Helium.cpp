@@ -104,11 +104,4 @@ namespace ArtificialNature {
 			callbackOnTerminate();
 		}
 	}
-
-	void Helium::Run(function<void()> callback)
-	{
-		callbackOnFrame = callback;
-
-		Run();
-	}
 }

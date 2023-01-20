@@ -123,6 +123,25 @@ namespace ArtificialNature {
 		dirty = true;
 	}
 
+	void HeGeometryTriangleSoup::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec4& color0, const glm::vec4& color1, const glm::vec4& color2)
+	{
+		int vertexCount = (int)this->GetVertexCount();
+
+		this->AddVertex(v0);
+		this->AddVertex(v1);
+		this->AddVertex(v2);
+
+		this->AddColor(color0);
+		this->AddColor(color1);
+		this->AddColor(color2);
+
+		this->AddIndex(vertexCount);
+		this->AddIndex(vertexCount + 1);
+		this->AddIndex(vertexCount + 2);
+
+		dirty = true;
+	}
+
 	void HeGeometryTriangleSoup::ComputeFaceNormals()
 	{
 		this->ClearNormals();

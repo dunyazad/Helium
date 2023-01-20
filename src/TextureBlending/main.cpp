@@ -21,7 +21,7 @@ HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 //HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-HeThickLines* pDebugGeometry = nullptr;
+HeGeometryThickLines* pDebugGeometry = nullptr;
 
 int capturedFrameCount = 0;
 int selectedFrame = -1;
@@ -809,7 +809,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
         {
             auto pDebugNode = gScene->GetSceneNode("Debug");
-            auto pDebugGeometry = dynamic_cast<HeThickLines*>(pDebugNode->GetGeometry("Debug"));
+            auto pDebugGeometry = dynamic_cast<HeGeometryThickLines*>(pDebugNode->GetGeometry("Debug"));
             pDebugGeometry->AddVertex(v0);
             pDebugGeometry->AddVertex(v1);
             pDebugGeometry->AddVertex(v1);

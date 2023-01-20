@@ -10,6 +10,11 @@ namespace ArtificialNature {
 	class HeOrthogonalCamera;
 	class HePerspectiveCamera;
 
+	class HeCameraManipulatorBase;
+	class HeCameraManipulatorOrtho;
+	class HeCameraManipulatorFlight;
+	class HeCameraManipulatorTrackball;
+
 	class HeScene : public HeObject
 	{
 	public:
@@ -28,6 +33,10 @@ namespace ArtificialNature {
 		HeOrthogonalCamera* CreateOrthogonalCamera(const string& name, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 		HePerspectiveCamera* CreatePerspectiveCamera(const string& name, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 
+		HeCameraManipulatorOrtho* CreateCameraManipulatorOrtho(const string& name, HeCamera* camera);
+		HeCameraManipulatorFlight* CreateCameraManipulatoFlight(const string& name, HeCamera* camera);
+		HeCameraManipulatorTrackball* CreateCameraManipulatorTrackball(const string& name, HeCamera* camera);
+
 		HeSceneNode* GetSceneNode(const string& name);
 
 		inline HeGraphics* GetGraphics() { return graphics; }
@@ -42,6 +51,8 @@ namespace ArtificialNature {
 		HeSceneNode* rootNode = nullptr;
 		HeSceneNodeImgui* imguiRootNode = nullptr;
 		HeCamera* mainCamera = nullptr;
+
+		map<string, HeCameraManipulatorBase*> cameraManipulators;
 
 	public:
 		friend class Helium;

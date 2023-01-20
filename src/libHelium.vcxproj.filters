@@ -72,7 +72,7 @@
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometrySkybox.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\Graphics\Geometry\HeThickLines.cpp">
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryThickLines.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.cpp">
@@ -152,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Helium\Graphics\Texture\HeTextureFloatData.cpp">
       <Filter>Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\Graphics\Geometry\HeGeometryBox.cpp">
+      <Filter>Graphics\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -246,7 +249,7 @@
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometrySkybox.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Helium\Graphics\Geometry\HeThickLines.h">
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryThickLines.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometryTriangleSoup.h">
@@ -308,6 +311,9 @@
     </ClInclude>
     <ClInclude Include="Helium\Graphics\Texture\HeTextureFloatData.h">
       <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\Geometry\HeGeometryBox.h">
+      <Filter>Graphics\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

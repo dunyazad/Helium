@@ -6,7 +6,7 @@
 
 namespace ArtificialNature {
 
-	class HeThickLines : public HeGeometry
+	class HeGeometryThickLines : public HeGeometry
 	{
 	public:
 		virtual void Initialize();
@@ -15,8 +15,8 @@ namespace ArtificialNature {
 		void SetThickness(float thickness);
 
 	protected:
-		HeThickLines(const string& name);
-		~HeThickLines();
+		HeGeometryThickLines(const string& name);
+		~HeGeometryThickLines();
 
 		float thickness = 1.0f;
 

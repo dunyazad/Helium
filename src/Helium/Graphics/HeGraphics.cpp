@@ -106,14 +106,14 @@ namespace ArtificialNature {
 		return dynamic_cast<HeGeometrySkybox*>(geometries[name]);
 	}
 
-	HeThickLines* HeGraphics::GetGeometryThickLines(const string& name)
+	HeGeometryThickLines* HeGraphics::GetGeometryThickLines(const string& name)
 	{
 		if (geometries.count(name) == 0)
 		{
-			geometries[name] = new HeThickLines(name);
+			geometries[name] = new HeGeometryThickLines(name);
 		}
 
-		return dynamic_cast<HeThickLines*>(geometries[name]);
+		return dynamic_cast<HeGeometryThickLines*>(geometries[name]);
 	}
 
 	HeGeometryTriangleSoup* HeGraphics::GetGeometryTriangleSoup(const string& name)

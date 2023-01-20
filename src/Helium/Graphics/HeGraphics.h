@@ -8,7 +8,7 @@ namespace ArtificialNature {
 	class HeGeometry;
 	class HeGeometryPlane;
 	class HeGeometrySkybox;
-	class HeThickLines;
+	class HeGeometryThickLines;
 	class HeGeometryTriangleSoup;
 
 	class HeShader;
@@ -36,7 +36,7 @@ namespace ArtificialNature {
 		HeGeometry* GetGeometry(const string& name);
 		HeGeometryPlane* GetGeometryPlane(const string& name, float columnLength, float rowLength, unsigned int colomns, unsigned int rows, HePlaneType type);
 		HeGeometrySkybox* GetSkyboxGeometry(const string& name);
-		HeThickLines* GetGeometryThickLines(const string& name);
+		HeGeometryThickLines* GetGeometryThickLines(const string& name);
 		HeGeometryTriangleSoup* GetGeometryTriangleSoup(const string& name);
 
 		HeShader* GetShader(const string& name);

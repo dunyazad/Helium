@@ -8,6 +8,8 @@
 
 #include <Helium/Scene/HeCamera.h>
 
+#include <Helium/Graphics/Geometry/Geometry.h>
+
 namespace ArtificialNature {
 
 	HeGeometry::HeGeometry(const string& name)
@@ -365,8 +367,11 @@ namespace ArtificialNature {
 	void HeGeometry::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 	{
 		if (dirty == true) {
-			RebuildOctree();
-			dirty = false;
+			if (dynamic_cast<HeGeometryThickLines*>(this) == nullptr)
+			{
+				RebuildOctree();
+				dirty = false;
+			}
 		}
 
 		if (material == nullptr)

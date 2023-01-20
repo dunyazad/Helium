@@ -21,10 +21,12 @@ namespace ArtificialNature {
 		void TerminateImgui();
 
 		void Run();
-		void Run(function<void()> callback);
 
 		inline void OnPrepare(function<void()> callback) { callbackOnPrepare = callback; }
+		inline void OnFrame(function<void()> callback) { callbackOnFrame = callback; }
 		inline void OnTerminate(function<void()> callback) { callbackOnTerminate = callback; }
+
+		inline void SetFinished(bool finished) { this->finished = finished; }
 
 	private:
 		int windowWidth;
