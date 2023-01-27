@@ -163,6 +163,18 @@ namespace ArtificialNature {
 			auto rotationV = glm::angleAxis(glm::radians((float)-offsetY * 0.1f), camera->GetCameraRight());
 			camera->SetLocalRotation(rotationH * rotationV * camera->GetLocalRotation());
 		}
+		else if (mouseMiddleButtonDown)
+		{
+			auto offsetX = xpos - lastMouseMiddlePositionX;
+			auto offsetY = ypos - lastMouseMiddlePositionY;
+			lastMouseMiddlePositionX = xpos;
+			lastMouseMiddlePositionY = ypos;
+
+			auto dr = camera->GetCameraRight() * (float)(-offsetX * 0.01);
+			auto du = camera->GetCameraUp() * (float)(offsetY * 0.01);
+			auto lp = camera->GetLocalPosition();
+			camera->SetLocalPosition(dr + du + lp);
+		}
 	}
 
 	void HeCameraManipulatorFlight::OnMouseButton(GLFWwindow* window, int button, int action, int mods)

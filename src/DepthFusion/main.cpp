@@ -119,120 +119,14 @@ public:
 		return glm::ivec3(xIndex, yIndex, zIndex);
 	}
 
-	bool IntersectsTriangleAABBSAT(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& aabbExtents, const glm::vec3& axis)
-	{
-		auto p0 = glm::dot(v0, axis);
-		auto p1 = glm::dot(v1, axis);
-		auto p2 = glm::dot(v2, axis);
-
-		auto r = aabbExtents.x * abs(glm::dot(glm::vec3(1, 0, 0), axis)) +
-			aabbExtents.y * abs(glm::dot(glm::vec3(0, 1, 0), axis)) +
-			aabbExtents.z * abs(glm::dot(glm::vec3(0, 0, 1), axis));
-
-		auto maxP = max(p0, max(p1, p2));
-		auto minP = min(p0, min(p1, p2));
-
-		return !(max(-maxP, minP) > r);
-	}
-
-	bool IntersectsTriangleAABB(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& aabbmin, const glm::vec3& aabbmax)
-	{
-		glm::vec3 center = (aabbmin + aabbmin) * 0.5f;
-		auto extents = glm::vec3((aabbmax.x - aabbmin.x) * 0.5f, (aabbmax.y - aabbmin.y) * 0.5f, (aabbmax.z - aabbmin.z) * 0.5f);
-
-		auto p0 = v0 - center;
-		auto p1 = v1 - center;
-		auto p2 = v2 - center;
-
-		auto ab = glm::normalize(p1 - p0);
-		auto bc = glm::normalize(p2 - p1);
-		auto ca = glm::normalize(p0 - p2);
-
-		auto a00 = glm::vec3(0.0, -ab.x, ab.y);
-		auto a01 = glm::vec3(0.0, -bc.z, bc.y);
-		auto a02 = glm::vec3(0.0, -ca.x, ca.y);
-
-		auto a10 = glm::vec3(ab.z, 0.0, -ab.x);
-		auto a11 = glm::vec3(bc.z, 0.0, -bc.x);
-		auto a12 = glm::vec3(ca.z, 0.0, -ca.x);
-
-		auto a20 = glm::vec3(-ab.y, ab.x, 0.0);
-		auto a21 = glm::vec3(-bc.y, bc.x, 0.0);
-		auto a22 = glm::vec3(-ca.y, ca.x, 0.0);
-
-		if (
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a00) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a01) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a02) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a10) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a11) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a12) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a20) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a21) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, a22) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, glm::vec3(1, 0, 0)) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, glm::vec3(0, 1, 0)) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, glm::vec3(0, 0, 1)) ||
-			!IntersectsTriangleAABBSAT(p0, p1, p2, extents, glm::cross(ab, bc))
-			)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	void integrate(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
-	{
-		auto i0 = GetIndex(v0);
-		auto i1 = GetIndex(v1);
-		auto i2 = GetIndex(v2);
-
-		if (i0 == i1 && i1 == i2)
-		{
-			At(i0) = true;
-		}
-		else
-		{
-			HeAABB iaabb;
-			iaabb.Extend(v0);
-			iaabb.Extend(v1);
-			iaabb.Extend(v2);
-
-			auto imin = GetIndex(iaabb.GetMin());
-			auto imax = GetIndex(iaabb.GetMax());
-
-			int dx = imax.x - imin.x;
-			int dy = imax.y - imin.y;
-			int dz = imax.z - imin.z;
-
-			for (int z = 0; z < dz; z++)
-			{
-				for (int y = 0; y < dy; y++)
-				{
-					for (int x = 0; x < dx; x++)
-					{
-						auto vmin = aabb.GetMin() + glm::vec3(voxelSize * x, voxelSize * y, voxelSize * z);
-						auto vmax = aabb.GetMin() + glm::vec3(voxelSize * (x + 1), voxelSize * (y + 1), voxelSize * (z + 1));
-
-						if (IntersectsTriangleAABB(v0, v1, v2, vmin, vmax))
-						{
-							At(x, y, z) = true;
-						}
-					}
-				}
-			}
-		}
-	}
-
 	bool& At(int x, int y, int z)
 	{
-		return voxels[z * (yCount * xCount) + y * (xCount)+x];
+		return voxels[z * (yCount * xCount) + y * (xCount) + x];
 	}
 
 	bool& At(glm::ivec3& index)
 	{
-		return voxels[index.z * (yCount * xCount) + index.y * (xCount)+index.x];
+		return voxels[index.z * (yCount * xCount) + index.y * (xCount) + index.x];
 	}
 
 	void Iterate(function<void(const glm::vec3&, const glm::vec3&, bool)> callback)
@@ -314,6 +208,17 @@ public:
 		axisGeometry->AddColor(glm::vec4(0, 1, 0, 1));
 		axisGeometry->AddColor(glm::vec4(0, 0, 1, 1));
 		axisGeometry->AddColor(glm::vec4(0, 0, 1, 1));
+
+		//{
+		//	auto pNode = gScene->CreateSceneNode("Grid");
+		//	auto pGeometry = gGraphics->GetGeometryPlane("Grid.Geometry", 2, 2, 1, 1, HePlaneType::XY);
+		//	pGeometry->Initialize();
+		//	pNode->AddGeometry(pGeometry);
+		//	auto pMaterial = gGraphics->GetMaterial("Grid.Material");
+		//	pGeometry->SetMaterial(pMaterial);
+		//	auto pShader = gGraphics->GetShader("Grid.Shader", "../../res/shader/grid.vs", "../../res/shader/grid.fs");
+		//	pMaterial->SetShader(pShader);
+		//}
 	}
 
 	void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
@@ -347,6 +252,25 @@ public:
 		lineGeometry->AddColor(color0);
 
 		solidGeometry->AddTriangle(v0, v1, v2, color0, color1, color2);
+	}
+
+	void AddLine(const glm::vec3& v0, const glm::vec3& v1)
+	{
+		AddLine(v0, v1, glm::vec4(1, 1, 1, 1), glm::vec4(1, 1, 1, 1));
+	}
+
+	void AddLine(const glm::vec3& v0, const glm::vec3& v1, const glm::vec4& color0, const glm::vec4& color1)
+	{
+		int vertexCount = (int)lineGeometry->GetVertexCount();
+
+		lineGeometry->AddVertex(v0);
+		lineGeometry->AddVertex(v1);
+
+		lineGeometry->AddIndex(vertexCount);
+		lineGeometry->AddIndex(vertexCount + 1);
+
+		lineGeometry->AddColor(color0);
+		lineGeometry->AddColor(color1);
 	}
 
 	void AddBox(const glm::vec3& bmin, const glm::vec3& bmax)
@@ -486,25 +410,119 @@ int main(int argc, char** argv)
 		}
 
 		HeVolume volume(glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-		volume.integrate(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.5f, -0.5f), glm::vec3(0.5f, -0.5f, -0.5f));
+		//volume.integrate(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.5f, -0.5f), glm::vec3(0.5f, -0.5f, -0.5f));
 
-		HeTime timer("AddBox");
+		//visualDebugger.AddTriangle(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.5f, -0.5f), glm::vec3(0.5f, -0.5f, -0.5f));
+
+		//visualDebugger.AddTriangle(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, -0.5f, 0.0f));
+
+		//HeTime timer("AddBox");
 		volume.Iterate([&](const glm::vec3& vmin, const glm::vec3& vmax, bool value) {
 			if (value)
 			{
-				vd->AddBox(vmin, vmax, glm::vec4(1, 0, 0, 1));
+				//vd->AddBox(vmin, vmax, glm::vec4(1, 0, 0, 1));
 			}
 			else
 			{
-				//vd->AddBox(vmin, vmax);
+				//vd->AddBox(vmin, vmax, glm::vec4(1, 1, 1, 0.01));
 			}
-			timer.Touch();
+			//timer.Touch();
 		});
-		timer.Stop();
+		//timer.Stop();
 
 		//HeTime timer1("AddBox1");
 		//vd->AddBox(glm::vec3(-0.25f, -0.25f, -0.25f), glm::vec3(0.25f, 0.25f, 0.25f));
 		//timer1.Stop();
+
+
+
+		{
+			project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+			capturedFrameCount = project->GetFrames().size();
+
+			for (size_t i = 0; i < capturedFrameCount; i++)
+			{
+				auto frame = project->GetFrames()[i];
+				auto cameraInfo = frame->GetCameraInfo();
+				auto frustum = cameraInfo->GetFrustum();
+				auto& nr = frustum->GetNormalizedRight();
+				auto& nu = frustum->GetNormalizedUp();
+				auto& nf = frustum->GetNormalizedFront();
+				auto& fp = frustum->GetPosition();
+				const auto& m = cameraInfo->GetTransformMatrix();
+
+				auto right = glm::vec3(m * glm::vec4(1, 0, 0, 0));
+				auto up = glm::vec3(m * glm::vec4(0, 1, 0, 0));
+				auto front = glm::vec3(m * glm::vec4(0, 0, 1, 0));
+				vd->AddLine(fp, fp + right * 0.1f, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+				vd->AddLine(fp, fp + up * 0.1f, glm::vec4(0, 1, 0, 1), glm::vec4(0, 1, 0, 1));
+				vd->AddLine(fp, fp + front * 0.1f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+
+				auto pNode = gScene->CreateSceneNode(format("Frame Color Image {}", i));
+				auto pGeometry = gGraphics->GetGeometry(format("Frame Color Image Geometry {}", i));
+				pGeometry->AddVertex(glm::vec3(-0.096, -0.072, 0.01f));
+				pGeometry->AddVertex(glm::vec3( 0.096, -0.072, 0.01f));
+				pGeometry->AddVertex(glm::vec3(-0.096,  0.072, 0.01f));
+				pGeometry->AddVertex(glm::vec3( 0.096,  0.072, 0.01f));
+				pGeometry->AddUV(glm::vec2(0.0, 0.0));
+				pGeometry->AddUV(glm::vec2(1.0, 0.0));
+				pGeometry->AddUV(glm::vec2(0.0, 1.0));
+				pGeometry->AddUV(glm::vec2(1.0, 1.0));
+				pGeometry->AddIndex(0);
+				pGeometry->AddIndex(1);
+				pGeometry->AddIndex(2);
+				pGeometry->AddIndex(2);
+				pGeometry->AddIndex(1);
+				pGeometry->AddIndex(3);
+				pGeometry->Initialize();
+				pNode->AddGeometry(pGeometry);
+				pNode->SetLocalPosition(fp);
+				pNode->SetLocalRotation(glm::quat_cast(m));
+
+				onoff.AddSceneNode(pNode);
+
+				auto pMaterial = gGraphics->GetMaterialSingleTexture(format("Frame Material {}", i));
+				pGeometry->SetMaterial(pMaterial);
+				auto pShader = gGraphics->GetShader(format("Frame Color Image Shader {}", i), "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+				pMaterial->SetShader(pShader);
+
+				auto pImage = frame->LoadColorImage(gGraphics);
+				pImage->Initialize();
+				auto pTexture = gGraphics->GetTexture(format("Frame Color Image Texture {}", i), pImage);
+				pTexture->Initialize();
+				pMaterial->SetTexture(pTexture);
+
+				auto pLineGeometry = gGraphics->GetGeometryThickLines("lines");
+				pLineGeometry->Initialize();
+				pNode->AddGeometry(pLineGeometry);
+				auto pLineMaterial = gGraphics->GetMaterial("Visual Debugger.LineMaterial");
+				auto pLineShader = gGraphics->GetShader("Visual Debugger.LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+				pLineMaterial->SetShader(pLineShader);
+				pLineGeometry->SetMaterial(pLineMaterial);
+				pLineGeometry->SetThickness(1);
+				pLineGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+
+				pLineGeometry->AddVertex(glm::vec3(0, 0, 0));
+				pLineGeometry->AddVertex(glm::vec3(0.05f, 0, 0));
+				pLineGeometry->AddVertex(glm::vec3(0, 0, 0));
+				pLineGeometry->AddVertex(glm::vec3(0, 0.05f, 0));
+				pLineGeometry->AddVertex(glm::vec3(0, 0, 0));
+				pLineGeometry->AddVertex(glm::vec3(0, 0, 0.05f));
+
+				pLineGeometry->AddColor(glm::vec4(0, 1, 1, 1));
+				pLineGeometry->AddColor(glm::vec4(0, 1, 1, 1));
+				pLineGeometry->AddColor(glm::vec4(1, 0, 1, 1));
+				pLineGeometry->AddColor(glm::vec4(1, 0, 1, 1));
+				pLineGeometry->AddColor(glm::vec4(1, 1, 0, 1));
+				pLineGeometry->AddColor(glm::vec4(1, 1, 0, 1));
+				pLineGeometry->AddIndex(0);
+				pLineGeometry->AddIndex(1);
+				pLineGeometry->AddIndex(2);
+				pLineGeometry->AddIndex(3);
+				pLineGeometry->AddIndex(4);
+				pLineGeometry->AddIndex(5);
+			}
+		}
 
 		});
 

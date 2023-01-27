@@ -117,205 +117,208 @@ int main(int argc, char** argv)
 
 
     Helium helium("helium", windowWidth, windowHeight);
+    helium.InitializeImgui(mWindow);
     gGraphics = helium.GetGraphics();
 
+
+    gGraphics = helium.GetGraphics();
     gScene = helium.GetScene("Default Scene");
 
-    pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
-    //pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
-    HeCameraManipulatorFlight manipulator(pCamera);
-    pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
-    //HeCameraManipulatorOrtho manipulator(pCamera);
-    pCameraManipulator = &manipulator;
-    gScene->SetMainCamera(pCamera);
+    helium.OnPrepare([&]() {
+        pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+        //pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+        pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+        //HeCameraManipulatorOrtho manipulator(pCamera);
+        pCameraManipulator = gScene->CreateCameraManipulatoFlight("Main Camera Manipulator", pCamera);
+        gScene->SetMainCamera(pCamera);
 
-    
-    {
-        auto pNode = gScene->CreateSceneNode("Gizmo Node");
+
+        {
+            auto pNode = gScene->CreateSceneNode("Gizmo Node");
 
 #pragma region [Lines]
-        auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
-        pLines->Initialize();
-        pLines->SetThickness(1);
-        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-        pNode->AddGeometry(pLines);
+            auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
+            pLines->Initialize();
+            pLines->SetThickness(1);
+            pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+            pNode->AddGeometry(pLines);
 
-        pLines->AddVertex(glm::vec3(-1024, 0, 0));
-        pLines->AddVertex(glm::vec3(1024, 0, 0));
-        pLines->AddVertex(glm::vec3(0, -1024, 0));
-        pLines->AddVertex(glm::vec3(0, 1024, 0));
-        pLines->AddVertex(glm::vec3(0, 0, -1024));
-        pLines->AddVertex(glm::vec3(0, 0, 1024));
+            pLines->AddVertex(glm::vec3(-1024, 0, 0));
+            pLines->AddVertex(glm::vec3(1024, 0, 0));
+            pLines->AddVertex(glm::vec3(0, -1024, 0));
+            pLines->AddVertex(glm::vec3(0, 1024, 0));
+            pLines->AddVertex(glm::vec3(0, 0, -1024));
+            pLines->AddVertex(glm::vec3(0, 0, 1024));
 
-        pLines->AddColor(glm::vec4(1, 0, 0, 1));
-        pLines->AddColor(glm::vec4(1, 0, 0, 1));
-        pLines->AddColor(glm::vec4(0, 1, 0, 1));
-        pLines->AddColor(glm::vec4(0, 1, 0, 1));
-        pLines->AddColor(glm::vec4(0, 0, 1, 1));
-        pLines->AddColor(glm::vec4(0, 0, 1, 1));
+            pLines->AddColor(glm::vec4(1, 0, 0, 1));
+            pLines->AddColor(glm::vec4(1, 0, 0, 1));
+            pLines->AddColor(glm::vec4(0, 1, 0, 1));
+            pLines->AddColor(glm::vec4(0, 1, 0, 1));
+            pLines->AddColor(glm::vec4(0, 0, 1, 1));
+            pLines->AddColor(glm::vec4(0, 0, 1, 1));
 
-        auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
+            auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
 
-        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        pMaterial->SetShader(pShader);
-
-        pLines->SetMaterial(pMaterial);
-
-
-        glEnable(GL_LINE_SMOOTH);
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#pragma endregion
-    }
-
-
-    {
-        auto pNode = gScene->CreateSceneNode("Mesh");
-        auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
-        //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
-
-        //pGeometry->SetFillMode(HeGeometry::Wireframe);
-        pGeometry->Initialize();
-        //pNode->AddGeometry(pGeometry);
-
-        auto pMaterial = gGraphics->GetMaterial("Mesh Material");
-        pGeometry->SetMaterial(pMaterial);
-
-        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
-        pMaterial->SetShader(pShader);
-
-        //pGeometry->ClearNormals();
-        
-        //auto start = HeTime::Now();
-
-        //ComputeFaceNormals((HeGeometryTriangleSoup*)pGeometry);
-        //((HeGeometryTriangleSoup*)pGeometry)->ComputeFaceNormals();
-
-        //pGeometry->RayIntersect(glm::vec3(1, 1, 1), -glm::normalize(glm::vec3(1, 1, 1)));
-        //RayIntersect((HeGeometryTriangleSoup*)pGeometry, glm::vec3(1, 1, 1), -glm::normalize(glm::vec3(1, 1, 1)));
-
-        //cout << HeTime::DeltaMili(start) << " miliseconds" << endl;
-
-        //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
-        //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Temp\\TestOBJ.obj");
-    }
-
- /*   {
-        auto pGeometry = gGraphics->GetGeometry("Mesh");
-
-        auto pNode = gScene->CreateSceneNode("Debugging");
-
-        auto pLines = gGraphics->GetGeometryThickLines("Debugging");
-        pLines->Initialize();
-        pLines->SetThickness(1);
-        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-        pNode->AddGeometry(pLines);
-
-        auto pMaterial = gGraphics->GetMaterial("thick lines");
-
-        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        pMaterial->SetShader(pShader);
-
-        pLines->SetMaterial(pMaterial);
-
-        auto nof = pGeometry->GetFaceCount();
-        for (size_t fi = 0; fi < nof; fi++)
-        {
-            auto vi0 = pGeometry->GetIndex(fi * 3);
-            auto vi1 = pGeometry->GetIndex(fi * 3 + 1);
-            auto vi2 = pGeometry->GetIndex(fi * 3 + 2);
-
-            const auto& v0 = pGeometry->GetVertex(vi0);
-            const auto& v1 = pGeometry->GetVertex(vi1);
-            const auto& v2 = pGeometry->GetVertex(vi2);
-
-            pLines->AddVertex(v0);
-            pLines->AddVertex(v1);
-            pLines->AddVertex(v1);
-            pLines->AddVertex(v2);
-            pLines->AddVertex(v2);
-            pLines->AddVertex(v0);
-
-            pLines->AddColor(glm::vec4(1, 0, 1, 1));
-            pLines->AddColor(glm::vec4(1, 0, 1, 1));
-            pLines->AddColor(glm::vec4(1, 0, 1, 1));
-            pLines->AddColor(glm::vec4(1, 0, 1, 1));
-            pLines->AddColor(glm::vec4(1, 0, 1, 1));
-            pLines->AddColor(glm::vec4(1, 0, 1, 1));
-        }
-    }*/
-
-    
-    {
-        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
-
-        vector<const HeCameraInfo*> cameraInfos;
-        vector<HeGeometryTriangleSoup*> frameGeometries;
-        for (auto& frame : project.GetFrames())
-        {
-            cameraInfos.push_back(frame->GetCameraInfo());
-
-            auto id = format("frame_{}", frame->GetFrameIndex());
-            auto pNode = gScene->CreateSceneNode(id);
-            onoff.AddSceneNode(pNode);
-            auto pGeometry = gGraphics->GetGeometryTriangleSoup(id);
-            pGeometry->Initialize();
-            frameGeometries.push_back(pGeometry);
-            pNode->AddGeometry(pGeometry);
-
-            auto pMaterial = gGraphics->GetMaterialSingleTexture(id);
-            pGeometry->SetMaterial(pMaterial);
-         
-            auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+            auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
             pMaterial->SetShader(pShader);
 
-            auto image = frame->LoadColorImage(gGraphics);
-            auto pTexture = gGraphics->GetTexture(id, image);
-            pTexture->Initialize();
-            pMaterial->SetTexture(pTexture);
+            pLines->SetMaterial(pMaterial);
+
+
+            glEnable(GL_LINE_SMOOTH);
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#pragma endregion
         }
 
-        auto start = HeTime::Now();
-        //ComputeOcclusionInfo((HeGeometryTriangleSoup*)(gGraphics->GetGeometry("Mesh")), cameraInfos);
-        cout << HeTime::DeltaMili(start) << " miliseconds" << endl;
 
-        auto mesh = gGraphics->GetGeometry("Mesh");
-        auto nof = mesh->GetFaceCount();
-        for (size_t fi = 0; fi < nof; fi++)
         {
-            auto vi0 = mesh->GetIndex(fi * 3);
-            auto vi1 = mesh->GetIndex(fi * 3 + 1);
-            auto vi2 = mesh->GetIndex(fi * 3 + 2);
+            auto pNode = gScene->CreateSceneNode("Mesh");
+            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+            //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
 
-            const auto& v0 = mesh->GetVertex(vi0);
-            const auto& v1 = mesh->GetVertex(vi1);
-            const auto& v2 = mesh->GetVertex(vi2);
-            auto fc = (v0 + v1 + v2) / 3.0f;
-            auto fn = mesh->GetNormal(vi0);
+            //pGeometry->SetFillMode(HeGeometry::Wireframe);
+            pGeometry->Initialize();
+            //pNode->AddGeometry(pGeometry);
 
-            HeFrameInfo* nearestFrame = nullptr;
-            float nearestDistance2 = FLT_MAX;
+            auto pMaterial = gGraphics->GetMaterial("Mesh Material");
+            pGeometry->SetMaterial(pMaterial);
 
-            HeFrameInfo* perpendicularFrame = nullptr;
-            float dotBetweenCameraAndFaceNormal = FLT_MAX;
+            auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+            pMaterial->SetShader(pShader);
 
-            HeFrameInfo* nearUVCenterFrame = nullptr;
-            float uvCenterDistance2 = FLT_MAX;
+            //pGeometry->ClearNormals();
+
+            //auto start = HeTime::Now();
+
+            //ComputeFaceNormals((HeGeometryTriangleSoup*)pGeometry);
+            //((HeGeometryTriangleSoup*)pGeometry)->ComputeFaceNormals();
+
+            //pGeometry->RayIntersect(glm::vec3(1, 1, 1), -glm::normalize(glm::vec3(1, 1, 1)));
+            //RayIntersect((HeGeometryTriangleSoup*)pGeometry, glm::vec3(1, 1, 1), -glm::normalize(glm::vec3(1, 1, 1)));
+
+            //cout << HeTime::DeltaMili(start) << " miliseconds" << endl;
+
+            //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
+            //HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Temp\\TestOBJ.obj");
+        }
+
+        /*   {
+               auto pGeometry = gGraphics->GetGeometry("Mesh");
+
+               auto pNode = gScene->CreateSceneNode("Debugging");
+
+               auto pLines = gGraphics->GetGeometryThickLines("Debugging");
+               pLines->Initialize();
+               pLines->SetThickness(1);
+               pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+               pNode->AddGeometry(pLines);
+
+               auto pMaterial = gGraphics->GetMaterial("thick lines");
+
+               auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+               pMaterial->SetShader(pShader);
+
+               pLines->SetMaterial(pMaterial);
+
+               auto nof = pGeometry->GetFaceCount();
+               for (size_t fi = 0; fi < nof; fi++)
+               {
+                   auto vi0 = pGeometry->GetIndex(fi * 3);
+                   auto vi1 = pGeometry->GetIndex(fi * 3 + 1);
+                   auto vi2 = pGeometry->GetIndex(fi * 3 + 2);
+
+                   const auto& v0 = pGeometry->GetVertex(vi0);
+                   const auto& v1 = pGeometry->GetVertex(vi1);
+                   const auto& v2 = pGeometry->GetVertex(vi2);
+
+                   pLines->AddVertex(v0);
+                   pLines->AddVertex(v1);
+                   pLines->AddVertex(v1);
+                   pLines->AddVertex(v2);
+                   pLines->AddVertex(v2);
+                   pLines->AddVertex(v0);
+
+                   pLines->AddColor(glm::vec4(1, 0, 1, 1));
+                   pLines->AddColor(glm::vec4(1, 0, 1, 1));
+                   pLines->AddColor(glm::vec4(1, 0, 1, 1));
+                   pLines->AddColor(glm::vec4(1, 0, 1, 1));
+                   pLines->AddColor(glm::vec4(1, 0, 1, 1));
+                   pLines->AddColor(glm::vec4(1, 0, 1, 1));
+               }
+           }*/
+
+
+        {
+            HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+
+            vector<const HeCameraInfo*> cameraInfos;
+            vector<HeGeometryTriangleSoup*> frameGeometries;
             for (auto& frame : project.GetFrames())
             {
-                auto cameraInfo = frame->GetCameraInfo();
-                auto cameraFront = glm::vec3(cameraInfo->GetViewMatrix()[3]);
-                auto frustum = cameraInfo->GetFrustum();
+                cameraInfos.push_back(frame->GetCameraInfo());
 
+                auto id = format("frame_{}", frame->GetFrameIndex());
+                auto pNode = gScene->CreateSceneNode(id);
+                onoff.AddSceneNode(pNode);
+                auto pGeometry = gGraphics->GetGeometryTriangleSoup(id);
+                pGeometry->Initialize();
+                frameGeometries.push_back(pGeometry);
+                pNode->AddGeometry(pGeometry);
 
-                if (frustum->ContainsAll(v0, v1, v2))
+                auto pMaterial = gGraphics->GetMaterialSingleTexture(id);
+                pGeometry->SetMaterial(pMaterial);
+
+                auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+                pMaterial->SetShader(pShader);
+
+                auto image = frame->LoadColorImage(gGraphics);
+                auto pTexture = gGraphics->GetTexture(id, image);
+                pTexture->Initialize();
+                pMaterial->SetTexture(pTexture);
+            }
+
+            auto start = HeTime::Now();
+            //ComputeOcclusionInfo((HeGeometryTriangleSoup*)(gGraphics->GetGeometry("Mesh")), cameraInfos);
+            cout << HeTime::DeltaMili(start) << " miliseconds" << endl;
+
+            auto mesh = gGraphics->GetGeometry("Mesh");
+            auto nof = mesh->GetFaceCount();
+            for (size_t fi = 0; fi < nof; fi++)
+            {
+                auto vi0 = mesh->GetIndex(fi * 3);
+                auto vi1 = mesh->GetIndex(fi * 3 + 1);
+                auto vi2 = mesh->GetIndex(fi * 3 + 2);
+
+                const auto& v0 = mesh->GetVertex(vi0);
+                const auto& v1 = mesh->GetVertex(vi1);
+                const auto& v2 = mesh->GetVertex(vi2);
+                auto fc = (v0 + v1 + v2) / 3.0f;
+                auto fn = mesh->GetNormal(vi0);
+
+                HeFrameInfo* nearestFrame = nullptr;
+                float nearestDistance2 = FLT_MAX;
+
+                HeFrameInfo* perpendicularFrame = nullptr;
+                float dotBetweenCameraAndFaceNormal = FLT_MAX;
+
+                HeFrameInfo* nearUVCenterFrame = nullptr;
+                float uvCenterDistance2 = FLT_MAX;
+                for (auto& frame : project.GetFrames())
                 {
-                    //if ((mesh->LineIntersect(cameraInfo->GetPosition(), v0).size() == 0) &&
-                    //    (mesh->LineIntersect(cameraInfo->GetPosition(), v1).size() == 0) &&
-                    //    (mesh->LineIntersect(cameraInfo->GetPosition(), v2).size() == 0))
-                    //{
+                    auto cameraInfo = frame->GetCameraInfo();
+                    auto cameraFront = glm::vec3(cameraInfo->GetViewMatrix()[3]);
+                    auto frustum = cameraInfo->GetFrustum();
+
+
+                    if (frustum->ContainsAll(v0, v1, v2))
+                    {
+                        //if ((mesh->LineIntersect(cameraInfo->GetPosition(), v0).size() == 0) &&
+                        //    (mesh->LineIntersect(cameraInfo->GetPosition(), v1).size() == 0) &&
+                        //    (mesh->LineIntersect(cameraInfo->GetPosition(), v2).size() == 0))
+                        //{
                         auto ffd = glm::distance2(fc, frame->GetCameraInfo()->GetPosition());
                         if (ffd < nearestDistance2) {
                             nearestDistance2 = ffd;
@@ -341,31 +344,35 @@ int main(int argc, char** argv)
                             uvCenterDistance2 = meand;
                             nearUVCenterFrame = frame;
                         }
-                    //}
+                        //}
+                    }
+                }
+
+                if (nearUVCenterFrame != nullptr)
+                {
+                    auto cameraInfo = nearUVCenterFrame->GetCameraInfo();
+                    auto uv0 = cameraInfo->WorldToUV(v0);
+                    auto uv1 = cameraInfo->WorldToUV(v1);
+                    auto uv2 = cameraInfo->WorldToUV(v2);
+
+                    auto pGeometry = frameGeometries[nearUVCenterFrame->GetFrameIndex()];
+                    pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
                 }
             }
 
-            if (nearUVCenterFrame != nullptr)
-            {
-                auto cameraInfo = nearUVCenterFrame->GetCameraInfo();
-                auto uv0 = cameraInfo->WorldToUV(v0);
-                auto uv1 = cameraInfo->WorldToUV(v1);
-                auto uv2 = cameraInfo->WorldToUV(v2);
-
-                auto pGeometry = frameGeometries[nearUVCenterFrame->GetFrameIndex()];
-                pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
-            }
+            //HeResourceIO::WriteOBJFile(gGraphics, frameGeometries, "D:\\temp\\test.obj");
         }
+        });
 
-        //HeResourceIO::WriteOBJFile(gGraphics, frameGeometries, "D:\\temp\\test.obj");
-    }
-    
+    int cnt = 0;
 
     auto lastTime = HeTime::Now();
     double accTime = 0.0;
     int frameCount = 0;
     int fps = 0;
-    while (glfwWindowShouldClose(mWindow) == false) {
+    int incremental = 0;
+
+    helium.OnFrame([&]() {
         auto delta = HeTime::DeltaMili(lastTime);
         lastTime = HeTime::Now();
 
@@ -384,10 +391,24 @@ int main(int argc, char** argv)
         glEnable(GL_BLEND);
 
         //glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //gScene->GetSceneNode("Plane")->SetActive(true);
+        //if(cnt == 20)
+        //{
+        //    auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+        //    //auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
+        //    pMaterial->SetIncremental(incremental);
+        //    onoff.On(incremental);
+
+        //    incremental++;
+        //    if (incremental > capturedFrameCount) {
+        //        incremental = 0;
+        //    }
+
+        //    cnt = 0;
+        //}
+        //cnt++;
 
         gScene->Update((float)delta);
         gScene->Render();
@@ -404,9 +425,18 @@ int main(int argc, char** argv)
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
-    }
 
-    glfwTerminate();
+        helium.SetFinished(glfwWindowShouldClose(mWindow));
+        });
+
+    helium.Run();
+
+    helium.OnTerminate([&]() {
+        helium.TerminateImgui();
+
+        glfwTerminate();
+        });
+
     return EXIT_SUCCESS;
 }
 
