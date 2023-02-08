@@ -33,6 +33,7 @@ namespace ArtificialNature {
 		int width = 0;
 		int height = 0;
 		int nrChannels = 0;
+		int bits = 0;
 
 		unsigned char* data = nullptr;
 

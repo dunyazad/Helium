@@ -263,7 +263,7 @@ int main(int argc, char** argv)
 				auto frame = project->GetFrames()[i];
 				frameInformations.push_back(frame);
 
-				dataToFragmentShader.push_back(frame->GetCameraInfo()->GetFX());
+				dataToFragmentShader.push_back(frame->GetCameraInfo()->GetOriginalFX());
 
 				auto frameMatrix = frame->GetCameraInfo()->GetTransformMatrix();
 				auto framePosition = frame->GetCameraInfo()->GetPosition();
@@ -287,9 +287,9 @@ int main(int argc, char** argv)
 
 
 				auto camera_info = frame->GetCameraInfo();
-				auto width = camera_info->GetImageWidth();
-				auto height = camera_info->GetImageHeight();
-				auto fx = camera_info->GetFX();
+				auto width = camera_info->GetColorImageWidth();
+				auto height = camera_info->GetColorImageHeight();
+				auto fx = camera_info->GetOriginalFX();
 				auto hiw = width * 0.5f;
 				auto hih = height * 0.5f;
 

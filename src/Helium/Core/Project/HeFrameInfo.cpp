@@ -38,7 +38,7 @@ namespace ArtificialNature {
 		delete this->cameraInfo;
 	}
 
-	HeImage* HeFrameInfo::LoadColorImage(HeGraphics* pGraphics)
+	HeImage* HeFrameInfo::LoadColorImage(HeGraphics* pGraphics, bool verticalFlip)
 	{
 		stringstream ss;
 		ss << "frame" << frameIndex;

@@ -22,12 +22,18 @@ namespace ArtificialNature {
 		glm::vec2 WorldToUV(const glm::vec3& worldPosition) const;
 
 		inline int GetFrameIndex() const { return frameIndex; }
-		inline int GetImageWidth() const { return imageWidth; }
-		inline int GetImageHeight() const { return imageHeight; }
-		inline float GetFX() const { return fx; }
-		inline float GetFY() const { return fy; }
-		inline float GetOX() const { return ox; }
-		inline float GetOY() const { return oy; }
+		inline int GetColorImageWidth() const { return colorImageWidth; }
+		inline int GetColorImageHeight() const { return colorImageHeight; }
+		inline int GetDepthImageWidth() const { return depthImageWidth; }
+		inline int GetDepthImageHeight() const { return depthImageHeight; }
+		inline float GetOriginalFX() const { return original_fx; }
+		inline float GetOriginalFY() const { return original_fy; }
+		inline float GetOriginalOX() const { return original_ox; }
+		inline float GetOriginalOY() const { return original_oy; }
+		inline float GetScaledFX() const { return scaled_fx; }
+		inline float GetScaledFY() const { return scaled_fy; }
+		inline float GetScaledOX() const { return scaled_ox; }
+		inline float GetScaledOY() const { return scaled_oy; }
 
 		inline const glm::mat3& GetIntrinsicMatrix() const { return intrinsicMatrix; }
 		inline const glm::mat4& GetViewMatrix() const { return viewMatrix; }
@@ -48,12 +54,18 @@ namespace ArtificialNature {
 
 	protected:
 		int frameIndex = -1;
-		int imageWidth = 0;
-		int imageHeight = 0;
-		float fx = 0.0f;
-		float fy = 0.0f;
-		float ox = 0.0f;
-		float oy = 0.0f;
+		int colorImageWidth = 0;
+		int colorImageHeight = 0;
+		int depthImageWidth = 0;
+		int depthImageHeight = 0;
+		float original_fx = 0.0f;
+		float original_fy = 0.0f;
+		float original_ox = 0.0f;
+		float original_oy = 0.0f;
+		float scaled_fx = 0.0f;
+		float scaled_fy = 0.0f;
+		float scaled_ox = 0.0f;
+		float scaled_oy = 0.0f;
 		glm::mat3 intrinsicMatrix = glm::identity<glm::mat3>();
 		glm::mat4 viewMatrix = glm::identity<glm::mat4>();
 		glm::mat4 viewMatrixInversed = glm::identity<glm::mat4>();

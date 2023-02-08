@@ -19,7 +19,7 @@ namespace ArtificialNature {
 
 		~HeFrameInfo();
 
-		HeImage* LoadColorImage(HeGraphics* pGraphics);
+		HeImage* LoadColorImage(HeGraphics* pGraphics, bool verticalFlip = true);
 		void LoadDepthInfo();
 
 		inline int GetFrameIndex() const { return frameIndex; }

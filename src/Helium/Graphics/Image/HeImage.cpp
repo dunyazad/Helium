@@ -18,7 +18,7 @@ namespace ArtificialNature {
 	void HeImage::Initialize()
 	{
 		stbi_set_flip_vertically_on_load(verticalFlip);
-		data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
+		data = stbi_load(filename.c_str(), &width, &height, &nrChannels, bits);
 	}
 
 	void HeImage::Write(const string& outputFilename, bool verticalFlip)

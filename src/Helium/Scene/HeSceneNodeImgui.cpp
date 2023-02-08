@@ -6,6 +6,7 @@ namespace ArtificialNature {
 	{
         defaultFont = ImGui::GetIO().Fonts->AddFontDefault();
         customFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("../../res/fonts/arial.ttf", 128);
+        //customFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("./res/fonts/arial.ttf", 128);
         customFont->FontSize = 24;
 	}
 

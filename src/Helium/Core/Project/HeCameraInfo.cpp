@@ -15,13 +15,15 @@ namespace ArtificialNature {
 
 			int index = 0;
 			memcpy(&this->frameIndex, buffer + index, 4); index += 4;
-			memcpy(&this->imageWidth, buffer + index, 4); index += 4;
-			memcpy(&this->imageHeight, buffer + index, 4); index += 4;
+			memcpy(&this->depthImageWidth, buffer + index, 4); index += 4;
+			memcpy(&this->depthImageHeight, buffer + index, 4); index += 4;
+			this->colorImageWidth = depthImageWidth * 7.5;
+			this->colorImageHeight = depthImageHeight * 7.5;
 
-			memcpy(&this->fx, buffer + index, 4); index += 4;
-			memcpy(&this->fy, buffer + index, 4); index += 4;
-			memcpy(&this->ox, buffer + index, 4); index += 4;
-			memcpy(&this->oy, buffer + index, 4); index += 4;
+			memcpy(&this->original_fx, buffer + index, 4); index += 4;
+			memcpy(&this->original_fy, buffer + index, 4); index += 4;
+			memcpy(&this->original_ox, buffer + index, 4); index += 4;
+			memcpy(&this->original_oy, buffer + index, 4); index += 4;
 
 			float intrinsics[9]; memcpy(&intrinsics, buffer + index, 36); index += 36;
 			float view_matrix[16]; memcpy(&view_matrix, buffer + index, 64); index += 64;
@@ -47,10 +49,10 @@ namespace ArtificialNature {
 			intrinsic_matrix[2][2] = 1.0f;
 
 			this->intrinsicMatrix = intrinsic_matrix;
-			this->fx = this->intrinsicMatrix[0][0];
-			this->fy = this->intrinsicMatrix[1][1];
-			this->ox = this->intrinsicMatrix[0][2];
-			this->oy = this->intrinsicMatrix[1][2];
+			this->scaled_fx = this->intrinsicMatrix[0][0];
+			this->scaled_fy = this->intrinsicMatrix[1][1];
+			this->scaled_ox = this->intrinsicMatrix[0][2];
+			this->scaled_oy = this->intrinsicMatrix[1][2];
 
 
 			this->localToWorldMatrix = glm::inverse(glm::flip_axes(this->viewMatrixInversed));
@@ -78,7 +80,7 @@ namespace ArtificialNature {
 			rr[2] = r2;
 
 			//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
-			this->frustum = new HeFrustum(this->position, rr, this->imageWidth, this->imageHeight, this->fx, this->fy);
+			this->frustum = new HeFrustum(this->position, rr, this->colorImageWidth, this->colorImageHeight, this->original_fx, this->original_fy);
 		}
 	}
 
@@ -162,12 +164,18 @@ namespace ArtificialNature {
 		{
 			auto& info = reconstructionInfo["frames"][frameInfo->GetFrameIndex()];
 			this->frameIndex = frameInfo->GetFrameIndex();
-			this->imageWidth = info["image_width"].get<int>();
-			this->imageHeight = info["image_height"].get<int>();
-			this->fx = info["fx"].get<float>();
-			this->fy = info["fy"].get<float>();
-			this->ox = info["ox"].get<float>();
-			this->oy = info["oy"].get<float>();
+			this->depthImageWidth = info["image_width"].get<int>();
+			this->depthImageHeight = info["image_height"].get<int>();
+			this->colorImageWidth = this->depthImageWidth * 7.5;
+			this->colorImageHeight = this->depthImageHeight * 7.5;
+			this->scaled_fx = info["fx"].get<float>();
+			this->scaled_fy = info["fy"].get<float>();
+			this->scaled_ox = info["ox"].get<float>();
+			this->scaled_oy = info["oy"].get<float>();
+			this->original_fx = this->scaled_fx * 7.5;
+			this->original_fy = this->scaled_fy * 7.5;
+			this->original_ox = this->scaled_ox * 7.5;
+			this->original_oy = this->scaled_oy * 7.5;
 			this->intrinsicMatrix = glm::make_mat4(info["intrinsic_matrix"].get<vector<float>>().data());
 			this->extrinsicMatrix = glm::make_mat4(info["extrinsic_matrix"].get<vector<float>>().data());
 			this->position = glm::vec3(glm::row(glm::inverse(this->extrinsicMatrix), 3));
@@ -184,13 +192,13 @@ namespace ArtificialNature {
 				this->ambientIntensity = info["ambient_intensity"].get<float>();
 			}
 
-			this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
+			//this->frustum = new HeFrustum(this->position, this->rotation, this->colorImageWidth, this->colorImageHeight, this->original_fx, this->original_fy);
 
 			auto rr = this->rotation * glm::mat3(glm::angleAxis(glm::radians(180.0f), glm::vec3(1, 0, 0)));
 			rr[2] = -rr[2];
 
 			//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
-			this->frustum = new HeFrustum(this->position, rr, this->imageWidth, this->imageHeight, this->fx, this->fy);
+			this->frustum = new HeFrustum(this->position, rr, this->colorImageWidth, this->colorImageHeight, this->original_fx, this->original_fy);
 		}
 	}
 
@@ -218,13 +226,13 @@ namespace ArtificialNature {
 
 		auto ip4 = this->transformMatrixInversed * glm::vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1);
 		//auto uv4 = this->projectionMatrix * this->transformMatrixInversed * glm::vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1);
-		glm::vec3 planePoint = glm::vec3(0, 0, this->fx);
+		glm::vec3 planePoint = glm::vec3(0, 0, this->original_fx);
 		glm::vec3 planeNormal = glm::vec3(0, 0, 1);
 		glm::vec3 rayOrigin = glm::vec3(0, 0, 0);
 		glm::vec3 rayDirection = glm::normalize(glm::vec3(ip4.x, ip4.y, ip4.z));
 		glm::vec3 intersection = RayPlaneIntersection(planePoint, planeNormal, rayOrigin, rayDirection);
-		float u = ((intersection.x / (this->imageWidth * 0.5f)) * 0.5f + 0.5f);
-		float v = 1 - ((intersection.y / (this->imageHeight * 0.5f)) * 0.5f + 0.5f);
+		float u = ((intersection.x / (this->colorImageWidth * 0.5f)) * 0.5f + 0.5f);
+		float v = 1 - ((intersection.y / (this->colorImageHeight * 0.5f)) * 0.5f + 0.5f);
 		return glm::vec2(u, v);
 	}
 }

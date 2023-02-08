@@ -348,8 +348,59 @@ protected:
 
 HeVisualDebugger* vd = nullptr;
 
+#include <math.h>
+
+const float voxel_size = 0.05; // size of each voxel in meters
+const float truncation_distance = 1.0; // maximum distance to consider in TSDF
+const int grid_size = 256 / voxel_size;
+
+vector<vector<vector<float>>> tsdf(const vector<vector<vector<float>>>& depth_maps) {
+	// Initialize an empty voxel grid
+	vector<vector<vector<float>>> voxel_grid(grid_size, vector<vector<float>>(grid_size, vector<float>(grid_size, 0.0)));
+	// Initialize the voxel grid with the TSDF values
+	for (auto depth_map : depth_maps) {
+		for (int y = 0; y < depth_map.size(); y++) {
+			for (int x = 0; x < depth_map[0].size(); x++) {
+				float depth = depth_map[y][x];
+				if (depth == 0) continue; // ignore invalid depth values
+				// Compute the point coordinates in the camera frame
+				glm::vec3 point(x * depth, y * depth, depth);
+				// Compute the voxel coordinates
+				int x_voxel = point.x / voxel_size;
+				int y_voxel = point.y / voxel_size;
+				int z_voxel = point.z / voxel_size;
+				// Update the TSDF value for the voxel
+				float current_tsdf = voxel_grid[x_voxel][y_voxel][z_voxel];
+				float new_tsdf = fminf(current_tsdf, sqrt(pow(point.x, 2) + pow(point.y, 2) + pow(point.z, 2)));
+				voxel_grid[x_voxel][y_voxel][z_voxel] = new_tsdf;
+			}
+		}
+	}
+	// Truncate the TSDF values
+	for (int x = 0; x < voxel_grid.size(); x++) {
+		for (int y = 0; y < voxel_grid.size(); y++) {
+			for (int z = 0; z < voxel_grid.size(); z++) {
+				float tsdf = voxel_grid[x][y][z];
+				if (tsdf > truncation_distance) {
+					voxel_grid[x][y][z] = truncation_distance;
+				}
+			}
+		}
+	}
+	return voxel_grid;
+}
+
 int main(int argc, char** argv)
 {
+	// Example usage
+	vector<vector<vector<float>>> depth_maps;
+	depth_maps.push_back({ {0.5, 0.6, 0.7}, {0.8, 0.9, 1.0} });
+	depth_maps.push_back({ {1.2, 1.3, 1.4}, {1.5, 1.6, 1.7} });
+	depth_maps.push_back({ {1.8, 1.9, 2.0}, {2.1, 2.2, 2.3} });
+
+	vector<vector<vector<float>>> voxel_grid = tsdf(depth_maps);
+
+
 	// Load GLFW and Create a Window
 	glfwInit(); 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -459,68 +510,106 @@ int main(int argc, char** argv)
 				vd->AddLine(fp, fp + front * 0.1f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
 
 				auto pNode = gScene->CreateSceneNode(format("Frame Color Image {}", i));
-				auto pGeometry = gGraphics->GetGeometry(format("Frame Color Image Geometry {}", i));
-				pGeometry->AddVertex(glm::vec3(-0.096, -0.072, 0.01f));
-				pGeometry->AddVertex(glm::vec3( 0.096, -0.072, 0.01f));
-				pGeometry->AddVertex(glm::vec3(-0.096,  0.072, 0.01f));
-				pGeometry->AddVertex(glm::vec3( 0.096,  0.072, 0.01f));
-				pGeometry->AddUV(glm::vec2(0.0, 0.0));
-				pGeometry->AddUV(glm::vec2(1.0, 0.0));
-				pGeometry->AddUV(glm::vec2(0.0, 1.0));
-				pGeometry->AddUV(glm::vec2(1.0, 1.0));
-				pGeometry->AddIndex(0);
-				pGeometry->AddIndex(1);
-				pGeometry->AddIndex(2);
-				pGeometry->AddIndex(2);
-				pGeometry->AddIndex(1);
-				pGeometry->AddIndex(3);
-				pGeometry->Initialize();
-				pNode->AddGeometry(pGeometry);
 				pNode->SetLocalPosition(fp);
 				pNode->SetLocalRotation(glm::quat_cast(m));
 
 				onoff.AddSceneNode(pNode);
+				{
+					//auto pGeometry = gGraphics->GetGeometry(format("Frame Color Image Geometry {}", i));
+					//pGeometry->AddVertex(glm::vec3(-0.096, -0.072, 0.01f));
+					//pGeometry->AddVertex(glm::vec3(0.096, -0.072, 0.01f));
+					//pGeometry->AddVertex(glm::vec3(-0.096, 0.072, 0.01f));
+					//pGeometry->AddVertex(glm::vec3(0.096, 0.072, 0.01f));
+					//pGeometry->AddUV(glm::vec2(0.0, 0.0));
+					//pGeometry->AddUV(glm::vec2(1.0, 0.0));
+					//pGeometry->AddUV(glm::vec2(0.0, 1.0));
+					//pGeometry->AddUV(glm::vec2(1.0, 1.0));
+					//pGeometry->AddIndex(0);
+					//pGeometry->AddIndex(1);
+					//pGeometry->AddIndex(2);
+					//pGeometry->AddIndex(2);
+					//pGeometry->AddIndex(1);
+					//pGeometry->AddIndex(3);
+					//pGeometry->Initialize();
+					//pNode->AddGeometry(pGeometry);
+					
 
-				auto pMaterial = gGraphics->GetMaterialSingleTexture(format("Frame Material {}", i));
-				pGeometry->SetMaterial(pMaterial);
-				auto pShader = gGraphics->GetShader(format("Frame Color Image Shader {}", i), "../../res/shader/texture.vs", "../../res/shader/texture.fs");
-				pMaterial->SetShader(pShader);
+					//auto pMaterial = gGraphics->GetMaterialSingleTexture(format("Frame Material {}", i));
+					//pGeometry->SetMaterial(pMaterial);
+					//auto pShader = gGraphics->GetShader(format("Frame Color Image Shader {}", i), "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+					//pMaterial->SetShader(pShader);
 
-				auto pImage = frame->LoadColorImage(gGraphics);
-				pImage->Initialize();
-				auto pTexture = gGraphics->GetTexture(format("Frame Color Image Texture {}", i), pImage);
-				pTexture->Initialize();
-				pMaterial->SetTexture(pTexture);
+					//auto pImage = frame->LoadColorImage(gGraphics);
+					//pImage->Initialize();
+					//auto pTexture = gGraphics->GetTexture(format("Frame Color Image Texture {}", i), pImage);
+					//pTexture->Initialize();
+					//pMaterial->SetTexture(pTexture);
+				}
 
-				auto pLineGeometry = gGraphics->GetGeometryThickLines("lines");
-				pLineGeometry->Initialize();
-				pNode->AddGeometry(pLineGeometry);
-				auto pLineMaterial = gGraphics->GetMaterial("Visual Debugger.LineMaterial");
-				auto pLineShader = gGraphics->GetShader("Visual Debugger.LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-				pLineMaterial->SetShader(pLineShader);
-				pLineGeometry->SetMaterial(pLineMaterial);
-				pLineGeometry->SetThickness(1);
-				pLineGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+				{
+					auto pGeometry = gGraphics->GetGeometryThickLines("lines");
+					pGeometry->Initialize();
+					pNode->AddGeometry(pGeometry);
+					auto pMaterial = gGraphics->GetMaterial("Line Geometry.LineMaterial");
+					auto pShader = gGraphics->GetShader("Line Geometry.LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+					pMaterial->SetShader(pShader);
+					pGeometry->SetMaterial(pMaterial);
+					pGeometry->SetThickness(1);
+					pGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
 
-				pLineGeometry->AddVertex(glm::vec3(0, 0, 0));
-				pLineGeometry->AddVertex(glm::vec3(0.05f, 0, 0));
-				pLineGeometry->AddVertex(glm::vec3(0, 0, 0));
-				pLineGeometry->AddVertex(glm::vec3(0, 0.05f, 0));
-				pLineGeometry->AddVertex(glm::vec3(0, 0, 0));
-				pLineGeometry->AddVertex(glm::vec3(0, 0, 0.05f));
+					pGeometry->AddVertex(glm::vec3(0, 0, 0));
+					pGeometry->AddVertex(glm::vec3(0.05f, 0, 0));
+					pGeometry->AddVertex(glm::vec3(0, 0, 0));
+					pGeometry->AddVertex(glm::vec3(0, 0.05f, 0));
+					pGeometry->AddVertex(glm::vec3(0, 0, 0));
+					pGeometry->AddVertex(glm::vec3(0, 0, 0.05f));
 
-				pLineGeometry->AddColor(glm::vec4(0, 1, 1, 1));
-				pLineGeometry->AddColor(glm::vec4(0, 1, 1, 1));
-				pLineGeometry->AddColor(glm::vec4(1, 0, 1, 1));
-				pLineGeometry->AddColor(glm::vec4(1, 0, 1, 1));
-				pLineGeometry->AddColor(glm::vec4(1, 1, 0, 1));
-				pLineGeometry->AddColor(glm::vec4(1, 1, 0, 1));
-				pLineGeometry->AddIndex(0);
-				pLineGeometry->AddIndex(1);
-				pLineGeometry->AddIndex(2);
-				pLineGeometry->AddIndex(3);
-				pLineGeometry->AddIndex(4);
-				pLineGeometry->AddIndex(5);
+					pGeometry->AddColor(glm::vec4(0, 1, 1, 1));
+					pGeometry->AddColor(glm::vec4(0, 1, 1, 1));
+					pGeometry->AddColor(glm::vec4(1, 0, 1, 1));
+					pGeometry->AddColor(glm::vec4(1, 0, 1, 1));
+					pGeometry->AddColor(glm::vec4(1, 1, 0, 1));
+					pGeometry->AddColor(glm::vec4(1, 1, 0, 1));
+					pGeometry->AddIndex(0);
+					pGeometry->AddIndex(1);
+					pGeometry->AddIndex(2);
+					pGeometry->AddIndex(3);
+					pGeometry->AddIndex(4);
+					pGeometry->AddIndex(5);
+				}
+
+				{
+					frame->LoadDepthInfo();
+					auto depthInfo = frame->GetDepthInfos();
+
+					int width = cameraInfo->GetDepthImageWidth();
+					int height = cameraInfo->GetDepthImageHeight();
+
+					auto pGeometry = gGraphics->GetGeometryPlane(format("Frame Depth Image Plane {}", i), width * 0.01f, height * 0.01f, width, height, HePlaneType::XY);
+					pGeometry->Initialize();
+					pNode->AddGeometry(pGeometry);
+
+					for (size_t i = 0; i < depthInfo.size(); i++)
+					{
+						auto& v = pGeometry->GetVertex(i);
+						auto nv = glm::vec3(v);
+						nv.z = depthInfo[i];
+						pGeometry->SetVertex(i, nv);
+					}
+
+					auto pMaterial = gGraphics->GetMaterialSingleTexture(format("Frame Depth Image Material {}", i));
+					pGeometry->SetMaterial(pMaterial);
+					auto pShader = gGraphics->GetShader(format("Frame Depth Image Shader {}", i), "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+					pMaterial->SetShader(pShader);
+
+					auto pImage = frame->LoadColorImage(gGraphics, false);
+					pImage->Initialize();
+					auto pTexture = gGraphics->GetTexture(format("Frame Depth Image Texture {}", i), pImage);
+					pTexture->Initialize();
+					pMaterial->SetTexture(pTexture);
+				}
+
+				break;
 			}
 		}
 
