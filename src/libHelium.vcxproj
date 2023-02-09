@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Helium\Core\glad.c" />
+    <ClCompile Include="Helium\Core\HeColor.cpp" />
     <ClCompile Include="Helium\Core\HeFile.cpp" />
     <ClCompile Include="Helium\Core\HeliumCommon.cpp" />
     <ClCompile Include="Helium\Core\HeObject.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Helium\Graphics\Texture\HeTextureArray.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeTextureFloatData.cpp" />
     <ClCompile Include="Helium\Helium.cpp" />
+    <ClCompile Include="Helium\HeVisualDebugger.cpp" />
     <ClCompile Include="Helium\nanovg.c" />
     <ClCompile Include="Helium\Scene\HeCamera.cpp" />
     <ClCompile Include="Helium\Scene\HeCameraManipulator.cpp" />
@@ -143,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Core\Core.h" />
+    <ClInclude Include="Helium\Core\HeColor.h" />
     <ClInclude Include="Helium\Core\HeFile.h" />
     <ClInclude Include="Helium\Core\HeliumCommon.h" />
     <ClInclude Include="Helium\Core\HeObject.h" />
@@ -189,6 +192,7 @@
     <ClInclude Include="Helium\Graphics\Texture\HeTextureFloatData.h" />
     <ClInclude Include="Helium\Graphics\Texture\Texture.h" />
     <ClInclude Include="Helium\Helium.h" />
+    <ClInclude Include="Helium\HeVisualDebugger.h" />
     <ClInclude Include="Helium\Scene\HeCamera.h" />
     <ClInclude Include="Helium\Scene\HeCameraManipulator.h" />
     <ClInclude Include="Helium\Scene\HeScene.h" />

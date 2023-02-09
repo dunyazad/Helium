@@ -21,8 +21,6 @@ HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 //HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-HeGeometryThickLines* pDebugGeometry = nullptr;
-
 int capturedFrameCount = 0;
 int selectedFrame = -1;
 vector<HeFrameInfo*> frameInformations;
@@ -95,6 +93,8 @@ protected:
 };
 OnOff onoff;
 
+HeVisualDebugger* vd = nullptr;
+
 HeShader* pShaderByDistance = nullptr;
 HeShader* pShaderByUV = nullptr;
 HeShader* pShaderBlending = nullptr;
@@ -155,6 +155,9 @@ int main(int argc, char** argv)
 		gScene->SetMainCamera(pCamera);
 		pCameraManipulator = gScene->CreateCameraManipulatoFlight("Main Camera Manipulator", pCamera);
 
+		auto visualDebugger = HeVisualDebugger(helium);
+		vd = &visualDebugger;
+
 		for (auto& v : controlValues)
 		{
 			v = 1.0f;
@@ -163,73 +166,6 @@ int main(int argc, char** argv)
 		{
 			auto pNode = gScene->CreateSceneNodeImgui("imgui");
 			pNode->SetText("0");
-		}
-
-		{
-			auto pNode = gScene->CreateSceneNode("Gizmo Node");
-
-#pragma region [Lines]
-			auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
-			pLines->Initialize();
-			pLines->SetThickness(1);
-			pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-			pNode->AddGeometry(pLines);
-
-			pLines->AddVertex(glm::vec3(-1024, 0, 0));
-			pLines->AddVertex(glm::vec3(1024, 0, 0));
-			pLines->AddVertex(glm::vec3(0, -1024, 0));
-			pLines->AddVertex(glm::vec3(0, 1024, 0));
-			pLines->AddVertex(glm::vec3(0, 0, -1024));
-			pLines->AddVertex(glm::vec3(0, 0, 1024));
-
-			pLines->AddColor(glm::vec4(1, 0, 0, 1));
-			pLines->AddColor(glm::vec4(1, 0, 0, 1));
-			pLines->AddColor(glm::vec4(0, 1, 0, 1));
-			pLines->AddColor(glm::vec4(0, 1, 0, 1));
-			pLines->AddColor(glm::vec4(0, 0, 1, 1));
-			pLines->AddColor(glm::vec4(0, 0, 1, 1));
-
-			auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
-
-			auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-			pMaterial->SetShader(pShader);
-
-			pLines->SetMaterial(pMaterial);
-
-
-			glEnable(GL_LINE_SMOOTH);
-			glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#pragma endregion
-		}
-
-		{
-			auto pNode = gScene->CreateSceneNode("Debug");
-
-#pragma region [Lines]
-			auto pLines = gGraphics->GetGeometryThickLines("Debug");
-			pLines->Initialize();
-			pLines->SetThickness(1);
-			pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-			pNode->AddGeometry(pLines);
-
-			pDebugGeometry = pLines;
-
-			auto pMaterial = gGraphics->GetMaterial("Debug");
-
-			auto pShader = gGraphics->GetShader("Debug", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-			pMaterial->SetShader(pShader);
-
-			pLines->SetMaterial(pMaterial);
-
-			glEnable(GL_LINE_SMOOTH);
-			glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#pragma endregion
 		}
 
 		{
@@ -316,12 +252,12 @@ int main(int argc, char** argv)
 					pLines->AddVertex(fp);
 					pLines->AddVertex(fp + nf * 0.1f);
 
-					pLines->AddColor(glm::vec4(1, 0, 0, 1));
-					pLines->AddColor(glm::vec4(1, 0, 0, 1));
-					pLines->AddColor(glm::vec4(0, 1, 0, 1));
-					pLines->AddColor(glm::vec4(0, 1, 0, 1));
-					pLines->AddColor(glm::vec4(0, 0, 1, 1));
-					pLines->AddColor(glm::vec4(0, 0, 1, 1));
+					pLines->AddColor(HeColor::RED);
+					pLines->AddColor(HeColor::RED);
+					pLines->AddColor(HeColor::GREEN);
+					pLines->AddColor(HeColor::GREEN);
+					pLines->AddColor(HeColor::BLUE);
+					pLines->AddColor(HeColor::BLUE);
 
 					auto length = sqrt(fx * fx + hiw * hiw) * 0.01f;
 					pLines->AddVertex(fp);
@@ -333,14 +269,14 @@ int main(int argc, char** argv)
 					pLines->AddVertex(fp);
 					pLines->AddVertex(frustum->GetImageRightDown());
 
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
 
 					pLines->AddVertex(frustum->GetImageLeftUp());
 					pLines->AddVertex(frustum->GetImageRightUp());
@@ -351,14 +287,14 @@ int main(int argc, char** argv)
 					pLines->AddVertex(frustum->GetImageLeftDown());
 					pLines->AddVertex(frustum->GetImageLeftUp());
 
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
-					pLines->AddColor(glm::vec4(1, 1, 0, 1));
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
+					pLines->AddColor(HeColor::YELLOW);
 
 					auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
 
@@ -809,23 +745,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 		gScene->GetSceneNodeIMGUI()->SetText(format("{}", selectedFrame));
 
-		{
-			auto pDebugNode = gScene->GetSceneNode("Debug");
-			auto pDebugGeometry = dynamic_cast<HeGeometryThickLines*>(pDebugNode->GetGeometry("Debug"));
-			pDebugGeometry->AddVertex(v0);
-			pDebugGeometry->AddVertex(v1);
-			pDebugGeometry->AddVertex(v1);
-			pDebugGeometry->AddVertex(v2);
-			pDebugGeometry->AddVertex(v2);
-			pDebugGeometry->AddVertex(v0);
-
-			pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-			pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-			pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-			pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-			pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-			pDebugGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-		}
+		vd->AddTriangle(v0, v1, v2, HeColor::RED, HeColor::RED, HeColor::RED);
 	}
 }
 

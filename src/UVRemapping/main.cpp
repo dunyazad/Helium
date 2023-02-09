@@ -77,6 +77,8 @@ protected:
 };
 OnOff onoff;
 
+HeVisualDebugger* vd = nullptr;
+
 HeGeometry* Flatten(const HeProject& project, HeGeometry* from, const string& name, float scale, vector<glm::vec2>& uvs, vector<int>& faceFrameMapping, bool asBoundingBox = false);
 
 int main(int argc, char** argv)
@@ -137,50 +139,13 @@ int main(int argc, char** argv)
     pCameraManipulator = &manipulator;
     gScene->SetMainCamera(pCamera);
 
+    auto visualDebugger = HeVisualDebugger(helium);
+    vd = &visualDebugger;
+
     //{
     //    auto pNode = gScene->CreateSceneNodeImgui("imgui");
     //    pNode->SetText("0");
     //}
-
-    {
-        auto pNode = gScene->CreateSceneNode("Gizmo Node");
-
-#pragma region [Lines]
-        auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
-        pLines->Initialize();
-        pLines->SetThickness(1);
-        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-        pNode->AddGeometry(pLines);
-
-        pLines->AddVertex(glm::vec3(-1024, 0, 0));
-        pLines->AddVertex(glm::vec3(1024, 0, 0));
-        pLines->AddVertex(glm::vec3(0, -1024, 0));
-        pLines->AddVertex(glm::vec3(0, 1024, 0));
-        pLines->AddVertex(glm::vec3(0, 0, -1024));
-        pLines->AddVertex(glm::vec3(0, 0, 1024));
-
-        pLines->AddColor(glm::vec4(1, 0, 0, 1));
-        pLines->AddColor(glm::vec4(1, 0, 0, 1));
-        pLines->AddColor(glm::vec4(0, 1, 0, 1));
-        pLines->AddColor(glm::vec4(0, 1, 0, 1));
-        pLines->AddColor(glm::vec4(0, 0, 1, 1));
-        pLines->AddColor(glm::vec4(0, 0, 1, 1));
-
-        auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
-
-        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        pMaterial->SetShader(pShader);
-
-        pLines->SetMaterial(pMaterial);
-
-
-        glEnable(GL_LINE_SMOOTH);
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#pragma endregion
-    }
 
     {
         auto pNode = gScene->CreateSceneNode("Debug");

@@ -24,6 +24,8 @@ namespace ArtificialNature {
 		inline const glm::vec3& GetPosition() const { return position; }
 		inline const glm::mat3& GetRotation() const { return rotation; }
 
+		inline const glm::mat4& GetTransform() const { return transform; }
+
 		inline const glm::vec3& GetForward() const { return this->forward; }
 		inline const glm::vec3& GetRight() const { return this->right; }
 		inline const glm::vec3& GetUp() const { return this->up; }
@@ -52,6 +54,7 @@ namespace ArtificialNature {
 		float fx = 0.0f;
 		float fy = 0.0f;
 
+		glm::mat4 transform = glm::mat4();
 		glm::vec3 forward = glm::vec3(0, 0, 0);
 		glm::vec3 right = glm::vec3(0, 0, 0);
 		glm::vec3 up = glm::vec3(0, 0, 0);

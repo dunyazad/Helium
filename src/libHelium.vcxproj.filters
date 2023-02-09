@@ -156,6 +156,10 @@
     <ClCompile Include="Helium\Graphics\Geometry\HeGeometryBox.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Helium\Core\HeColor.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Helium\HeVisualDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
@@ -315,6 +319,10 @@
     <ClInclude Include="Helium\Graphics\Geometry\HeGeometryBox.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Helium\Core\HeColor.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\HeVisualDebugger.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

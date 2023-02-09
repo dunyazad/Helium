@@ -181,14 +181,14 @@ namespace ArtificialNature {
 		ibo->Clear();
 	}
 
-	void HeGeometry::AddColor(const glm::vec4& color)
+	void HeGeometry::AddColor(const HeColor& color)
 	{
 		cbo->AddElement(color);
 
 		dirty = true;
 	}
 
-	void HeGeometry::SetColor(int index, const glm::vec4& color)
+	void HeGeometry::SetColor(int index, const HeColor& color)
 	{
 		if (cbo->SetElement(index, color) == true)
 			dirty = true;

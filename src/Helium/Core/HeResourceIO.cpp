@@ -48,8 +48,8 @@ namespace ArtificialNature {
 			glm::vec3 ul(+scale * 0.5f, -scale * 0.5f, 0.0f);
 			glm::vec3 ur(+scale * 0.5f, +scale * 0.5f, 0.0f);
 
-			pGeometry->AddTriangle(rotation * ll + translation, rotation * ul + translation, rotation * lr + translation, glm::vec4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, (float)a / 255.0f));
-			pGeometry->AddTriangle(rotation * lr + translation, rotation * ul + translation, rotation * ur + translation, glm::vec4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, (float)a / 255.0f));
+			pGeometry->AddTriangle(rotation * ll + translation, rotation * ul + translation, rotation * lr + translation, HeColor(r, g, b, a));
+			pGeometry->AddTriangle(rotation * lr + translation, rotation * ul + translation, rotation * ur + translation, HeColor(r, g, b, a));
 		}
 
 		return pGeometry;

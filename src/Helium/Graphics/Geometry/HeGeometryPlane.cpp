@@ -60,7 +60,7 @@ namespace ArtificialNature {
 					AddIndex((r + 1) * (columns + 1) + c + 1);
 				}
 
-				AddColor(glm::vec4(1, 1, 1, 1));
+				AddColor(HeColor::WHITE);
 
 				AddUV(glm::vec2((float)c / (float)columns, (float)r / (float)rows));
 			}

@@ -23,6 +23,8 @@ int capturedFrameCount = 0;
 float controlValue = 0.0f;
 HeSceneNode* selectedSceneNode = nullptr;
 
+HeVisualDebugger* vd = nullptr;
+
 int main(int argc, char** argv)
 {
     // Load GLFW and Create a Window
@@ -82,45 +84,8 @@ int main(int argc, char** argv)
     pCameraManipulator = &manipulator;
     gScene->SetMainCamera(pCamera);
 
-    {
-        auto pNode = gScene->CreateSceneNode("Gizmo Node");
-
-#pragma region [Lines]
-        auto pLines = gGraphics->GetGeometryThickLines("Gizmo");
-        pLines->Initialize();
-        pLines->SetThickness(1);
-        pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-        pNode->AddGeometry(pLines);
-
-        pLines->AddVertex(glm::vec3(-1024, 0, 0));
-        pLines->AddVertex(glm::vec3(1024, 0, 0));
-        pLines->AddVertex(glm::vec3(0, -1024, 0));
-        pLines->AddVertex(glm::vec3(0, 1024, 0));
-        pLines->AddVertex(glm::vec3(0, 0, -1024));
-        pLines->AddVertex(glm::vec3(0, 0, 1024));
-
-        pLines->AddColor(glm::vec4(1, 0, 0, 1));
-        pLines->AddColor(glm::vec4(1, 0, 0, 1));
-        pLines->AddColor(glm::vec4(0, 1, 0, 1));
-        pLines->AddColor(glm::vec4(0, 1, 0, 1));
-        pLines->AddColor(glm::vec4(0, 0, 1, 1));
-        pLines->AddColor(glm::vec4(0, 0, 1, 1));
-
-        auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
-
-        auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        pMaterial->SetShader(pShader);
-
-        pLines->SetMaterial(pMaterial);
-
-
-        glEnable(GL_LINE_SMOOTH);
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#pragma endregion
-    }
+    auto visualDebugger = HeVisualDebugger(helium);
+    vd = &visualDebugger;
 
     HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
     capturedFrameCount = project.GetFrames().size();

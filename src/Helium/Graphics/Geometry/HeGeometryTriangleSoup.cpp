@@ -104,7 +104,7 @@ namespace ArtificialNature {
 		dirty = true;
 	}
 
-	void HeGeometryTriangleSoup::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec4& color)
+	void HeGeometryTriangleSoup::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color)
 	{
 		int vertexCount = (int)this->GetVertexCount();
 
@@ -123,7 +123,7 @@ namespace ArtificialNature {
 		dirty = true;
 	}
 
-	void HeGeometryTriangleSoup::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec4& color0, const glm::vec4& color1, const glm::vec4& color2)
+	void HeGeometryTriangleSoup::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2)
 	{
 		int vertexCount = (int)this->GetVertexCount();
 

@@ -38,6 +38,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{889CCC8F-3941-49DD-8D1E-BC4029276E70}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColorCorrection", "src\ColorCorrection.vcxproj", "{B4B06A48-B339-498D-A592-CB688CE14CC9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B572468D-A94C-4EDE-8082-F6DE865B19CD} = {B572468D-A94C-4EDE-8082-F6DE865B19CD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

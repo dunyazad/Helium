@@ -75,197 +75,6 @@ protected:
 };
 OnOff onoff;
 
-class HeVisualDebugger
-{
-public:
-    HeVisualDebugger(Helium& helium)
-        : helium(helium)
-    {
-        scene = helium.GetScene("Default Scene");
-        graphics = helium.GetGraphics();
-
-        solidSceneNode = scene->CreateSceneNode("Visual Debugger.SolidSceneNode");
-        solidGeometry = graphics->GetGeometryTriangleSoup("Visual Debugger.SolidGeometry");
-        solidGeometry->Initialize();
-        solidSceneNode->AddGeometry(solidGeometry);
-        solidMaterial = gGraphics->GetMaterial("Visual Debugger.SolidMaterial");
-        solidShader = gGraphics->GetShader("Visual Debugger.SolidShader", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
-        solidMaterial->SetShader(solidShader);
-        solidGeometry->SetMaterial(solidMaterial);
-
-        lineSceneNode = scene->CreateSceneNode("Visual Debugger.LineSceneNode");
-        lineGeometry = graphics->GetGeometryThickLines("Visual Debugger.LineGeometry");
-        lineGeometry->Initialize();
-        lineSceneNode->AddGeometry(lineGeometry);
-        lineMaterial = gGraphics->GetMaterial("Visual Debugger.LineMaterial");
-        lineShader = gGraphics->GetShader("Visual Debugger.LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        lineMaterial->SetShader(lineShader);
-        lineGeometry->SetMaterial(lineMaterial);
-        lineGeometry->SetThickness(1);
-        lineGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-
-        axisSceneNode = scene->CreateSceneNode("Visual Debugger.AxisSceneNode");
-        axisGeometry = graphics->GetGeometryThickLines("Visual Debugger.AxisGeometry");
-        axisGeometry->Initialize();
-        axisSceneNode->AddGeometry(axisGeometry);
-        axisMaterial = gGraphics->GetMaterial("Visual Debugger.AxisMaterial");
-        axisShader = gGraphics->GetShader("Visual Debugger.AxisShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        axisMaterial->SetShader(axisShader);
-        axisGeometry->SetMaterial(axisMaterial);
-        axisGeometry->SetThickness(1);
-        axisGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-
-        axisGeometry->AddVertex(glm::vec3(-1024, 0, 0));
-        axisGeometry->AddVertex(glm::vec3(1024, 0, 0));
-        axisGeometry->AddVertex(glm::vec3(0, -1024, 0));
-        axisGeometry->AddVertex(glm::vec3(0, 1024, 0));
-        axisGeometry->AddVertex(glm::vec3(0, 0, -1024));
-        axisGeometry->AddVertex(glm::vec3(0, 0, 1024));
-
-        axisGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-        axisGeometry->AddColor(glm::vec4(1, 0, 0, 1));
-        axisGeometry->AddColor(glm::vec4(0, 1, 0, 1));
-        axisGeometry->AddColor(glm::vec4(0, 1, 0, 1));
-        axisGeometry->AddColor(glm::vec4(0, 0, 1, 1));
-        axisGeometry->AddColor(glm::vec4(0, 0, 1, 1));
-
-        //{
-        //	auto pNode = gScene->CreateSceneNode("Grid");
-        //	auto pGeometry = gGraphics->GetGeometryPlane("Grid.Geometry", 2, 2, 1, 1, HePlaneType::XY);
-        //	pGeometry->Initialize();
-        //	pNode->AddGeometry(pGeometry);
-        //	auto pMaterial = gGraphics->GetMaterial("Grid.Material");
-        //	pGeometry->SetMaterial(pMaterial);
-        //	auto pShader = gGraphics->GetShader("Grid.Shader", "../../res/shader/grid.vs", "../../res/shader/grid.fs");
-        //	pMaterial->SetShader(pShader);
-        //}
-    }
-
-    void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
-    {
-        AddTriangle(v0, v1, v2, glm::vec4(1, 1, 1, 1), glm::vec4(1, 1, 1, 1), glm::vec4(1, 1, 1, 1));
-    }
-
-    void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec4& color0, const glm::vec4& color1, const glm::vec4& color2)
-    {
-        int vertexCount = (int)lineGeometry->GetVertexCount();
-
-        lineGeometry->AddVertex(v0);
-        lineGeometry->AddVertex(v1);
-        lineGeometry->AddVertex(v1);
-        lineGeometry->AddVertex(v2);
-        lineGeometry->AddVertex(v2);
-        lineGeometry->AddVertex(v0);
-
-        lineGeometry->AddIndex(vertexCount);
-        lineGeometry->AddIndex(vertexCount + 1);
-        lineGeometry->AddIndex(vertexCount + 2);
-        lineGeometry->AddIndex(vertexCount + 3);
-        lineGeometry->AddIndex(vertexCount + 4);
-        lineGeometry->AddIndex(vertexCount + 5);
-
-        lineGeometry->AddColor(color0);
-        lineGeometry->AddColor(color1);
-        lineGeometry->AddColor(color1);
-        lineGeometry->AddColor(color2);
-        lineGeometry->AddColor(color2);
-        lineGeometry->AddColor(color0);
-
-        solidGeometry->AddTriangle(v0, v1, v2, color0, color1, color2);
-    }
-
-    void AddLine(const glm::vec3& v0, const glm::vec3& v1)
-    {
-        AddLine(v0, v1, glm::vec4(1, 1, 1, 1), glm::vec4(1, 1, 1, 1));
-    }
-
-    void AddLine(const glm::vec3& v0, const glm::vec3& v1, const glm::vec4& color0, const glm::vec4& color1)
-    {
-        int vertexCount = (int)lineGeometry->GetVertexCount();
-
-        lineGeometry->AddVertex(v0);
-        lineGeometry->AddVertex(v1);
-
-        lineGeometry->AddIndex(vertexCount);
-        lineGeometry->AddIndex(vertexCount + 1);
-
-        lineGeometry->AddColor(color0);
-        lineGeometry->AddColor(color1);
-    }
-
-    void AddBox(const glm::vec3& bmin, const glm::vec3& bmax)
-    {
-        AddBox(bmin, bmax, glm::vec4(1, 1, 1, 1));
-    }
-
-    void AddBox(const glm::vec3& bmin, const glm::vec3& bmax, const glm::vec4& color)
-    {
-        glm::vec3 llb(bmin.x, bmin.y, bmin.z);
-        glm::vec3 rlb(bmax.x, bmin.y, bmin.z);
-        glm::vec3 lub(bmin.x, bmax.y, bmin.z);
-        glm::vec3 rub(bmax.x, bmax.y, bmin.z);
-        glm::vec3 llf(bmin.x, bmin.y, bmax.z);
-        glm::vec3 rlf(bmax.x, bmin.y, bmax.z);
-        glm::vec3 luf(bmin.x, bmax.y, bmax.z);
-        glm::vec3 ruf(bmax.x, bmax.y, bmax.z);
-
-        int vertexCount = (int)lineGeometry->GetVertexCount();
-
-        lineGeometry->AddVertex(llf);
-        lineGeometry->AddVertex(rlf);
-        lineGeometry->AddVertex(llb);
-        lineGeometry->AddVertex(rlb);
-        lineGeometry->AddVertex(llf);
-        lineGeometry->AddVertex(llb);
-        lineGeometry->AddVertex(rlf);
-        lineGeometry->AddVertex(rlb);
-
-        lineGeometry->AddVertex(luf);
-        lineGeometry->AddVertex(ruf);
-        lineGeometry->AddVertex(lub);
-        lineGeometry->AddVertex(rub);
-        lineGeometry->AddVertex(luf);
-        lineGeometry->AddVertex(lub);
-        lineGeometry->AddVertex(ruf);
-        lineGeometry->AddVertex(rub);
-
-        lineGeometry->AddVertex(llf);
-        lineGeometry->AddVertex(luf);
-        lineGeometry->AddVertex(rlf);
-        lineGeometry->AddVertex(ruf);
-        lineGeometry->AddVertex(llb);
-        lineGeometry->AddVertex(lub);
-        lineGeometry->AddVertex(rlb);
-        lineGeometry->AddVertex(rub);
-
-        for (int i = vertexCount; i < (int)lineGeometry->GetVertexCount(); i++)
-        {
-            lineGeometry->AddIndex(i);
-            lineGeometry->AddColor(color);
-        }
-    }
-
-protected:
-    Helium& helium;
-    HeScene* scene = nullptr;
-    HeGraphics* graphics = nullptr;
-
-    HeSceneNode* solidSceneNode = nullptr;
-    HeGeometryTriangleSoup* solidGeometry = nullptr;
-    HeMaterial* solidMaterial = nullptr;
-    HeShader* solidShader = nullptr;
-
-    HeSceneNode* lineSceneNode = nullptr;
-    HeGeometryThickLines* lineGeometry = nullptr;
-    HeMaterial* lineMaterial = nullptr;
-    HeShader* lineShader = nullptr;
-
-    HeSceneNode* axisSceneNode = nullptr;
-    HeGeometryThickLines* axisGeometry = nullptr;
-    HeMaterial* axisMaterial = nullptr;
-    HeShader* axisShader = nullptr;
-};
-
 HeVisualDebugger* vd = nullptr;
 
 int main(int argc, char** argv)
@@ -329,11 +138,91 @@ int main(int argc, char** argv)
         vd = &visualDebugger;
 
         {
+            float scale = 0.001;
             auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
 
-            
+            auto frameA = project->GetFrames()[0];
+            auto camera_info_A = frameA->GetCameraInfo();
+            auto frustum_A = camera_info_A->GetFrustum();
+            auto transform_A = frustum_A->GetTransform();
+            auto im = glm::inverse(transform_A);
+            auto p_A = frustum_A->GetPosition();
+            auto ic_A = frustum_A->GetImageCenter();
+            auto lu_A = frustum_A->GetImageLeftUp();
+            auto ld_A = frustum_A->GetImageLeftDown();
+            auto ru_A = frustum_A->GetImageRightUp();
+            auto rd_A = frustum_A->GetImageRightDown();
+
+  /*          vd->AddLine(p_A, lu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(p_A, ld_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(p_A, ru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(p_A, rd_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+
+            vd->AddLine(ic_A, lu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(ic_A, ld_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(ic_A, ru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(ic_A, rd_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+
+            vd->AddLine(lu_A, ru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(ru_A, rd_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(rd_A, ld_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            vd->AddLine(ld_A, lu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));*/
+
+            auto ip_A = (im * glm::vec4(frustum_A->GetPosition(), 1));
+            auto iic_A = (im * glm::vec4(frustum_A->GetImageCenter(), 1));
+            auto ilu_A = (im * glm::vec4(frustum_A->GetImageLeftUp(), 1));
+            auto ild_A = (im * glm::vec4(frustum_A->GetImageLeftDown(), 1));
+            auto iru_A = (im * glm::vec4(frustum_A->GetImageRightUp(), 1));
+            auto ird_A = (im * glm::vec4(frustum_A->GetImageRightDown(), 1));
+
+            //vd->AddLine(ip_A, ilu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            //vd->AddLine(ip_A, ild_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            //vd->AddLine(ip_A, iru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            //vd->AddLine(ip_A, ird_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+
+            //vd->AddLine(iic_A, ilu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            //vd->AddLine(iic_A, ild_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            //vd->AddLine(iic_A, iru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+            //vd->AddLine(iic_A, ird_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+
+            vd->AddLine(iic_A * scale, ilu_A * scale, HeColor::RED, HeColor::RED);
+            vd->AddLine(iic_A * scale, ild_A * scale, HeColor::RED, HeColor::RED);
+            vd->AddLine(iic_A * scale, iru_A * scale, HeColor::RED, HeColor::RED);
+            vd->AddLine(iic_A * scale, ird_A * scale, HeColor::RED, HeColor::RED);
+
+            vd->AddLine(ilu_A * scale, iru_A * scale, HeColor::RED, HeColor::RED);
+            vd->AddLine(iru_A * scale, ird_A * scale, HeColor::RED, HeColor::RED);
+            vd->AddLine(ird_A * scale, ild_A * scale, HeColor::RED, HeColor::RED);
+            vd->AddLine(ild_A * scale, ilu_A * scale, HeColor::RED, HeColor::RED);
+
+
+
+            auto frameB = project->GetFrames()[1];
+            auto camera_info_B = frameB->GetCameraInfo();
+            auto frustum_B = camera_info_B->GetFrustum();
+            auto ip_B = (im * glm::vec4(frustum_B->GetPosition(), 1));
+            auto iic_B = (im * glm::vec4(frustum_B->GetImageCenter(), 1));
+            auto ilu_B = (im * glm::vec4(frustum_B->GetImageLeftUp(), 1));
+            auto ild_B = (im * glm::vec4(frustum_B->GetImageLeftDown(), 1));
+            auto iru_B = (im * glm::vec4(frustum_B->GetImageRightUp(), 1));
+            auto ird_B = (im * glm::vec4(frustum_B->GetImageRightDown(), 1));
+
+            //vd->AddLine(ip_B, ilu_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+            //vd->AddLine(ip_B, ild_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+            //vd->AddLine(ip_B, iru_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+            //vd->AddLine(ip_B, ird_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+
+            //vd->AddLine(iic_B, ilu_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+            //vd->AddLine(iic_B, ild_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+            //vd->AddLine(iic_B, iru_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+            //vd->AddLine(iic_B, ird_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
+
+            vd->AddLine(ilu_B * scale, iru_B * scale, HeColor::BLUE, HeColor::BLUE);
+            vd->AddLine(iru_B * scale, ird_B* scale, HeColor::BLUE, HeColor::BLUE);
+            vd->AddLine(ird_B * scale, ild_B* scale, HeColor::BLUE, HeColor::BLUE);
+            vd->AddLine(ild_B * scale, ilu_B* scale, HeColor::BLUE, HeColor::BLUE);
         }
-        });
+		});
 
     int cnt = 0;
 
@@ -361,8 +250,8 @@ int main(int argc, char** argv)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
-        //glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
-        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+        //glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //if(cnt == 20)

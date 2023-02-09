@@ -41,8 +41,8 @@ namespace ArtificialNature {
 		size_t GetIndexCount();
 		void ClearIndices();
 
-		void AddColor(const glm::vec4& color);
-		void SetColor(int index, const glm::vec4& color);
+		void AddColor(const HeColor& color);
+		void SetColor(int index, const HeColor& color);
 		size_t GetColorsCount();
 		void ClearColors();
 

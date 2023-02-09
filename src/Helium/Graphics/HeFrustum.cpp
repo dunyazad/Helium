@@ -21,14 +21,15 @@ namespace ArtificialNature {
 		auto imageRightUp = imageCenter + glm::vec3(halfWidth, halfHeight, 0);
 		auto imageRightDown = imageCenter + glm::vec3(halfWidth, -halfHeight, 0);
 
-		auto transform = glm::mat4(rotation);
-		transform[3] = glm::vec4(position, 1);
+		this->transform = glm::mat4(rotation);
+		this->transform[3] = glm::vec4(position, 1);
 
-		this->imageCenter = transform * glm::vec4(imageCenter, 1);
-		this->imageLeftUp = transform * glm::vec4(imageLeftUp, 1);
-		this->imageLeftDown = transform * glm::vec4(imageLeftDown, 1);
-		this->imageRightUp = transform * glm::vec4(imageRightUp, 1);
-		this->imageRightDown = transform * glm::vec4(imageRightDown, 1);
+
+		this->imageCenter = this->transform * glm::vec4(imageCenter, 1);
+		this->imageLeftUp = this->transform * glm::vec4(imageLeftUp, 1);
+		this->imageLeftDown = this->transform * glm::vec4(imageLeftDown, 1);
+		this->imageRightUp = this->transform * glm::vec4(imageRightUp, 1);
+		this->imageRightDown = this->transform * glm::vec4(imageRightDown, 1);
 
 		this->forward = rotation[2];
 		this->right = rotation[0];
