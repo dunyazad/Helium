@@ -162,6 +162,9 @@
     <ClCompile Include="Helium\Scene\HeVisualDebugger.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Helium\Graphics\HeRay.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Helium.h" />
@@ -326,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="Helium\Scene\HeVisualDebugger.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Helium\Graphics\HeRay.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

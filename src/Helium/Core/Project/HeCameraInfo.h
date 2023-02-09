@@ -20,6 +20,7 @@ namespace ArtificialNature {
 		~HeCameraInfo();
 
 		glm::vec2 WorldToUV(const glm::vec3& worldPosition) const;
+		glm::vec3 UVToWorld(const glm::vec2& uv) const;
 
 		inline int GetFrameIndex() const { return frameIndex; }
 		inline int GetColorImageWidth() const { return colorImageWidth; }

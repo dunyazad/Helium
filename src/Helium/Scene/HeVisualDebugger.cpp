@@ -196,20 +196,24 @@ namespace ArtificialNature {
     {
         int vertexCount = (int)lineGeometry->GetVertexCount();
 
-        lineGeometry->AddVertex(lu);
-        lineGeometry->AddVertex(ld);
-        lineGeometry->AddVertex(ru);
-        lineGeometry->AddVertex(rd);
+        //lineGeometry->AddVertex(lu);
+        //lineGeometry->AddVertex(ld);
+        //lineGeometry->AddVertex(ru);
+        //lineGeometry->AddVertex(rd);
 
-        lineGeometry->AddIndex(vertexCount);
-        lineGeometry->AddIndex(vertexCount + 1);
-        lineGeometry->AddIndex(vertexCount + 2);
-        lineGeometry->AddIndex(vertexCount + 3);
-
-        lineGeometry->AddColor(HeColor::WHITE);
-        lineGeometry->AddColor(HeColor::WHITE);
-        lineGeometry->AddColor(HeColor::WHITE);
-        lineGeometry->AddColor(HeColor::WHITE);
+        //lineGeometry->AddIndex(vertexCount);
+        //lineGeometry->AddIndex(vertexCount + 1);
+        //lineGeometry->AddIndex(vertexCount + 1);
+        //lineGeometry->AddIndex(vertexCount + 3);
+        //lineGeometry->AddIndex(vertexCount + 3);
+        //lineGeometry->AddIndex(vertexCount + 2);
+        //lineGeometry->AddIndex(vertexCount + 2);
+        //lineGeometry->AddIndex(vertexCount);
+        
+        //lineGeometry->AddColor(HeColor::WHITE);
+        //lineGeometry->AddColor(HeColor::WHITE);
+        //lineGeometry->AddColor(HeColor::WHITE);
+        //lineGeometry->AddColor(HeColor::WHITE);
 
         if (texturedSceneNodes.count(texture) == 0)
         {
@@ -231,11 +235,6 @@ namespace ArtificialNature {
         auto pGeometry = dynamic_cast<HeGeometryTriangleSoup*>(pNode->GetGeometry());
         pGeometry->AddTriangle(ld, lu, rd, glm::vec2(0, 0), glm::vec2(0, 1), glm::vec2(1, 0));
         pGeometry->AddTriangle(rd, lu, ru, glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(1, 1));
-    }
-
-    void HeVisualDebugger::AddBox(const glm::vec3& bmin, const glm::vec3& bmax)
-    {
-        AddBox(bmin, bmax, HeColor::WHITE);
     }
 
     void HeVisualDebugger::AddBox(const glm::vec3& bmin, const glm::vec3& bmax, const HeColor& color)
@@ -283,5 +282,12 @@ namespace ArtificialNature {
             lineGeometry->AddIndex(i);
             lineGeometry->AddColor(color);
         }
+    }
+
+    void HeVisualDebugger::AddBox(const glm::vec3& position, float xLength, float yLength, float zLength, const HeColor& color)
+    {
+        auto bmin = position + glm::vec3(-xLength * 0.5f, -yLength * 0.5f, -zLength * 0.5f);
+        auto bmax = position + glm::vec3(xLength * 0.5f, yLength * 0.5f, zLength * 0.5f);
+        AddBox(bmin, bmax, color);
     }
 }

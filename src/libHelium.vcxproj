@@ -119,6 +119,7 @@
     <ClCompile Include="Helium\Graphics\HeIndexBufferObject.cpp" />
     <ClCompile Include="Helium\Graphics\HeOctree.cpp" />
     <ClCompile Include="Helium\Graphics\HePlane.cpp" />
+    <ClCompile Include="Helium\Graphics\HeRay.cpp" />
     <ClCompile Include="Helium\Graphics\HeShader.cpp" />
     <ClCompile Include="Helium\Graphics\HeVertexArrayObject.cpp" />
     <ClCompile Include="Helium\Graphics\Image\HeCanvasImage.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Helium\Graphics\HeIndexBufferObject.h" />
     <ClInclude Include="Helium\Graphics\HeOctree.h" />
     <ClInclude Include="Helium\Graphics\HePlane.h" />
+    <ClInclude Include="Helium\Graphics\HeRay.h" />
     <ClInclude Include="Helium\Graphics\HeShader.h" />
     <ClInclude Include="Helium\Graphics\HeVertexArrayObject.h" />
     <ClInclude Include="Helium\Graphics\HeVertexBufferObject.hpp" />

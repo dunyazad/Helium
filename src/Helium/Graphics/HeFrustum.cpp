@@ -34,20 +34,20 @@ namespace ArtificialNature {
 		this->right = rotation[0];
 		this->up = rotation[1];
 
-		auto dlu = glm::normalize(this->imageLeftUp - this->imageCenter);
-		auto dld = glm::normalize(this->imageLeftDown - this->imageCenter);
-		auto dru = glm::normalize(this->imageRightUp - this->imageCenter);
-		auto drd = glm::normalize(this->imageRightDown - this->imageCenter);
+		auto dlu = glm::normalize(this->imageLeftUp - this->position);
+		auto dld = glm::normalize(this->imageLeftDown - this->position);
+		auto dru = glm::normalize(this->imageRightUp - this->position);
+		auto drd = glm::normalize(this->imageRightDown - this->position);
 
-		this->leftPlaneNormal = glm::normalize(glm::cross(dlu, dld));
+		this->leftPlaneNormal = glm::normalize(glm::cross( dlu, dld));
 		this->rightPlaneNormal = glm::normalize(glm::cross(drd, dru));
 		this->upperPlaneNormal = glm::normalize(glm::cross(dru, dlu));
 		this->lowerPlaneNormal = glm::normalize(glm::cross(dld, drd));
 
-		this->leftPlane = new HePlane(this->imageCenter, this->leftPlaneNormal);
-		this->rightPlane = new HePlane(this->imageCenter, this->rightPlaneNormal);
-		this->upperPlane = new HePlane(this->imageCenter, this->upperPlaneNormal);
-		this->lowerPlane = new HePlane(this->imageCenter, this->lowerPlaneNormal);
+		this->leftPlane = new HePlane(this->position, this->leftPlaneNormal);
+		this->rightPlane = new HePlane(this->position, this->rightPlaneNormal);
+		this->upperPlane = new HePlane(this->position, this->upperPlaneNormal);
+		this->lowerPlane = new HePlane(this->position, this->lowerPlaneNormal);
 	}
 
 	HeFrustum::~HeFrustum()
@@ -60,10 +60,10 @@ namespace ArtificialNature {
 
 	bool HeFrustum::Contains(const glm::vec3& point) const
 	{
-		if (this->leftPlane->PointIsOnPositiveSide(point) == false) return false;
-		if (this->rightPlane->PointIsOnPositiveSide(point) == false) return false;
-		if (this->upperPlane->PointIsOnPositiveSide(point) == false) return false;
-		if (this->lowerPlane->PointIsOnPositiveSide(point) == false) return false;
+		if (this->leftPlane->PointIsOnPositiveSide(point)) return false;
+		if (this->rightPlane->PointIsOnPositiveSide(point)) return false;
+		if (this->upperPlane->PointIsOnPositiveSide(point)) return false;
+		if (this->lowerPlane->PointIsOnPositiveSide(point)) return false;
 		return true;
 	}
 

@@ -235,4 +235,10 @@ namespace ArtificialNature {
 		float v = 1 - ((intersection.y / (this->colorImageHeight * 0.5f)) * 0.5f + 0.5f);
 		return glm::vec2(u, v);
 	}
+
+	glm::vec3 HeCameraInfo::UVToWorld(const glm::vec2& uv) const
+	{
+		glm::vec3 p = glm::vec3((uv.x - 0.5f) * this->colorImageWidth, (uv.y - 0.5f) * this->colorImageHeight, this->original_fx);
+		return this->transformMatrix* glm::vec4(p, 1);
+	}
 }

@@ -1,5 +1,6 @@
 #define USING_FILES_SYSTEM
 #include <Helium/Helium.h>
+#include <omp.h>
 using namespace ArtificialNature;
 
 const int windowWidth = 1024;
@@ -82,9 +83,91 @@ int main(int argc, char** argv)
         vd = gScene->GetVisualDebugger();
         onoff = vd->GetOnOff();
 
+        auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+        auto pMesh = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+        
+        {
+            vector<HeRay> rays;
+            auto frame = project->GetFrames()[0];
+            auto camera_info = frame->GetCameraInfo();
+            auto frustum = camera_info->GetFrustum();
+            auto width = camera_info->GetColorImageWidth();
+            auto height = camera_info->GetColorImageHeight();
+            auto position = camera_info->GetPosition();
+            for (int h = 0; h < height; h++)
+            {
+                for (int w = 0; w < width; w++)
+                {
+                    auto p = camera_info->UVToWorld(glm::vec2(w / width, h / height));
+                    auto d = glm::normalize(p - position);
+                    rays.push_back(HeRay(position, d));
+                    //auto wp = pMesh->RayIntersect(position, d);
+                    //if (wp.size() > 0) {
+                    //    auto& v = pMesh->GetVertex(wp[0]);
+                    //    vd->AddBox(v, 0.01f, 0.01f, 0.01f, HeColor::RED);
+                    //}
+                }
+            }
+
+            auto faceCount = pMesh->GetFaceCount();
+            for (size_t i = 0; i < faceCount; i++)
+            {
+                auto i0 = pMesh->GetIndex(i * 3);
+                auto i1 = pMesh->GetIndex(i * 3 + 1);
+                auto i2 = pMesh->GetIndex(i * 3 + 2);
+                auto& v0 = pMesh->GetVertex(i0);
+                auto& v1 = pMesh->GetVertex(i1);
+                auto& v2 = pMesh->GetVertex(i2);
+
+                if (frustum->ContainsAny(v0, v1, v2))
+                {
+                    vd->AddTriangle(v0, v1, v2);
+                }
+            }
+
+            auto wlu = camera_info->UVToWorld(glm::vec2(0, 1));
+            auto wld = camera_info->UVToWorld(glm::vec2(0, 0));
+            auto wru = camera_info->UVToWorld(glm::vec2(1, 1));
+            auto wrd = camera_info->UVToWorld(glm::vec2(1, 0));
+            auto wic = camera_info->UVToWorld(glm::vec2(0.5f, 0.5f));
+            vd->AddBox(wlu * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::RED);
+            vd->AddBox(wld * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::RED);
+            vd->AddBox(wru * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::RED);
+            vd->AddBox(wrd * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::RED);
+            vd->AddBox(wic * 0.001f, 0.01f, 0.01f, 0.01f);
+
+            auto whlu = camera_info->UVToWorld(glm::vec2(0.25f, 0.75f));
+            auto whld = camera_info->UVToWorld(glm::vec2(0.25f, 0.25f));
+            auto whru = camera_info->UVToWorld(glm::vec2(0.75f, 0.75f));
+            auto whrd = camera_info->UVToWorld(glm::vec2(0.75f, 0.25f));
+            vd->AddBox(whlu * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::BLUE);
+            vd->AddBox(whld * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::BLUE);
+            vd->AddBox(whru * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::BLUE);
+            vd->AddBox(whrd * 0.001f, 0.01f, 0.01f, 0.01f, HeColor::BLUE);
+
+            vd->AddLine(camera_info->GetPosition(), wlu * 0.001f, HeColor::RED, HeColor::RED);
+            vd->AddLine(camera_info->GetPosition(), wld * 0.001f, HeColor::RED, HeColor::RED);
+            vd->AddLine(camera_info->GetPosition(), wru * 0.001f, HeColor::RED, HeColor::RED);
+            vd->AddLine(camera_info->GetPosition(), wrd * 0.001f, HeColor::RED, HeColor::RED);
+
+            vd->AddLine(frustum->GetPosition() + glm::vec3(0.1, 0.1, 0.1f), frustum->GetLeftPlaneNormal() * 0.01f, HeColor::RED, HeColor::WHITE);
+            vd->AddLine(frustum->GetPosition() + glm::vec3(0.1, 0.1, 0.1f), frustum->GetRightPlaneNormal() * 0.01f, HeColor::GREEN, HeColor::BLACK);
+            vd->AddLine(frustum->GetPosition() + glm::vec3(0.1, 0.1, 0.1f), frustum->GetUpperPlaneNormal() * 0.01f, HeColor::BLUE, HeColor::YELLOW);
+            vd->AddLine(frustum->GetPosition() + glm::vec3(0.1, 0.1, 0.1f), frustum->GetLowerPlaneNormal() * 0.01f, HeColor::CYAN, HeColor::CYAN);
+
+   /*         auto time = HeTime("parallel");
+            #pragma omp parallel for
+            for (size_t i = 0; i < rays.size(); i++)
+            {
+                auto ray = rays[i];
+                auto wp = pMesh->RayIntersect(ray.GetOrigin(), ray.GetDirection());
+            }
+            time.Stop();*/
+        }
+
+
         {
             float scale = 0.001;
-            auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
 
             int frameNumber = 0;
             for (auto& frame : project->GetFrames())
@@ -119,20 +202,20 @@ int main(int argc, char** argv)
                 //iru_A.z = 0;
                 //ird_A.z = 0;
 
-                vd->AddLine(p_A, lu_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(p_A, ld_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(p_A, ru_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(p_A, rd_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(p_A, lu_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(p_A, ld_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(p_A, ru_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(p_A, rd_A * scale, HeColor::RED, HeColor::RED);
 
-                vd->AddLine(ic_A * scale, lu_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(ic_A * scale, ld_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(ic_A * scale, ru_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(ic_A * scale, rd_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(ic_A * scale, lu_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(ic_A * scale, ld_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(ic_A * scale, ru_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(ic_A * scale, rd_A * scale, HeColor::RED, HeColor::RED);
 
-                vd->AddLine(lu_A * scale, ru_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(ru_A * scale, rd_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(rd_A * scale, ld_A * scale, HeColor::RED, HeColor::RED);
-                vd->AddLine(ld_A * scale, lu_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(lu_A * scale, ru_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(ru_A * scale, rd_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(rd_A * scale, ld_A * scale, HeColor::RED, HeColor::RED);
+                //vd->AddLine(ld_A * scale, lu_A * scale, HeColor::RED, HeColor::RED);
 
                 vd->AddPlane(lu_A * scale, ld_A * scale, ru_A * scale, rd_A * scale, texture_A);
 
@@ -171,6 +254,22 @@ int main(int argc, char** argv)
                 //vd->AddPlane(lu_B * scale, ld_B * scale, ru_B * scale, rd_B * scale, texture_B);
             }
         }
+        
+
+        //{
+        //    auto pNode = gScene->CreateSceneNode("Mesh");
+        //    auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+
+        //    //pGeometry->SetFillMode(HeGeometry::Wireframe);
+        //    pGeometry->Initialize();
+        //    pNode->AddGeometry(pGeometry);
+
+        //    auto pMaterial = gGraphics->GetMaterial("Mesh Material");
+        //    pGeometry->SetMaterial(pMaterial);
+
+        //    auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+        //    pMaterial->SetShader(pShader);
+        //}
 		});
 
     int cnt = 0;

@@ -42,8 +42,8 @@ namespace ArtificialNature {
         void AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, const HeColor& color);
         void AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, HeTexture* texture);
 
-        void AddBox(const glm::vec3& bmin, const glm::vec3& bmax);
-        void AddBox(const glm::vec3& bmin, const glm::vec3& bmax, const HeColor& color);
+        void AddBox(const glm::vec3& bmin, const glm::vec3& bmax, const HeColor& color = HeColor::WHITE);
+        void AddBox(const glm::vec3& position, float xLength = 1.0f, float yLength = 1.0f, float zLength = 1.0f, const HeColor& color = HeColor::WHITE);
 
         inline HeOnOff* GetOnOff() { return &onoff; }
 
