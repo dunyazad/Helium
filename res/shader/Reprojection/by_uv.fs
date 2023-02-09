@@ -95,8 +95,8 @@ vec2 WorldToUV(int frameIndex, vec3 worldPosition) {
 	vec3 rayOrigin = vec3(0, 0, 0);
 	vec3 rayDirection = normalize(vec3(ip4.x, ip4.y, ip4.z));
 	vec3 intersection = RayPlaneIntersection(planePoint, planeNormal, rayOrigin, rayDirection);
-	float u = ((intersection.x / ((float(imageWidth) / 7.5) * 0.5)) * 0.5 + 0.5);
-	float v = 1.0 - ((intersection.y / ((float(imageHeight) / 7.5) * 0.5)) * 0.5 + 0.5);
+	float u = ((intersection.x / (float(imageWidth) * 0.5)) * 0.5 + 0.5);
+	float v = 1.0 - ((intersection.y / (float(imageHeight) * 0.5)) * 0.5 + 0.5);
 	return vec2(u, v);
 }
 

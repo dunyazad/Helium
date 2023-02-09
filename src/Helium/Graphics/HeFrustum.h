@@ -24,19 +24,25 @@ namespace ArtificialNature {
 		inline const glm::vec3& GetPosition() const { return position; }
 		inline const glm::mat3& GetRotation() const { return rotation; }
 
-		inline const glm::vec3& GetNormalizedRight() const { return nr; }
-		inline const glm::vec3& GetNormalizedUp() const { return nu; }
-		inline const glm::vec3& GetNormalizedFront() const { return nf; }
+		inline const glm::vec3& GetForward() const { return this->forward; }
+		inline const glm::vec3& GetRight() const { return this->right; }
+		inline const glm::vec3& GetUp() const { return this->up; }
 
-		inline const glm::vec3& GetLocalDirectionLeftTop() const { return ldlu; }
-		inline const glm::vec3& GetLocalDirectionRightTop() const { return ldru; }
-		inline const glm::vec3& GetLocalDirectionLeftBottom() const { return ldll; }
-		inline const glm::vec3& GetLocalDirectionRightBottom() const { return ldrl; }
+		inline const glm::vec3& GetLeftPlaneNormal() const { return this->leftPlaneNormal; }
+		inline const glm::vec3& GetRightPlaneNormal() const { return this->rightPlaneNormal; }
+		inline const glm::vec3& GetUpperPlaneNormal() const { return this->upperPlaneNormal; }
+		inline const glm::vec3& GetLowerPlaneNormal() const { return this->lowerPlaneNormal; }
 
-		inline const glm::vec3& GetDirectionLeftTop() const { return adlu; }
-		inline const glm::vec3& GetDirectionRightTop() const { return adru; }
-		inline const glm::vec3& GetDirectionLeftBottom() const { return adll; }
-		inline const glm::vec3& GetDirectionRightBottom() const { return adrl; }
+		inline const glm::vec3& GetImageCenter() const { return this->imageCenter; }
+		inline const glm::vec3& GetImageLeftUp() const { return this->imageLeftUp; }
+		inline const glm::vec3& GetImageLeftDown() const { return this->imageLeftDown; }
+		inline const glm::vec3& GetImageRightUp() const { return this->imageRightUp; }
+		inline const glm::vec3& GetImageRightDown() const { return this->imageRightDown; }
+
+		inline HePlane* GetLeftPlane() const { return this->leftPlane; }
+		inline HePlane* GetRightPlane() const { return this->rightPlane; }
+		inline HePlane* GetUpperPlane() const { return this->upperPlane; }
+		inline HePlane* GetLowerPlane() const { return this->lowerPlane; }
 
 	protected:
 		glm::vec3 position = glm::vec3(0, 0, 0);
@@ -55,29 +61,15 @@ namespace ArtificialNature {
 		glm::vec3 upperPlaneNormal = glm::vec3(0, 0, 0);
 		glm::vec3 lowerPlaneNormal = glm::vec3(0, 0, 0);
 
+		glm::vec3 imageCenter = glm::vec3(0, 0, 0);
+		glm::vec3 imageLeftUp = glm::vec3(0, 0, 0);
+		glm::vec3 imageLeftDown = glm::vec3(0, 0, 0);
+		glm::vec3 imageRightUp = glm::vec3(0, 0, 0);
+		glm::vec3 imageRightDown = glm::vec3(0, 0, 0);
+
 		HePlane* leftPlane = nullptr;
 		HePlane* rightPlane = nullptr;
 		HePlane* upperPlane = nullptr;
 		HePlane* lowerPlane = nullptr;
-
-		glm::vec3 ldlu = glm::vec3(0, 0, 0);
-		glm::vec3 ldru = glm::vec3(0, 0, 0);
-		glm::vec3 ldll = glm::vec3(0, 0, 0);
-		glm::vec3 ldrl = glm::vec3(0, 0, 0);
-
-		glm::vec3 adlu = glm::vec3(0, 0, 0);
-		glm::vec3 adru = glm::vec3(0, 0, 0);
-		glm::vec3 adll = glm::vec3(0, 0, 0);
-		glm::vec3 adrl = glm::vec3(0, 0, 0);
-
-		glm::vec3 dfl = glm::vec3(0, 0, 0);
-		glm::vec3 dfr = glm::vec3(0, 0, 0);
-		glm::vec3 dfu = glm::vec3(0, 0, 0);
-		glm::vec3 dfd = glm::vec3(0, 0, 0);
-
-		glm::vec3 nf = glm::vec3(0, 0, 0);
-		glm::vec3 nr = glm::vec3(0, 0, 0);
-		glm::vec3 nu = glm::vec3(0, 0, 0);
 	};
-
 }

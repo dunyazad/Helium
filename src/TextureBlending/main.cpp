@@ -295,9 +295,9 @@ int main(int argc, char** argv)
 
 				auto cameraInfo = frame->GetCameraInfo();
 				auto frustum = cameraInfo->GetFrustum();
-				auto& nr = frustum->GetNormalizedRight();
-				auto& nu = frustum->GetNormalizedUp();
-				auto& nf = frustum->GetNormalizedFront();
+				auto& nr = frustum->GetRight();
+				auto& nu = frustum->GetUp();
+				auto& nf = frustum->GetForward();
 				auto& fp = frustum->GetPosition();
 
 				auto pNode = gScene->CreateSceneNode(format("frame{}", frame->GetFrameIndex()));
@@ -325,13 +325,13 @@ int main(int argc, char** argv)
 
 					auto length = sqrt(fx * fx + hiw * hiw) * 0.01f;
 					pLines->AddVertex(fp);
-					pLines->AddVertex(fp + frustum->GetDirectionLeftTop() * length);
+					pLines->AddVertex(frustum->GetImageLeftUp());
 					pLines->AddVertex(fp);
-					pLines->AddVertex(fp + frustum->GetDirectionRightTop() * length);
+					pLines->AddVertex(frustum->GetImageRightUp());
 					pLines->AddVertex(fp);
-					pLines->AddVertex(fp + frustum->GetDirectionLeftBottom() * length);
+					pLines->AddVertex(frustum->GetImageLeftDown());
 					pLines->AddVertex(fp);
-					pLines->AddVertex(fp + frustum->GetDirectionRightBottom() * length);
+					pLines->AddVertex(frustum->GetImageRightDown());
 
 					pLines->AddColor(glm::vec4(1, 1, 0, 1));
 					pLines->AddColor(glm::vec4(1, 1, 0, 1));
@@ -342,14 +342,14 @@ int main(int argc, char** argv)
 					pLines->AddColor(glm::vec4(1, 1, 0, 1));
 					pLines->AddColor(glm::vec4(1, 1, 0, 1));
 
-					pLines->AddVertex(fp + frustum->GetDirectionLeftTop() * length);
-					pLines->AddVertex(fp + frustum->GetDirectionRightTop() * length);
-					pLines->AddVertex(fp + frustum->GetDirectionRightTop() * length);
-					pLines->AddVertex(fp + frustum->GetDirectionRightBottom() * length);
-					pLines->AddVertex(fp + frustum->GetDirectionRightBottom() * length);
-					pLines->AddVertex(fp + frustum->GetDirectionLeftBottom() * length);
-					pLines->AddVertex(fp + frustum->GetDirectionLeftBottom() * length);
-					pLines->AddVertex(fp + frustum->GetDirectionLeftTop() * length);
+					pLines->AddVertex(frustum->GetImageLeftUp());
+					pLines->AddVertex(frustum->GetImageRightUp());
+					pLines->AddVertex(frustum->GetImageRightUp());
+					pLines->AddVertex(frustum->GetImageRightDown());
+					pLines->AddVertex(frustum->GetImageRightDown());
+					pLines->AddVertex(frustum->GetImageLeftDown());
+					pLines->AddVertex(frustum->GetImageLeftDown());
+					pLines->AddVertex(frustum->GetImageLeftUp());
 
 					pLines->AddColor(glm::vec4(1, 1, 0, 1));
 					pLines->AddColor(glm::vec4(1, 1, 0, 1));

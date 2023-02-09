@@ -15,48 +15,39 @@ namespace ArtificialNature {
 		auto halfWidth = imageWidth * 0.5f;
 		auto halfHeight = imageHeight * 0.5f;
 
-		this->forward = glm::vec3(0, 0, fx);
-		this->right = glm::vec3(halfWidth, 0, 0);
-		this->up = glm::vec3(0, halfHeight, 0);
+		auto imageCenter = glm::vec3(0, 0, fx);
+		auto imageLeftUp = imageCenter + glm::vec3(-halfWidth, halfHeight, 0);
+		auto imageLeftDown = imageCenter + glm::vec3(-halfWidth, -halfHeight, 0);
+		auto imageRightUp = imageCenter + glm::vec3(halfWidth, halfHeight, 0);
+		auto imageRightDown = imageCenter + glm::vec3(halfWidth, -halfHeight, 0);
 
-		auto dfl = glm::normalize(this->forward - this->right);
-		auto dfr = glm::normalize(this->forward + this->right);
-		auto dfu = glm::normalize(this->forward + this->up);
-		auto dfd = glm::normalize(this->forward - this->up);
+		auto transform = glm::mat4(rotation);
+		transform[3] = glm::vec4(position, 1);
 
-		ldlu = glm::normalize(this->forward - this->right + this->up);
-		ldru = glm::normalize(this->forward + this->right + this->up);
-		ldll = glm::normalize(this->forward - this->right - this->up);
-		ldrl = glm::normalize(this->forward + this->right - this->up);
+		this->imageCenter = transform * glm::vec4(imageCenter, 1);
+		this->imageLeftUp = transform * glm::vec4(imageLeftUp, 1);
+		this->imageLeftDown = transform * glm::vec4(imageLeftDown, 1);
+		this->imageRightUp = transform * glm::vec4(imageRightUp, 1);
+		this->imageRightDown = transform * glm::vec4(imageRightDown, 1);
 
-		auto nl = glm::normalize(glm::cross(ldlu, ldll));
-		auto nr = glm::normalize(glm::cross(ldrl, ldru));
-		auto nu = glm::normalize(glm::cross(ldru, ldlu));
-		auto nd = glm::normalize(glm::cross(ldll, ldrl));
+		this->forward = rotation[2];
+		this->right = rotation[0];
+		this->up = rotation[1];
 
-		this->leftPlaneNormal = this->rotation * nl;
-		this->rightPlaneNormal = this->rotation * nr;
-		this->upperPlaneNormal = this->rotation * nu;
-		this->lowerPlaneNormal = this->rotation * nd;
+		auto dlu = glm::normalize(this->imageLeftUp - this->imageCenter);
+		auto dld = glm::normalize(this->imageLeftDown - this->imageCenter);
+		auto dru = glm::normalize(this->imageRightUp - this->imageCenter);
+		auto drd = glm::normalize(this->imageRightDown - this->imageCenter);
 
-		this->leftPlane = new HePlane(this->position, this->leftPlaneNormal);
-		this->rightPlane = new HePlane(this->position, this->rightPlaneNormal);
-		this->upperPlane = new HePlane(this->position, this->upperPlaneNormal);
-		this->lowerPlane = new HePlane(this->position, this->lowerPlaneNormal);
+		this->leftPlaneNormal = glm::normalize(glm::cross(dlu, dld));
+		this->rightPlaneNormal = glm::normalize(glm::cross(drd, dru));
+		this->upperPlaneNormal = glm::normalize(glm::cross(dru, dlu));
+		this->lowerPlaneNormal = glm::normalize(glm::cross(dld, drd));
 
-		this->adlu = this->rotation * ldlu;
-		this->adru = this->rotation * ldru;
-		this->adll = this->rotation * ldll;
-		this->adrl = this->rotation * ldrl;
-
-		this->dfl = this->rotation * dfl;
-		this->dfr = this->rotation * dfr;
-		this->dfu = this->rotation * dfu;
-		this->dfd = this->rotation * dfd;
-
-		this->nf = this->rotation * glm::normalize(this->forward);
-		this->nr = this->rotation * glm::normalize(this->right);
-		this->nu = this->rotation * glm::normalize(this->up);
+		this->leftPlane = new HePlane(this->imageCenter, this->leftPlaneNormal);
+		this->rightPlane = new HePlane(this->imageCenter, this->rightPlaneNormal);
+		this->upperPlane = new HePlane(this->imageCenter, this->upperPlaneNormal);
+		this->lowerPlane = new HePlane(this->imageCenter, this->lowerPlaneNormal);
 	}
 
 	HeFrustum::~HeFrustum()

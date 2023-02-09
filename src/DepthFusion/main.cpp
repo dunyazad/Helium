@@ -496,9 +496,9 @@ int main(int argc, char** argv)
 				auto frame = project->GetFrames()[i];
 				auto cameraInfo = frame->GetCameraInfo();
 				auto frustum = cameraInfo->GetFrustum();
-				auto& nr = frustum->GetNormalizedRight();
-				auto& nu = frustum->GetNormalizedUp();
-				auto& nf = frustum->GetNormalizedFront();
+				auto& nr = frustum->GetRight();
+				auto& nu = frustum->GetUp();
+				auto& nf = frustum->GetForward();
 				auto& fp = frustum->GetPosition();
 				const auto& m = cameraInfo->GetTransformMatrix();
 
