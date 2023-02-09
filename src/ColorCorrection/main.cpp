@@ -19,63 +19,8 @@ HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorFlight* pCameraManipulator = nullptr;
 //HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
-class OnOff {
-public:
-    void AddSceneNode(HeSceneNode* node) {
-        nodes.push_back(node);
-    }
-
-    void First()
-    {
-        nodes[index]->SetActive(false);
-        nodes[0]->SetActive(true);
-        index = 0;
-    }
-
-    void Last()
-    {
-        nodes[index]->SetActive(false);
-        nodes[nodes.size() - 1]->SetActive(true);
-        index = nodes.size() - 1;
-    }
-
-    void Next()
-    {
-        if (index + 1 < nodes.size()) {
-            HideAll();
-
-            nodes[index]->SetActive(false);
-            nodes[index + 1]->SetActive(true);
-            index++;
-        }
-    }
-
-    void Previous()
-    {
-        if (index > 0) {
-            HideAll();
-
-            nodes[index]->SetActive(false);
-            nodes[index - 1]->SetActive(true);
-            index--;
-        }
-    }
-
-    void HideAll()
-    {
-        for (auto& n : nodes)
-        {
-            n->SetActive(false);
-        }
-    }
-
-protected:
-    vector<HeSceneNode*> nodes;
-    size_t index = 0;
-};
-OnOff onoff;
-
 HeVisualDebugger* vd = nullptr;
+HeOnOff* onoff = nullptr;
 
 int main(int argc, char** argv)
 {
@@ -134,93 +79,97 @@ int main(int argc, char** argv)
         pCameraManipulator = gScene->CreateCameraManipulatoFlight("Main Camera Manipulator", pCamera);
         gScene->SetMainCamera(pCamera);
 
-        auto visualDebugger = HeVisualDebugger(helium);
-        vd = &visualDebugger;
+        vd = gScene->GetVisualDebugger();
+        onoff = vd->GetOnOff();
 
         {
             float scale = 0.001;
             auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
 
-            auto frameA = project->GetFrames()[0];
-            auto camera_info_A = frameA->GetCameraInfo();
-            auto frustum_A = camera_info_A->GetFrustum();
-            auto transform_A = frustum_A->GetTransform();
-            auto im = glm::inverse(transform_A);
-            auto p_A = frustum_A->GetPosition();
-            auto ic_A = frustum_A->GetImageCenter();
-            auto lu_A = frustum_A->GetImageLeftUp();
-            auto ld_A = frustum_A->GetImageLeftDown();
-            auto ru_A = frustum_A->GetImageRightUp();
-            auto rd_A = frustum_A->GetImageRightDown();
+            int frameNumber = 0;
+            for (auto& frame : project->GetFrames())
+            {
+                //auto frameA = project->GetFrames()[0];
+                auto frameA = frame;
+                auto image_A = frameA->LoadColorImage(gGraphics);
+                auto texture_A = gGraphics->GetTexture(image_A->GetName(), image_A);
+                texture_A->Initialize();
+                auto camera_info_A = frameA->GetCameraInfo();
+                auto frustum_A = camera_info_A->GetFrustum();
+                auto transform_A = frustum_A->GetTransform();
+                auto im = glm::inverse(transform_A);
+                auto p_A = frustum_A->GetPosition();
+                auto ic_A = frustum_A->GetImageCenter();
+                auto lu_A = frustum_A->GetImageLeftUp();
+                auto ld_A = frustum_A->GetImageLeftDown();
+                auto ru_A = frustum_A->GetImageRightUp();
+                auto rd_A = frustum_A->GetImageRightDown();
 
-  /*          vd->AddLine(p_A, lu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(p_A, ld_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(p_A, ru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(p_A, rd_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+                auto ip_A = (im * glm::vec4(frustum_A->GetPosition(), 1));
+                auto iic_A = (im * glm::vec4(frustum_A->GetImageCenter(), 1));
+                auto ilu_A = (im * glm::vec4(frustum_A->GetImageLeftUp(), 1));
+                auto ild_A = (im * glm::vec4(frustum_A->GetImageLeftDown(), 1));
+                auto iru_A = (im * glm::vec4(frustum_A->GetImageRightUp(), 1));
+                auto ird_A = (im * glm::vec4(frustum_A->GetImageRightDown(), 1));
 
-            vd->AddLine(ic_A, lu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(ic_A, ld_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(ic_A, ru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(ic_A, rd_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+                //ip_A.z = 0;
+                //iic_A.z = 0;
+                //ilu_A.z = 0;
+                //ild_A.z = 0;
+                //iru_A.z = 0;
+                //ird_A.z = 0;
 
-            vd->AddLine(lu_A, ru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(ru_A, rd_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(rd_A, ld_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            vd->AddLine(ld_A, lu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));*/
+                vd->AddLine(p_A, lu_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(p_A, ld_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(p_A, ru_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(p_A, rd_A * scale, HeColor::RED, HeColor::RED);
 
-            auto ip_A = (im * glm::vec4(frustum_A->GetPosition(), 1));
-            auto iic_A = (im * glm::vec4(frustum_A->GetImageCenter(), 1));
-            auto ilu_A = (im * glm::vec4(frustum_A->GetImageLeftUp(), 1));
-            auto ild_A = (im * glm::vec4(frustum_A->GetImageLeftDown(), 1));
-            auto iru_A = (im * glm::vec4(frustum_A->GetImageRightUp(), 1));
-            auto ird_A = (im * glm::vec4(frustum_A->GetImageRightDown(), 1));
+                vd->AddLine(ic_A * scale, lu_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(ic_A * scale, ld_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(ic_A * scale, ru_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(ic_A * scale, rd_A * scale, HeColor::RED, HeColor::RED);
 
-            //vd->AddLine(ip_A, ilu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            //vd->AddLine(ip_A, ild_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            //vd->AddLine(ip_A, iru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            //vd->AddLine(ip_A, ird_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+                vd->AddLine(lu_A * scale, ru_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(ru_A * scale, rd_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(rd_A * scale, ld_A * scale, HeColor::RED, HeColor::RED);
+                vd->AddLine(ld_A * scale, lu_A * scale, HeColor::RED, HeColor::RED);
 
-            //vd->AddLine(iic_A, ilu_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            //vd->AddLine(iic_A, ild_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            //vd->AddLine(iic_A, iru_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
-            //vd->AddLine(iic_A, ird_A, glm::vec4(1, 0, 0, 1), glm::vec4(1, 0, 0, 1));
+                vd->AddPlane(lu_A * scale, ld_A * scale, ru_A * scale, rd_A * scale, texture_A);
 
-            vd->AddLine(iic_A * scale, ilu_A * scale, HeColor::RED, HeColor::RED);
-            vd->AddLine(iic_A * scale, ild_A * scale, HeColor::RED, HeColor::RED);
-            vd->AddLine(iic_A * scale, iru_A * scale, HeColor::RED, HeColor::RED);
-            vd->AddLine(iic_A * scale, ird_A * scale, HeColor::RED, HeColor::RED);
+                //auto frameB = project->GetFrames()[2];
+                //auto image_B = frameB->LoadColorImage(gGraphics, "frame 2");
+                //auto texture_B = gGraphics->GetTexture(image_B->GetName(), image_B);
+                //texture_B->Initialize();
+                //auto camera_info_B = frameB->GetCameraInfo();
+                //auto frustum_B = camera_info_B->GetFrustum();
+                //auto p_B = frustum_B->GetPosition();
+                //auto ic_B = frustum_B->GetImageCenter();
+                //auto lu_B = frustum_B->GetImageLeftUp();
+                //auto ld_B = frustum_B->GetImageLeftDown();
+                //auto ru_B = frustum_B->GetImageRightUp();
+                //auto rd_B = frustum_B->GetImageRightDown();
 
-            vd->AddLine(ilu_A * scale, iru_A * scale, HeColor::RED, HeColor::RED);
-            vd->AddLine(iru_A * scale, ird_A * scale, HeColor::RED, HeColor::RED);
-            vd->AddLine(ird_A * scale, ild_A * scale, HeColor::RED, HeColor::RED);
-            vd->AddLine(ild_A * scale, ilu_A * scale, HeColor::RED, HeColor::RED);
+                //auto ip_B = (im * glm::vec4(frustum_B->GetPosition(), 1));
+                //auto iic_B = (im * glm::vec4(frustum_B->GetImageCenter(), 1));
+                //auto ilu_B = (im * glm::vec4(frustum_B->GetImageLeftUp(), 1));
+                //auto ild_B = (im * glm::vec4(frustum_B->GetImageLeftDown(), 1));
+                //auto iru_B = (im * glm::vec4(frustum_B->GetImageRightUp(), 1));
+                //auto ird_B = (im * glm::vec4(frustum_B->GetImageRightDown(), 1));
 
+                //ip_B.z = 0;
+                //iic_B.z = 0;
+                //ilu_B.z = 0;
+                //ild_B.z = 0;
+                //iru_B.z = 0;
+                //ird_B.z = 0;
 
+                ////vd->AddLine(ilu_B * scale, iru_B * scale, HeColor::BLUE, HeColor::BLUE);
+                ////vd->AddLine(iru_B * scale, ird_B * scale, HeColor::BLUE, HeColor::BLUE);
+                ////vd->AddLine(ird_B * scale, ild_B * scale, HeColor::BLUE, HeColor::BLUE);
+                ////vd->AddLine(ild_B * scale, ilu_B * scale, HeColor::BLUE, HeColor::BLUE);
 
-            auto frameB = project->GetFrames()[1];
-            auto camera_info_B = frameB->GetCameraInfo();
-            auto frustum_B = camera_info_B->GetFrustum();
-            auto ip_B = (im * glm::vec4(frustum_B->GetPosition(), 1));
-            auto iic_B = (im * glm::vec4(frustum_B->GetImageCenter(), 1));
-            auto ilu_B = (im * glm::vec4(frustum_B->GetImageLeftUp(), 1));
-            auto ild_B = (im * glm::vec4(frustum_B->GetImageLeftDown(), 1));
-            auto iru_B = (im * glm::vec4(frustum_B->GetImageRightUp(), 1));
-            auto ird_B = (im * glm::vec4(frustum_B->GetImageRightDown(), 1));
-
-            //vd->AddLine(ip_B, ilu_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-            //vd->AddLine(ip_B, ild_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-            //vd->AddLine(ip_B, iru_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-            //vd->AddLine(ip_B, ird_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-
-            //vd->AddLine(iic_B, ilu_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-            //vd->AddLine(iic_B, ild_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-            //vd->AddLine(iic_B, iru_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-            //vd->AddLine(iic_B, ird_B, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 1, 1));
-
-            vd->AddLine(ilu_B * scale, iru_B * scale, HeColor::BLUE, HeColor::BLUE);
-            vd->AddLine(iru_B * scale, ird_B* scale, HeColor::BLUE, HeColor::BLUE);
-            vd->AddLine(ird_B * scale, ild_B* scale, HeColor::BLUE, HeColor::BLUE);
-            vd->AddLine(ild_B * scale, ilu_B* scale, HeColor::BLUE, HeColor::BLUE);
+                //vd->AddPlane(lu_B * scale, ld_B * scale, ru_B * scale, rd_B * scale, texture_B);
+            }
         }
 		});
 
@@ -350,11 +299,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
     else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        onoff.Previous();
+        onoff->Previous();
     }
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        onoff.Next();
+        onoff->Next();
     }
 }
 

@@ -84,8 +84,7 @@ int main(int argc, char** argv)
     pCameraManipulator = &manipulator;
     gScene->SetMainCamera(pCamera);
 
-    auto visualDebugger = HeVisualDebugger(helium);
-    vd = &visualDebugger;
+    vd = gScene->GetVisualDebugger();
 
     HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
     capturedFrameCount = project.GetFrames().size();

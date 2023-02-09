@@ -4,8 +4,6 @@
 #include <Helium/Graphics/Graphics.h>
 #include <Helium/Scene/Scene.h>
 
-#include <Helium/HeVisualDebugger.h>
-
 namespace ArtificialNature {
 
 	class Helium : public HeObject

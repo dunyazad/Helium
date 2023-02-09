@@ -135,13 +135,13 @@
     <ClCompile Include="Helium\Graphics\Texture\HeTextureArray.cpp" />
     <ClCompile Include="Helium\Graphics\Texture\HeTextureFloatData.cpp" />
     <ClCompile Include="Helium\Helium.cpp" />
-    <ClCompile Include="Helium\HeVisualDebugger.cpp" />
     <ClCompile Include="Helium\nanovg.c" />
     <ClCompile Include="Helium\Scene\HeCamera.cpp" />
     <ClCompile Include="Helium\Scene\HeCameraManipulator.cpp" />
     <ClCompile Include="Helium\Scene\HeScene.cpp" />
     <ClCompile Include="Helium\Scene\HeSceneNode.cpp" />
     <ClCompile Include="Helium\Scene\HeSceneNodeImgui.cpp" />
+    <ClCompile Include="Helium\Scene\HeVisualDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helium\Core\Core.h" />
@@ -192,12 +192,12 @@
     <ClInclude Include="Helium\Graphics\Texture\HeTextureFloatData.h" />
     <ClInclude Include="Helium\Graphics\Texture\Texture.h" />
     <ClInclude Include="Helium\Helium.h" />
-    <ClInclude Include="Helium\HeVisualDebugger.h" />
     <ClInclude Include="Helium\Scene\HeCamera.h" />
     <ClInclude Include="Helium\Scene\HeCameraManipulator.h" />
     <ClInclude Include="Helium\Scene\HeScene.h" />
     <ClInclude Include="Helium\Scene\HeSceneNode.h" />
     <ClInclude Include="Helium\Scene\HeSceneNodeImgui.h" />
+    <ClInclude Include="Helium\Scene\HeVisualDebugger.h" />
     <ClInclude Include="Helium\Scene\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

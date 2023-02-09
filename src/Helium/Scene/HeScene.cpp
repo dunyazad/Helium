@@ -4,6 +4,7 @@
 #include <Helium/Scene/HeSceneNodeImgui.h>
 #include <Helium/Scene/HeCamera.h>
 #include <Helium/Scene/HeCameraManipulator.h>
+#include <Helium/Scene/HeVisualDebugger.h>
 
 namespace ArtificialNature {
 
@@ -12,6 +13,8 @@ namespace ArtificialNature {
 	{
 		rootNode = new HeSceneNode("Root Node", this);
 		imguiRootNode = new HeSceneNodeImgui("imgui", this);
+
+		visualDebugger = new HeVisualDebugger(this, graphics);
 	}
 
 	HeScene::~HeScene()

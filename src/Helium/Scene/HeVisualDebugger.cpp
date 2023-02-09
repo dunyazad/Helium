@@ -1,12 +1,60 @@
-#include <Helium/HeVisualDebugger.h>
+#include <Helium/Scene/HeVisualDebugger.h>
+#include <Helium/Scene/Scene.h>
+#include <Helium/Graphics/Graphics.h>
 
 namespace ArtificialNature {
-    HeVisualDebugger::HeVisualDebugger(Helium& helium)
-        : helium(helium)
-    {
-        scene = helium.GetScene("Default Scene");
-        graphics = helium.GetGraphics();
+    
+    void HeOnOff::AddSceneNode(HeSceneNode* node) {
+        nodes.push_back(node);
+    }
 
+    void HeOnOff::First()
+    {
+        nodes[index]->SetActive(false);
+        nodes[0]->SetActive(true);
+        index = 0;
+    }
+
+    void HeOnOff::Last()
+    {
+        nodes[index]->SetActive(false);
+        nodes[nodes.size() - 1]->SetActive(true);
+        index = nodes.size() - 1;
+    }
+
+    void HeOnOff::Next()
+    {
+        if (index + 1 < nodes.size()) {
+            HideAll();
+
+            nodes[index]->SetActive(false);
+            nodes[index + 1]->SetActive(true);
+            index++;
+        }
+    }
+
+    void HeOnOff::Previous()
+    {
+        if (index > 0) {
+            HideAll();
+
+            nodes[index]->SetActive(false);
+            nodes[index - 1]->SetActive(true);
+            index--;
+        }
+    }
+
+    void HeOnOff::HideAll()
+    {
+        for (auto& n : nodes)
+        {
+            n->SetActive(false);
+        }
+    }
+
+    HeVisualDebugger::HeVisualDebugger(HeScene* scene, HeGraphics* graphics)
+        : scene(scene), graphics(graphics)
+    {
         solidSceneNode = scene->CreateSceneNode("Visual Debugger.SolidSceneNode");
         solidGeometry = graphics->GetGeometryTriangleSoup("Visual Debugger.SolidGeometry");
         solidGeometry->Initialize();
@@ -114,6 +162,75 @@ namespace ArtificialNature {
 
         lineGeometry->AddColor(color0);
         lineGeometry->AddColor(color1);
+    }
+
+    void HeVisualDebugger::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd)
+    {
+        AddPlane(lu, ld, ru, rd, HeColor::WHITE);
+    }
+
+    void HeVisualDebugger::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, const HeColor& color)
+    {
+        int vertexCount = (int)lineGeometry->GetVertexCount();
+
+        lineGeometry->AddVertex(lu);
+        lineGeometry->AddVertex(ld);
+        lineGeometry->AddVertex(ru);
+        lineGeometry->AddVertex(rd);
+
+        lineGeometry->AddIndex(vertexCount);
+        lineGeometry->AddIndex(vertexCount + 1);
+        lineGeometry->AddIndex(vertexCount + 2);
+        lineGeometry->AddIndex(vertexCount + 3);
+
+        lineGeometry->AddColor(color);
+        lineGeometry->AddColor(color);
+        lineGeometry->AddColor(color);
+        lineGeometry->AddColor(color);
+
+        solidGeometry->AddTriangle(ld, lu, rd, color);
+        solidGeometry->AddTriangle(rd, lu, ru, color);
+    }
+
+    void HeVisualDebugger::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, HeTexture* texture)
+    {
+        int vertexCount = (int)lineGeometry->GetVertexCount();
+
+        lineGeometry->AddVertex(lu);
+        lineGeometry->AddVertex(ld);
+        lineGeometry->AddVertex(ru);
+        lineGeometry->AddVertex(rd);
+
+        lineGeometry->AddIndex(vertexCount);
+        lineGeometry->AddIndex(vertexCount + 1);
+        lineGeometry->AddIndex(vertexCount + 2);
+        lineGeometry->AddIndex(vertexCount + 3);
+
+        lineGeometry->AddColor(HeColor::WHITE);
+        lineGeometry->AddColor(HeColor::WHITE);
+        lineGeometry->AddColor(HeColor::WHITE);
+        lineGeometry->AddColor(HeColor::WHITE);
+
+        if (texturedSceneNodes.count(texture) == 0)
+        {
+            auto pNode = scene->CreateSceneNode("Visual Debugger.TexturedSceneNode " + texture->GetName());
+            texturedSceneNodes[texture] = pNode;
+            onoff.AddSceneNode(pNode);
+
+            auto pGeometry = graphics->GetGeometryTriangleSoup("Visual Debugger.TexturedGeometry " + texture->GetName());
+            pGeometry->Initialize();
+            pNode->AddGeometry(pGeometry);
+            auto pMaterial = graphics->GetMaterialSingleTexture("Visual Debugger.TexturedMaterial " + texture->GetName());
+            pMaterial->SetTexture(texture);
+            auto pShader = graphics->GetShader("Visual Debugger.TexturedShader", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+            pMaterial->SetShader(pShader);
+            pGeometry->SetMaterial(pMaterial);
+        }
+
+        auto pNode = texturedSceneNodes[texture];
+        auto pGeometry = dynamic_cast<HeGeometryTriangleSoup*>(pNode->GetGeometry());
+        pGeometry->AddTriangle(ld, lu, rd, glm::vec2(0, 0), glm::vec2(0, 1), glm::vec2(1, 0));
+        pGeometry->AddTriangle(rd, lu, ru, glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(1, 1));
     }
 
     void HeVisualDebugger::AddBox(const glm::vec3& bmin, const glm::vec3& bmax)

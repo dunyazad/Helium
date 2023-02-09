@@ -134,8 +134,7 @@ int main(int argc, char** argv)
         pCameraManipulator = gScene->CreateCameraManipulatoFlight("Main Camera Manipulator", pCamera);
         gScene->SetMainCamera(pCamera);
 
-        auto visualDebugger = HeVisualDebugger(helium);
-        vd = &visualDebugger;
+        vd = gScene->GetVisualDebugger();
 
         {
             auto pNode = gScene->CreateSceneNode("Mesh");

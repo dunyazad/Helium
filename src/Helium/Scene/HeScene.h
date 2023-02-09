@@ -15,6 +15,8 @@ namespace ArtificialNature {
 	class HeCameraManipulatorFlight;
 	class HeCameraManipulatorTrackball;
 
+	class HeVisualDebugger;
+
 	class HeScene : public HeObject
 	{
 	public:
@@ -22,6 +24,7 @@ namespace ArtificialNature {
 
 		inline HeCamera* GetMainCamera() { return mainCamera; }
 		inline void SetMainCamera(HeCamera* camera) { mainCamera = camera; }
+		inline HeVisualDebugger* GetVisualDebugger() { return visualDebugger; }
 
 		void Update(float dt);
 		void UpdateImgui(float dt);
@@ -53,6 +56,8 @@ namespace ArtificialNature {
 		HeCamera* mainCamera = nullptr;
 
 		map<string, HeCameraManipulatorBase*> cameraManipulators;
+
+		HeVisualDebugger* visualDebugger = nullptr;
 
 	public:
 		friend class Helium;

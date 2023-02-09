@@ -155,8 +155,7 @@ int main(int argc, char** argv)
 		gScene->SetMainCamera(pCamera);
 		pCameraManipulator = gScene->CreateCameraManipulatoFlight("Main Camera Manipulator", pCamera);
 
-		auto visualDebugger = HeVisualDebugger(helium);
-		vd = &visualDebugger;
+		vd = gScene->GetVisualDebugger();
 
 		for (auto& v : controlValues)
 		{

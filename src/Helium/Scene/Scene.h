@@ -5,3 +5,4 @@
 #include <Helium/Scene/HeCamera.h>
 #include <Helium/Scene/HeCameraManipulator.h>
 #include <Helium/Scene/HeScene.h>
+#include <Helium/Scene/HeVisualDebugger.h>

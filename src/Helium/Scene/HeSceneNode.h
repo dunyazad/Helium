@@ -33,6 +33,14 @@ namespace ArtificialNature {
 		inline void RemoveGeometry(HeGeometry* geometry) { this->geometries.erase(geometry); }
 
 		inline const set<HeGeometry*>& GetGeometries() { return geometries; }
+		inline HeGeometry* GetGeometry() {
+			for (auto& geometry : geometries) {
+				if (geometry != nullptr) {
+					return geometry;
+				}
+			}
+			return nullptr;
+		}
 		inline HeGeometry* GetGeometry(const string& name) {
 			for (auto& geometry : geometries) {
 				if (geometry != nullptr) {

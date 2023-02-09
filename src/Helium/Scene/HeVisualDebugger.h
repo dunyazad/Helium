@@ -1,28 +1,53 @@
 #pragma once
 
-#include <Helium/Helium.h>
+#include <Helium/Core/HeliumCommon.h>
+#include <Helium/Core/HeColor.h>
 
 namespace ArtificialNature {
+    class HeScene;
+    class HeGraphics;
+    class HeTexture;
+    class HeMaterial;
+    class HeShader;
+    class HeSceneNode;
+    class HeGeometryTriangleSoup;
+    class HeGeometryThickLines;
+
+    class HeOnOff {
+    public:
+        void AddSceneNode(HeSceneNode* node);
+        void First();
+        void Last();
+        void Next();
+        void Previous();
+        void HideAll();
+
+    protected:
+        vector<HeSceneNode*> nodes;
+        size_t index = 0;
+    };
 
     class HeVisualDebugger
     {
     public:
-        HeVisualDebugger(Helium& helium);
+        HeVisualDebugger(HeScene* scene, HeGraphics* graphics);
 
         void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
-
         void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2);
 
         void AddLine(const glm::vec3& v0, const glm::vec3& v1);
-
         void AddLine(const glm::vec3& v0, const glm::vec3& v1, const HeColor& color0, const HeColor& color1);
 
-        void AddBox(const glm::vec3& bmin, const glm::vec3& bmax);
+        void AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd);
+        void AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, const HeColor& color);
+        void AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, HeTexture* texture);
 
+        void AddBox(const glm::vec3& bmin, const glm::vec3& bmax);
         void AddBox(const glm::vec3& bmin, const glm::vec3& bmax, const HeColor& color);
 
+        inline HeOnOff* GetOnOff() { return &onoff; }
+
     protected:
-        Helium& helium;
         HeScene* scene = nullptr;
         HeGraphics* graphics = nullptr;
 
@@ -40,5 +65,9 @@ namespace ArtificialNature {
         HeGeometryThickLines* axisGeometry = nullptr;
         HeMaterial* axisMaterial = nullptr;
         HeShader* axisShader = nullptr;
+
+        map<HeTexture*, HeSceneNode*> texturedSceneNodes;
+
+        HeOnOff onoff;
     };
 }

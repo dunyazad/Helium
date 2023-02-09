@@ -24,7 +24,6 @@ namespace ArtificialNature {
 		this->transform = glm::mat4(rotation);
 		this->transform[3] = glm::vec4(position, 1);
 
-
 		this->imageCenter = this->transform * glm::vec4(imageCenter, 1);
 		this->imageLeftUp = this->transform * glm::vec4(imageLeftUp, 1);
 		this->imageLeftDown = this->transform * glm::vec4(imageLeftDown, 1);
