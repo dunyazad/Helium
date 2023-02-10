@@ -12,6 +12,7 @@ namespace ArtificialNature {
 
 	class HeCameraManipulatorBase;
 	class HeCameraManipulatorOrtho;
+	class HeCameraManipulatorObital;
 	class HeCameraManipulatorFlight;
 	class HeCameraManipulatorTrackball;
 
@@ -37,6 +38,7 @@ namespace ArtificialNature {
 		HePerspectiveCamera* CreatePerspectiveCamera(const string& name, float viewportX, float viewportY, float viewportWidth, float viewportHeight);
 
 		HeCameraManipulatorOrtho* CreateCameraManipulatorOrtho(const string& name, HeCamera* camera);
+		HeCameraManipulatorObital* CreateCameraManipulatoObital(const string& name, HeCamera* camera);
 		HeCameraManipulatorFlight* CreateCameraManipulatoFlight(const string& name, HeCamera* camera);
 		HeCameraManipulatorTrackball* CreateCameraManipulatorTrackball(const string& name, HeCamera* camera);
 

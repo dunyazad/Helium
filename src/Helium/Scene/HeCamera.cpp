@@ -70,7 +70,7 @@ namespace ArtificialNature {
 
 		HeSceneNode::Update(dt);
 
-		viewMatrix = glm::inverse(absoluteTransform);
+		//viewMatrix = glm::inverse(absoluteTransform);
 
 		projectionMatrix = glm::perspective(45.0f, aspectRatio, 0.1f, 10000.0f);
 	}

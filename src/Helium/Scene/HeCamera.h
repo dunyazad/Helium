@@ -45,7 +45,9 @@ namespace ArtificialNature {
 		inline void SetTargetPosition(const glm::vec3& targetPosition) { this->targetPosition = targetPosition; }
 
 		inline const glm::mat4& GetViewMatrix() const { return viewMatrix; }
+		inline void SetViewMatrix(const glm::mat4& m) { viewMatrix = m; }
 		inline const glm::mat4& GetProjectionMatrix() const { return projectionMatrix; }
+		inline void SetProjectionMatrix(const glm::mat4& m) { projectionMatrix = m; }
 
 		inline glm::vec3 GetCameraRight() const { return glm::vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]); }
 		inline glm::vec3 GetCameraUp() const { return glm::vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]); }

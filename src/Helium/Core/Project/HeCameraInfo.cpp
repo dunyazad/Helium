@@ -80,7 +80,7 @@ namespace ArtificialNature {
 			rr[2] = r2;
 
 			//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
-			this->frustum = new HeFrustum(this->position, rr, this->colorImageWidth, this->colorImageHeight, this->original_fx, this->original_fy);
+			this->frustum = new HeFrustum(this->position, rr, this->colorImageWidth * 0.01f, this->colorImageHeight * 0.01f, this->original_fx * 0.01f, this->original_fy * 0.01f);
 		}
 	}
 

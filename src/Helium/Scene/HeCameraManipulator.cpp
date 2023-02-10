@@ -87,6 +87,204 @@ namespace ArtificialNature {
 		}
 	}
 
+	void HeCameraManipulatorOrtho::Reset()
+	{
+
+	}
+
+	HeCameraManipulatorObital::HeCameraManipulatorObital(HeCamera* camera)
+		: HeCameraManipulatorBase(camera)
+	{
+	}
+
+	void HeCameraManipulatorObital::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, true);
+
+		if (key == GLFW_KEY_M && action == GLFW_PRESS)
+		{
+			if (wireframeMode) {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				wireframeMode = false;
+			}
+			else {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				wireframeMode = true;
+			}
+		}
+
+		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		{
+			Reset();
+		}
+
+		if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			//auto front = camera->GetCameraFront();
+			//camera->SetLocalPosition(camera->GetLocalPosition() + front);
+		}
+		if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			//auto front = camera->GetCameraFront();
+			//camera->SetLocalPosition(camera->GetLocalPosition() - front);
+		}
+		if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			//auto right = camera->GetCameraRight();
+			//camera->SetLocalPosition(camera->GetLocalPosition() - right);
+		}
+		if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			//auto right = camera->GetCameraRight();
+			//camera->SetLocalPosition(camera->GetLocalPosition() + right);
+		}
+		if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			//auto up = camera->GetCameraUp();
+			//camera->SetLocalPosition(camera->GetLocalPosition() + up);
+		}
+		if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			//auto up = camera->GetCameraUp();
+			//camera->SetLocalPosition(camera->GetLocalPosition() - up);
+		}
+	}
+
+	void HeCameraManipulatorObital::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
+	{
+		lastMousePositionX = xpos;
+		lastMousePositionY = ypos;
+
+		if (mouseRightButtonDown)
+		{
+			auto offsetX = xpos - lastMouseRightPositionX;
+			auto offsetY = ypos - lastMouseRightPositionY;
+			lastMouseRightPositionX = xpos;
+			lastMouseRightPositionY = ypos;
+
+			angleH -= offsetX * 0.1f;
+			angleV -= offsetY * 0.1f;
+
+			if (angleV < -90.0f) angleV = -90.0f + 0.01f;
+			if (angleV > 90.0f) angleV = 90.0f - 0.01f;
+		}
+		else if (mouseMiddleButtonDown)
+		{
+			auto offsetX = xpos - lastMouseMiddlePositionX;
+			auto offsetY = ypos - lastMouseMiddlePositionY;
+			lastMouseMiddlePositionX = xpos;
+			lastMouseMiddlePositionY = ypos;
+
+			auto dr = camera->GetCameraRight() * (float)(-offsetX * distance * 0.001);
+			auto du = camera->GetCameraUp() * (float)(offsetY * distance * 0.001);
+			center = center + (dr + du);
+		}
+
+		ApplyCamera();
+	}
+
+	void HeCameraManipulatorObital::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		{
+			mouseLeftButtonDown = true;
+
+			lastMouseLeftPositionX = xpos;
+			lastMouseLeftPositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+		{
+			mouseLeftButtonDown = false;
+		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+		{
+			mouseRightButtonDown = true;
+
+			lastMouseRightPositionX = xpos;
+			lastMouseRightPositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+		{
+			mouseRightButtonDown = false;
+		}
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+		{
+			mouseMiddleButtonDown = true;
+
+			lastMouseMiddlePositionX = xpos;
+			lastMouseMiddlePositionY = ypos;
+		}
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+		{
+			mouseMiddleButtonDown = false;
+		}
+	}
+
+	void HeCameraManipulatorObital::OnWheel(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+		{
+			if (yoffset < 0)
+			{
+				distance *= 1.05f;
+			}
+			else
+			{
+				distance /= 1.05f;
+			}
+		}
+		else
+		{
+			if (yoffset < 0)
+			{
+				distance *= 1.01f;
+			}
+			else
+			{
+				distance /= 1.01f;
+			}
+		}
+
+		if (distance < 0.1f) distance = 0.1f;
+
+		ApplyCamera();
+	}
+
+	void HeCameraManipulatorObital::Reset()
+	{
+		distance = 1.0f;
+		angleH = 0.0f;
+		angleV = 0.0f;
+		center = glm::vec3(0, 0, 0);
+	}
+	
+	void HeCameraManipulatorObital::ApplyCamera()
+	{
+		//auto eye = center +
+		//	glm::vec3(
+		//		distance * sin(glm::radians(angleH)) * cos(glm::radians(angleV)),
+		//		distance * sin(glm::radians(angleH)) * sin(glm::radians(angleV)),
+		//		distance * cos(glm::radians(angleH)));
+
+		//cout << "distance: " << distance << " | eye: " << eye << " | center: " << center << endl;
+
+		auto rH = glm::angleAxis(glm::radians(angleH), glm::vec3(0, 1, 0));
+		auto rV = glm::angleAxis(glm::radians(angleV), glm::vec3(1, 0, 0));
+
+		auto eye = center + (rH * rV) * glm::vec3(0, 0, distance);
+
+		auto m = glm::lookAt(eye, center, glm::vec3(0, 1, 0));
+
+		//camera->SetTargetPosition(center);
+		//camera->SetLocalRotation(glm::inverse(m));
+		//camera->SetLocalPosition(m[3]);
+		camera->SetViewMatrix(m);
+	}
+
 	HeCameraManipulatorFlight::HeCameraManipulatorFlight(HeCamera* camera)
 		: HeCameraManipulatorBase(camera)
 	{
@@ -111,8 +309,7 @@ namespace ArtificialNature {
 		
 		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		{
-			camera->SetLocalPosition(glm::vec3(0, 0, 0));
-			camera->SetLocalRotation(glm::identity<glm::quat>());
+			Reset();
 		}
 
 		if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
@@ -245,6 +442,12 @@ namespace ArtificialNature {
 				camera->SetLocalPosition(camera->GetLocalPosition() + front * 0.1f);
 			}
 		}
+	}
+
+	void HeCameraManipulatorFlight::Reset()
+	{
+		camera->SetLocalPosition(glm::vec3(0, 0, 0));
+		camera->SetLocalRotation(glm::identity<glm::quat>());
 	}
 
 	HeCameraManipulatorTrackball::HeCameraManipulatorTrackball(HeCamera* camera)
@@ -383,4 +586,7 @@ namespace ArtificialNature {
 		}
 	}
 
+	void HeCameraManipulatorTrackball::Reset()
+	{
+	}
 }

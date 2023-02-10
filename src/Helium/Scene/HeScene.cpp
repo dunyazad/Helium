@@ -106,6 +106,20 @@ namespace ArtificialNature {
 		}
 	}
 
+	HeCameraManipulatorObital* HeScene::CreateCameraManipulatoObital(const string& name, HeCamera* camera)
+	{
+		if (cameraManipulators.contains(name))
+		{
+			return dynamic_cast<HeCameraManipulatorObital*>(cameraManipulators[name]);
+		}
+		else
+		{
+			auto pManipulator = new HeCameraManipulatorObital(camera);
+			cameraManipulators[name] = pManipulator;
+			return pManipulator;
+		}
+	}
+
 	HeCameraManipulatorFlight* HeScene::CreateCameraManipulatoFlight(const string& name, HeCamera* camera)
 	{
 		if (cameraManipulators.contains(name))

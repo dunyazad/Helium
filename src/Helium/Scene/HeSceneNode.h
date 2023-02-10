@@ -58,6 +58,7 @@ namespace ArtificialNature {
 
 		inline void SetLocalRotation(const glm::quat& rotation) { localRotation = rotation; }
 		inline void SetLocalPosition(const glm::vec3& position) { localPosition = position; }
+		inline void SetLocalTransform(const glm::mat4& transform) { localRotation = glm::mat3(transform); localPosition = glm::vec3(transform[3]); }
 		inline void SetLocalScale(const glm::vec3& scale) { localScale = scale; }
 
 		inline const glm::mat4& GetAbsoluteTransform() { return absoluteTransform; }

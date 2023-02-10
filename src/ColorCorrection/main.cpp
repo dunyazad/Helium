@@ -17,8 +17,7 @@ HeGraphics* gGraphics = nullptr;
 HeScene* gScene = nullptr;
 //HeOrthogonalCamera* pCamera = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
-HeCameraManipulatorFlight* pCameraManipulator = nullptr;
-//HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
+HeCameraManipulatorBase* pCameraManipulator = nullptr;
 
 HeVisualDebugger* vd = nullptr;
 HeOnOff* onoff = nullptr;
@@ -77,7 +76,7 @@ int main(int argc, char** argv)
         //pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
         pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
         //HeCameraManipulatorOrtho manipulator(pCamera);
-        pCameraManipulator = gScene->CreateCameraManipulatoFlight("Main Camera Manipulator", pCamera);
+        pCameraManipulator = gScene->CreateCameraManipulatoObital("Main Camera Manipulator", pCamera);
         gScene->SetMainCamera(pCamera);
 
         vd = gScene->GetVisualDebugger();

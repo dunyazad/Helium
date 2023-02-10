@@ -16,6 +16,7 @@ namespace ArtificialNature {
 		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos) = 0;
 		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods) = 0;
 		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset) = 0;
+		virtual void Reset() = 0;
 
 		inline double GetLastMousePositionX() const { return lastMousePositionX; }
 		inline double GetLastMousePositionY() const { return lastMousePositionY; }
@@ -49,6 +50,27 @@ namespace ArtificialNature {
 		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
 		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
 		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
+		virtual void Reset();
+	};
+
+	class HeCameraManipulatorObital : public HeCameraManipulatorBase
+	{
+	public:
+		HeCameraManipulatorObital(HeCamera* camera);
+
+		virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);
+		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
+		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
+		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
+		virtual void Reset();
+
+	protected:
+		glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
+		float angleH = 0.0f;
+		float angleV = 0.0f;
+		float distance = 1.0f;
+
+		void ApplyCamera();
 	};
 
 	class HeCameraManipulatorFlight : public HeCameraManipulatorBase
@@ -60,6 +82,7 @@ namespace ArtificialNature {
 		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
 		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
 		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
+		virtual void Reset();
 	};
 
 	class HeCameraManipulatorTrackball : public HeCameraManipulatorBase
@@ -71,6 +94,7 @@ namespace ArtificialNature {
 		virtual void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
 		virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
 		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
+		virtual void Reset();
 
 	protected:
 		double lastMouseLeftPositionX = 0.0;
