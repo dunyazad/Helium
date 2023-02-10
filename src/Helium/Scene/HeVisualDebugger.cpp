@@ -52,53 +52,32 @@ namespace ArtificialNature {
         }
     }
 
-    HeVisualDebugger::HeVisualDebugger(HeScene* scene, HeGraphics* graphics)
-        : scene(scene), graphics(graphics)
+    HePrimitivePresenter::HePrimitivePresenter(const string& name, HeScene* scene, HeGraphics* graphics)
+        : name(name), scene(scene), graphics(graphics)
     {
-        solidSceneNode = scene->CreateSceneNode("Visual Debugger.SolidSceneNode");
-        solidGeometry = graphics->GetGeometryTriangleSoup("Visual Debugger.SolidGeometry");
+        this->sceneNode = scene->CreateSceneNode(name);
+
+        solidSceneNode = scene->CreateSceneNode(name + ".SolidSceneNode");
+        sceneNode->AddChild(solidSceneNode);
+        solidGeometry = graphics->GetGeometryTriangleSoup(name + ".SolidGeometry");
         solidGeometry->Initialize();
         solidSceneNode->AddGeometry(solidGeometry);
-        solidMaterial = graphics->GetMaterial("Visual Debugger.SolidMaterial");
-        solidShader = graphics->GetShader("Visual Debugger.SolidShader", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+        solidMaterial = graphics->GetMaterial(name + ".SolidMaterial");
+        solidShader = graphics->GetShader(name + ".SolidShader", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
         solidMaterial->SetShader(solidShader);
         solidGeometry->SetMaterial(solidMaterial);
 
-        lineSceneNode = scene->CreateSceneNode("Visual Debugger.LineSceneNode");
-        lineGeometry = graphics->GetGeometryThickLines("Visual Debugger.LineGeometry");
+        lineSceneNode = scene->CreateSceneNode(name + ".LineSceneNode");
+        sceneNode->AddChild(lineSceneNode);
+        lineGeometry = graphics->GetGeometryThickLines(name + ".LineGeometry");
         lineGeometry->Initialize();
         lineSceneNode->AddGeometry(lineGeometry);
-        lineMaterial = graphics->GetMaterial("Visual Debugger.LineMaterial");
-        lineShader = graphics->GetShader("Visual Debugger.LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        lineMaterial = graphics->GetMaterial(name + ".LineMaterial");
+        lineShader = graphics->GetShader(name + ".LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
         lineMaterial->SetShader(lineShader);
         lineGeometry->SetMaterial(lineMaterial);
         lineGeometry->SetThickness(1);
         lineGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-
-        axisSceneNode = scene->CreateSceneNode("Visual Debugger.AxisSceneNode");
-        axisGeometry = graphics->GetGeometryThickLines("Visual Debugger.AxisGeometry");
-        axisGeometry->Initialize();
-        axisSceneNode->AddGeometry(axisGeometry);
-        axisMaterial = graphics->GetMaterial("Visual Debugger.AxisMaterial");
-        axisShader = graphics->GetShader("Visual Debugger.AxisShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-        axisMaterial->SetShader(axisShader);
-        axisGeometry->SetMaterial(axisMaterial);
-        axisGeometry->SetThickness(1);
-        axisGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-
-        axisGeometry->AddVertex(glm::vec3(-1024, 0, 0));
-        axisGeometry->AddVertex(glm::vec3(1024, 0, 0));
-        axisGeometry->AddVertex(glm::vec3(0, -1024, 0));
-        axisGeometry->AddVertex(glm::vec3(0, 1024, 0));
-        axisGeometry->AddVertex(glm::vec3(0, 0, -1024));
-        axisGeometry->AddVertex(glm::vec3(0, 0, 1024));
-
-        axisGeometry->AddColor(HeColor::RED);
-        axisGeometry->AddColor(HeColor::RED);
-        axisGeometry->AddColor(HeColor::GREEN);
-        axisGeometry->AddColor(HeColor::GREEN);
-        axisGeometry->AddColor(HeColor::BLUE);
-        axisGeometry->AddColor(HeColor::BLUE);
 
         //{
         //	auto pNode = gScene->CreateSceneNode("Grid");
@@ -112,12 +91,12 @@ namespace ArtificialNature {
         //}
     }
 
-    void HeVisualDebugger::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
+    void HePrimitivePresenter::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2)
     {
         AddTriangle(v0, v1, v2, HeColor::WHITE, HeColor::WHITE, HeColor::WHITE);
     }
 
-    void HeVisualDebugger::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2)
+    void HePrimitivePresenter::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2)
     {
         int vertexCount = (int)lineGeometry->GetVertexCount();
 
@@ -145,12 +124,12 @@ namespace ArtificialNature {
         solidGeometry->AddTriangle(v0, v1, v2, color0, color1, color2);
     }
 
-    void HeVisualDebugger::AddLine(const glm::vec3& v0, const glm::vec3& v1)
+    void HePrimitivePresenter::AddLine(const glm::vec3& v0, const glm::vec3& v1)
     {
         AddLine(v0, v1, HeColor::WHITE, HeColor::WHITE);
     }
 
-    void HeVisualDebugger::AddLine(const glm::vec3& v0, const glm::vec3& v1, const HeColor& color0, const HeColor& color1)
+    void HePrimitivePresenter::AddLine(const glm::vec3& v0, const glm::vec3& v1, const HeColor& color0, const HeColor& color1)
     {
         int vertexCount = (int)lineGeometry->GetVertexCount();
 
@@ -164,12 +143,12 @@ namespace ArtificialNature {
         lineGeometry->AddColor(color1);
     }
 
-    void HeVisualDebugger::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd)
+    void HePrimitivePresenter::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd)
     {
         AddPlane(lu, ld, ru, rd, HeColor::WHITE);
     }
 
-    void HeVisualDebugger::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, const HeColor& color)
+    void HePrimitivePresenter::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, const HeColor& color)
     {
         int vertexCount = (int)lineGeometry->GetVertexCount();
 
@@ -192,7 +171,7 @@ namespace ArtificialNature {
         solidGeometry->AddTriangle(rd, lu, ru, color);
     }
 
-    void HeVisualDebugger::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, HeTexture* texture)
+    void HePrimitivePresenter::AddPlane(const glm::vec3& lu, const glm::vec3& ld, const glm::vec3& ru, const glm::vec3& rd, HeTexture* texture)
     {
         int vertexCount = (int)lineGeometry->GetVertexCount();
 
@@ -217,16 +196,16 @@ namespace ArtificialNature {
 
         if (texturedSceneNodes.count(texture) == 0)
         {
-            auto pNode = scene->CreateSceneNode("Visual Debugger.TexturedSceneNode " + texture->GetName());
+            auto pNode = scene->CreateSceneNode(name + ".TexturedSceneNode " + texture->GetName());
             texturedSceneNodes[texture] = pNode;
-            onoff.AddSceneNode(pNode);
+            sceneNode->AddChild(pNode);
 
-            auto pGeometry = graphics->GetGeometryTriangleSoup("Visual Debugger.TexturedGeometry " + texture->GetName());
+            auto pGeometry = graphics->GetGeometryTriangleSoup(name + ".TexturedGeometry " + texture->GetName());
             pGeometry->Initialize();
             pNode->AddGeometry(pGeometry);
-            auto pMaterial = graphics->GetMaterialSingleTexture("Visual Debugger.TexturedMaterial " + texture->GetName());
+            auto pMaterial = graphics->GetMaterialSingleTexture(name + ".TexturedMaterial " + texture->GetName());
             pMaterial->SetTexture(texture);
-            auto pShader = graphics->GetShader("Visual Debugger.TexturedShader", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+            auto pShader = graphics->GetShader(name + ".TexturedShader", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
             pMaterial->SetShader(pShader);
             pGeometry->SetMaterial(pMaterial);
         }
@@ -237,7 +216,7 @@ namespace ArtificialNature {
         pGeometry->AddTriangle(rd, lu, ru, glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(1, 1));
     }
 
-    void HeVisualDebugger::AddBox(const glm::vec3& bmin, const glm::vec3& bmax, const HeColor& color)
+    void HePrimitivePresenter::AddBox(const glm::vec3& bmin, const glm::vec3& bmax, const HeColor& color)
     {
         glm::vec3 llb(bmin.x, bmin.y, bmin.z);
         glm::vec3 rlb(bmax.x, bmin.y, bmin.z);
@@ -284,10 +263,56 @@ namespace ArtificialNature {
         }
     }
 
-    void HeVisualDebugger::AddBox(const glm::vec3& position, float xLength, float yLength, float zLength, const HeColor& color)
+    void HePrimitivePresenter::AddBox(const glm::vec3& position, float xLength, float yLength, float zLength, const HeColor& color)
     {
         auto bmin = position + glm::vec3(-xLength * 0.5f, -yLength * 0.5f, -zLength * 0.5f);
         auto bmax = position + glm::vec3(xLength * 0.5f, yLength * 0.5f, zLength * 0.5f);
         AddBox(bmin, bmax, color);
+    }
+
+    void HePrimitivePresenter::AddAxisLines(const glm::mat4& transform, float xLenth, float yLenth, float zLenth, const HeColor& xColor, const HeColor& yColor, const HeColor& zColor)
+    {
+        axisSceneNode = scene->CreateSceneNode(name + ".AxisSceneNode");
+        axisGeometry = graphics->GetGeometryThickLines(name + ".AxisGeometry");
+        axisGeometry->Initialize();
+        sceneNode->AddChild(axisSceneNode);
+        axisSceneNode->AddGeometry(axisGeometry);
+        axisMaterial = graphics->GetMaterial(name + ".AxisMaterial");
+        axisShader = graphics->GetShader(name + ".AxisShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        axisMaterial->SetShader(axisShader);
+        axisGeometry->SetMaterial(axisMaterial);
+        axisGeometry->SetThickness(1);
+        axisGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+
+        axisGeometry->AddVertex(glm::vec3(-1024, 0, 0));
+        axisGeometry->AddVertex(glm::vec3(1024, 0, 0));
+        axisGeometry->AddVertex(glm::vec3(0, -1024, 0));
+        axisGeometry->AddVertex(glm::vec3(0, 1024, 0));
+        axisGeometry->AddVertex(glm::vec3(0, 0, -1024));
+        axisGeometry->AddVertex(glm::vec3(0, 0, 1024));
+
+        axisGeometry->AddColor(HeColor::RED);
+        axisGeometry->AddColor(HeColor::RED);
+        axisGeometry->AddColor(HeColor::GREEN);
+        axisGeometry->AddColor(HeColor::GREEN);
+        axisGeometry->AddColor(HeColor::BLUE);
+        axisGeometry->AddColor(HeColor::BLUE);
+    }
+
+    HeVisualDebugger::HeVisualDebugger(const string& name, HeScene* scene, HeGraphics* graphics)
+    {
+        auto group = new HePrimitivePresenter(name + ".PrimitivePresenter", scene, graphics);
+        groups["Default"] = group;
+    }
+
+    HeVisualDebugger::~HeVisualDebugger()
+    {
+        for (auto& kvp : groups)
+        {
+            if (kvp.second != nullptr)
+            {
+                delete kvp.second;
+            }
+        }
     }
 }

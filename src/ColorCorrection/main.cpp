@@ -20,7 +20,6 @@ HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorBase* pCameraManipulator = nullptr;
 
 HeVisualDebugger* vd = nullptr;
-HeOnOff* onoff = nullptr;
 
 int main(int argc, char** argv)
 {
@@ -80,7 +79,7 @@ int main(int argc, char** argv)
         gScene->SetMainCamera(pCamera);
 
         vd = gScene->GetVisualDebugger();
-        onoff = vd->GetOnOff();
+        //onoff = vd->GetOnOff();
 
         auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
         auto pMesh = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
@@ -397,11 +396,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
     else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        onoff->Previous();
+        //onoff->Previous();
     }
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        onoff->Next();
+        //onoff->Next();
     }
 }
 

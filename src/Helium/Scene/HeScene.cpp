@@ -14,7 +14,7 @@ namespace ArtificialNature {
 		rootNode = new HeSceneNode("Root Node", this);
 		imguiRootNode = new HeSceneNodeImgui("imgui", this);
 
-		visualDebugger = new HeVisualDebugger(this, graphics);
+		visualDebugger = new HeVisualDebugger(name + ".Visual Debugger", this, graphics);
 	}
 
 	HeScene::~HeScene()

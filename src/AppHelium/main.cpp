@@ -77,10 +77,6 @@ OnOff onoff;
 HeVisualDebugger* vd = nullptr;
 
 
-float cah = 0.0f;
-float cav = 0.0f;
-float cd = 3.0f;
-
 int main(int argc, char** argv)
 {
     // Load GLFW and Create a Window
@@ -138,6 +134,7 @@ int main(int argc, char** argv)
         gScene->SetMainCamera(pCamera);
 
         vd = gScene->GetVisualDebugger();
+        vd->AddAxisLines();
 
         //{
         //    auto pNode = gScene->CreateSceneNode("Mesh");
@@ -153,19 +150,6 @@ int main(int argc, char** argv)
         //    auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
         //    pMaterial->SetShader(pShader);
         //}
-
-        {
-            auto pNode = gScene->CreateSceneNode("Box");
-            auto pGeometry = gGraphics->GetGeometryPlane("Box", 1, 1, 1, 1, HePlaneType::XY);
-            pGeometry->Initialize();
-            pNode->AddGeometry(pGeometry);
-
-			auto pMaterial = gGraphics->GetMaterial("Box Material");
-			pGeometry->SetMaterial(pMaterial);
-
-			auto pShader = gGraphics->GetShader("vertexColor", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
-			pMaterial->SetShader(pShader);
-        }
 
         });
 
@@ -280,39 +264,23 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         //onoff.Previous();
-
-        cah -= 10;
     }
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
         //onoff.Next();
-
-        cah += 10;
     }
     else if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        cav += 10;
     }
     else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        cav -= 10;
     }
     else if (key == GLFW_KEY_PAGE_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        cd *= 0.9f;
     }
     else if (key == GLFW_KEY_PAGE_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-        cd *= 1.1f;
     }
-
-    auto p = glm::vec3(
-        cd * sin(glm::radians(cav)) * cos(glm::radians(cah)),
-        cd * cos(glm::radians(cav)),
-        cd * sin(glm::radians(cav)) * sin(glm::radians(cah)));
-
-    auto pNode = gScene->GetSceneNode("Box");
-    pNode->SetLocalPosition(p);
 }
 
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
