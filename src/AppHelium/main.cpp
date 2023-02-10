@@ -136,20 +136,20 @@ int main(int argc, char** argv)
         vd = gScene->GetVisualDebugger();
         vd->AddAxisLines();
 
-        //{
-        //    auto pNode = gScene->CreateSceneNode("Mesh");
-        //    auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+        {
+            auto pNode = gScene->CreateSceneNode("Mesh");
+            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
 
-        //    //pGeometry->SetFillMode(HeGeometry::Wireframe);
-        //    pGeometry->Initialize();
-        //    pNode->AddGeometry(pGeometry);
+            //pGeometry->SetFillMode(HeGeometry::Wireframe);
+            pGeometry->Initialize();
+            pNode->AddGeometry(pGeometry);
 
-        //    auto pMaterial = gGraphics->GetMaterial("Mesh Material");
-        //    pGeometry->SetMaterial(pMaterial);
+            auto pMaterial = gGraphics->GetMaterial("Mesh Material");
+            pGeometry->SetMaterial(pMaterial);
 
-        //    auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
-        //    pMaterial->SetShader(pShader);
-        //}
+            auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+            pMaterial->SetShader(pShader);
+        }
 
         });
 

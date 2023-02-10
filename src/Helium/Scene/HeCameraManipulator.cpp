@@ -121,33 +121,39 @@ namespace ArtificialNature {
 
 		if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			//auto front = camera->GetCameraFront();
-			//camera->SetLocalPosition(camera->GetLocalPosition() + front);
+			auto df = camera->GetCameraFront() * (float)(distance * 0.01);
+			center = center + df;
+			ApplyCamera();
 		}
 		if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			//auto front = camera->GetCameraFront();
-			//camera->SetLocalPosition(camera->GetLocalPosition() - front);
+			auto df = camera->GetCameraFront() * (float)(distance * 0.01);
+			center = center - df;
+			ApplyCamera();
 		}
 		if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			//auto right = camera->GetCameraRight();
-			//camera->SetLocalPosition(camera->GetLocalPosition() - right);
+			auto dr = camera->GetCameraRight() * (float)(distance * 0.01);
+			center = center - dr;
+			ApplyCamera();
 		}
 		if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			//auto right = camera->GetCameraRight();
-			//camera->SetLocalPosition(camera->GetLocalPosition() + right);
+			auto dr = camera->GetCameraRight() * (float)(distance * 0.01);
+			center = center + dr;
+			ApplyCamera();
 		}
 		if (key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			//auto up = camera->GetCameraUp();
-			//camera->SetLocalPosition(camera->GetLocalPosition() + up);
+			auto du = camera->GetCameraUp() * (float)(distance * 0.01);
+			center = center + du;
+			ApplyCamera();
 		}
 		if (key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
-			//auto up = camera->GetCameraUp();
-			//camera->SetLocalPosition(camera->GetLocalPosition() - up);
+			auto du = camera->GetCameraUp() * (float)(distance * 0.01);
+			center = center - du;
+			ApplyCamera();
 		}
 	}
 
