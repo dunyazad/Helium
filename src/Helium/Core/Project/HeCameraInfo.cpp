@@ -80,7 +80,7 @@ namespace ArtificialNature {
 			rr[2] = r2;
 
 			//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
-			this->frustum = new HeFrustum(this->position, rr, this->colorImageWidth * 0.01f, this->colorImageHeight * 0.01f, this->original_fx * 0.01f, this->original_fy * 0.01f);
+			this->frustum = new HeFrustum(this->transformMatrix, this->colorImageWidth * 0.01f, this->colorImageHeight * 0.01f, this->original_fx * 0.01f, this->original_fy * 0.01f);
 		}
 	}
 
@@ -166,19 +166,19 @@ namespace ArtificialNature {
 			this->frameIndex = frameInfo->GetFrameIndex();
 			this->depthImageWidth = info["image_width"].get<int>();
 			this->depthImageHeight = info["image_height"].get<int>();
-			this->colorImageWidth = this->depthImageWidth * 7.5;
-			this->colorImageHeight = this->depthImageHeight * 7.5;
+			this->colorImageWidth = this->depthImageWidth * 7.5f;
+			this->colorImageHeight = this->depthImageHeight * 7.5f;
 			this->scaled_fx = info["fx"].get<float>();
 			this->scaled_fy = info["fy"].get<float>();
 			this->scaled_ox = info["ox"].get<float>();
 			this->scaled_oy = info["oy"].get<float>();
-			this->original_fx = this->scaled_fx * 7.5;
-			this->original_fy = this->scaled_fy * 7.5;
-			this->original_ox = this->scaled_ox * 7.5;
-			this->original_oy = this->scaled_oy * 7.5;
+			this->original_fx = this->scaled_fx * 7.5f;
+			this->original_fy = this->scaled_fy * 7.5f;
+			this->original_ox = this->scaled_ox * 7.5f;
+			this->original_oy = this->scaled_oy * 7.5f;
 			this->intrinsicMatrix = glm::make_mat4(info["intrinsic_matrix"].get<vector<float>>().data());
 			this->extrinsicMatrix = glm::make_mat4(info["extrinsic_matrix"].get<vector<float>>().data());
-			this->position = glm::vec3(glm::row(glm::inverse(this->extrinsicMatrix), 3));
+			this->position = glm::vec3(glm::row(glm::inverse(this->extrinsicMatrix), 3)) * 1000.0f;
 			this->rotation = glm::mat3(this->extrinsicMatrix);
 
 			this->transformMatrix = glm::mat4(this->rotation);
@@ -192,13 +192,10 @@ namespace ArtificialNature {
 				this->ambientIntensity = info["ambient_intensity"].get<float>();
 			}
 
-			//this->frustum = new HeFrustum(this->position, this->rotation, this->colorImageWidth, this->colorImageHeight, this->original_fx, this->original_fy);
+			this->transformMatrix[1] = -this->transformMatrix[1];
+			//this->transformMatrix[2] = -this->transformMatrix[2];
 
-			auto rr = this->rotation * glm::mat3(glm::angleAxis(glm::radians(180.0f), glm::vec3(1, 0, 0)));
-			rr[2] = -rr[2];
-
-			//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
-			this->frustum = new HeFrustum(this->position, rr, this->colorImageWidth, this->colorImageHeight, this->original_fx, this->original_fy);
+			this->frustum = new HeFrustum(this->transformMatrix, this->colorImageWidth, this->colorImageHeight, this->original_fx, this->original_fy);
 		}
 	}
 
@@ -238,7 +235,9 @@ namespace ArtificialNature {
 
 	glm::vec3 HeCameraInfo::UVToWorld(const glm::vec2& uv) const
 	{
-		glm::vec3 p = glm::vec3((uv.x - 0.5f) * this->colorImageWidth, (uv.y - 0.5f) * this->colorImageHeight, this->original_fx);
-		return this->transformMatrix* glm::vec4(p, 1);
+		auto p = glm::vec3((uv.x - 0.5f) * this->colorImageWidth, ((1.0f - uv.y) - 0.5f) * this->colorImageHeight, this->original_fx);
+		auto dir = glm::normalize(p);
+		auto rp = dir * this->original_fx;
+		return this->position + this->rotation * rp;
 	}
 }

@@ -33,6 +33,7 @@ namespace ArtificialNature {
         HePrimitivePresenter(const string& name, HeScene* scene, HeGraphics* graphics);
 
         void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
+        void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color);
         void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2);
 
         void AddLine(const glm::vec3& v0, const glm::vec3& v1);
@@ -46,6 +47,7 @@ namespace ArtificialNature {
         void AddBox(const glm::vec3& position, float xLength = 1.0f, float yLength = 1.0f, float zLength = 1.0f, const HeColor& color = HeColor::WHITE);
 
         void AddAxisLines(const glm::mat4& transform = glm::identity<glm::mat4>(), float xLenth = 1024.0f, float yLenth = 1024.0f, float zLenth = 1024.0f, const HeColor& xColor = HeColor::RED, const HeColor& yColor = HeColor::GREEN, const HeColor& zColor = HeColor::BLUE);
+        void AddHalfAxisLines(const glm::mat4& transform = glm::identity<glm::mat4>(), float xLenth = 1024.0f, float yLenth = 1024.0f, float zLenth = 1024.0f, const HeColor& xColor = HeColor::RED, const HeColor& yColor = HeColor::GREEN, const HeColor& zColor = HeColor::BLUE);
 
         inline const string& GetName() const { return name; }
         inline HeSceneNode* GetSceneNode() { return sceneNode; }
@@ -100,15 +102,33 @@ namespace ArtificialNature {
 			}
 		}
         
+        inline void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color)
+        {
+            auto group = GetGroup("Default");
+            if (group != nullptr)
+            {
+                group->AddTriangle(v0, v1, v2, color);
+            }
+        }
+
+        inline void AddTriangle(const string& groupName, const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color)
+        {
+            auto group = GetGroup(groupName);
+            if (group != nullptr)
+            {
+                group->AddTriangle(v0, v1, v2, color);
+            }
+        }
+
         inline void AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2)
         {
             auto group = GetGroup("Default");
             if (group != nullptr)
-            { 
-				group->AddTriangle(v0, v1, v2, color0, color1, color2);
-			}
-		}
-        
+            {
+                group->AddTriangle(v0, v1, v2, color0, color1, color2);
+            }
+        }
+
         inline void AddTriangle(const string& groupName, const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2)
         {
             auto group = GetGroup(groupName);
@@ -262,20 +282,38 @@ namespace ArtificialNature {
             }
         }
 
+        void AddHalfAxisLines(const string& groupName, const glm::mat4& transform = glm::identity<glm::mat4>(), float xLenth = 1024.0f, float yLenth = 1024.0f, float zLenth = 1024.0f, const HeColor& xColor = HeColor::RED, const HeColor& yColor = HeColor::GREEN, const HeColor& zColor = HeColor::BLUE)
+        {
+            auto group = GetGroup(groupName);
+            if (group != nullptr)
+            {
+                group->AddHalfAxisLines(transform, xLenth, yLenth, zLenth, xColor, yColor, zColor);
+            }
+        }
+
+        void AddHalfAxisLines(const glm::mat4& transform = glm::identity<glm::mat4>(), float xLenth = 1024.0f, float yLenth = 1024.0f, float zLenth = 1024.0f, const HeColor& xColor = HeColor::RED, const HeColor& yColor = HeColor::GREEN, const HeColor& zColor = HeColor::BLUE)
+        {
+            auto group = GetGroup("Default");
+            if (group != nullptr)
+            {
+                group->AddHalfAxisLines(transform, xLenth, yLenth, zLenth, xColor, yColor, zColor);
+            }
+        }
+
         inline HePrimitivePresenter* GetGroup(const string& groupName)
         {
             if (groups.count(groupName) == 0)
             {
-                return nullptr;
+                auto group = new HePrimitivePresenter(groupName + ".PrimitivePresenter", this->scene, this->graphics);
+                groups[groupName] = group;
             }
-            else
-            {
-                return groups[groupName];
-            }
+            return groups[groupName];
         }
 
     protected:
         string name;
+        HeScene* scene = nullptr;
+        HeGraphics* graphics = nullptr;
         map<string, HePrimitivePresenter*> groups;
     };
 }

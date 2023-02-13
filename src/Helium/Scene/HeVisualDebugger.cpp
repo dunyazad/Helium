@@ -96,6 +96,11 @@ namespace ArtificialNature {
         AddTriangle(v0, v1, v2, HeColor::WHITE, HeColor::WHITE, HeColor::WHITE);
     }
 
+    void HePrimitivePresenter::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color)
+    {
+        AddTriangle(v0, v1, v2, color, color, color);
+    }
+
     void HePrimitivePresenter::AddTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const HeColor& color0, const HeColor& color1, const HeColor& color2)
     {
         int vertexCount = (int)lineGeometry->GetVertexCount();
@@ -284,22 +289,64 @@ namespace ArtificialNature {
         axisGeometry->SetThickness(1);
         axisGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
 
-        axisGeometry->AddVertex(glm::vec3(-1024, 0, 0));
-        axisGeometry->AddVertex(glm::vec3(1024, 0, 0));
-        axisGeometry->AddVertex(glm::vec3(0, -1024, 0));
-        axisGeometry->AddVertex(glm::vec3(0, 1024, 0));
-        axisGeometry->AddVertex(glm::vec3(0, 0, -1024));
-        axisGeometry->AddVertex(glm::vec3(0, 0, 1024));
+        auto nx = glm::vec3(transform * glm::vec4(-xLenth * 0.5f, 0.0f, 0.0f, 1.0f));
+        auto px = glm::vec3(transform * glm::vec4( xLenth * 0.5f, 0.0f, 0.0f, 1.0f));
+        auto ny = glm::vec3(transform * glm::vec4(0.0f, -yLenth * 0.5f, 0.0f, 1.0f));
+        auto py = glm::vec3(transform * glm::vec4(0.0f,  yLenth * 0.5f, 0.0f, 1.0f));
+        auto nz = glm::vec3(transform * glm::vec4(0.0f, 0.0f, -zLenth * 0.5f, 1.0f));
+        auto pz = glm::vec3(transform * glm::vec4(0.0f, 0.0f,  zLenth * 0.5f, 1.0f));
 
-        axisGeometry->AddColor(HeColor::RED);
-        axisGeometry->AddColor(HeColor::RED);
-        axisGeometry->AddColor(HeColor::GREEN);
-        axisGeometry->AddColor(HeColor::GREEN);
-        axisGeometry->AddColor(HeColor::BLUE);
-        axisGeometry->AddColor(HeColor::BLUE);
+        axisGeometry->AddVertex(nx);
+        axisGeometry->AddVertex(px);
+        axisGeometry->AddVertex(ny);
+        axisGeometry->AddVertex(py);
+        axisGeometry->AddVertex(nz);
+        axisGeometry->AddVertex(pz);
+
+        axisGeometry->AddColor(xColor);
+        axisGeometry->AddColor(xColor);
+        axisGeometry->AddColor(yColor);
+        axisGeometry->AddColor(yColor);
+        axisGeometry->AddColor(zColor);
+        axisGeometry->AddColor(zColor);
+    }
+
+    void HePrimitivePresenter::AddHalfAxisLines(const glm::mat4& transform, float xLenth, float yLenth, float zLenth, const HeColor& xColor, const HeColor& yColor, const HeColor& zColor)
+    {
+        axisSceneNode = scene->CreateSceneNode(name + ".AxisSceneNode");
+        axisGeometry = graphics->GetGeometryThickLines(name + ".AxisGeometry");
+        axisGeometry->Initialize();
+        sceneNode->AddChild(axisSceneNode);
+        axisSceneNode->AddGeometry(axisGeometry);
+        axisMaterial = graphics->GetMaterial(name + ".AxisMaterial");
+        axisShader = graphics->GetShader(name + ".AxisShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        axisMaterial->SetShader(axisShader);
+        axisGeometry->SetMaterial(axisMaterial);
+        axisGeometry->SetThickness(1);
+        axisGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+
+        auto o = glm::vec3(transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        auto px = glm::vec3(transform * glm::vec4( xLenth * 0.5f, 0.0f, 0.0f, 1.0f));
+        auto py = glm::vec3(transform * glm::vec4(0.0f,  yLenth * 0.5f, 0.0f, 1.0f));
+        auto pz = glm::vec3(transform * glm::vec4(0.0f, 0.0f,  zLenth * 0.5f, 1.0f));
+
+        axisGeometry->AddVertex(o);
+        axisGeometry->AddVertex(px);
+        axisGeometry->AddVertex(o);
+        axisGeometry->AddVertex(py);
+        axisGeometry->AddVertex(o);
+        axisGeometry->AddVertex(pz);
+
+        axisGeometry->AddColor(xColor);
+        axisGeometry->AddColor(xColor);
+        axisGeometry->AddColor(yColor);
+        axisGeometry->AddColor(yColor);
+        axisGeometry->AddColor(zColor);
+        axisGeometry->AddColor(zColor);
     }
 
     HeVisualDebugger::HeVisualDebugger(const string& name, HeScene* scene, HeGraphics* graphics)
+        : name(name), scene(scene), graphics(graphics)
     {
         auto group = new HePrimitivePresenter(name + ".PrimitivePresenter", scene, graphics);
         groups["Default"] = group;

@@ -138,7 +138,7 @@ int main(int argc, char** argv)
 
         {
             auto pNode = gScene->CreateSceneNode("Mesh");
-            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl", 1000.0f, 1000.0f, 1000.0f);
 
             //pGeometry->SetFillMode(HeGeometry::Wireframe);
             pGeometry->Initialize();
@@ -150,6 +150,98 @@ int main(int argc, char** argv)
             auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
             pMaterial->SetShader(pShader);
         }
+
+        auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+
+        auto DrawFrameOutline = [&](HeProject* project, int frameIndex, const HeColor& color) {
+            auto frames = project->GetFrames();
+            auto frame = frames[frameIndex];
+            auto cameraInfo = frame->GetCameraInfo();
+            auto frustum = cameraInfo->GetFrustum();
+
+            auto lu = cameraInfo->UVToWorld(glm::vec2(0, 1));
+            auto ld = cameraInfo->UVToWorld(glm::vec2(0, 0));
+            auto ru = cameraInfo->UVToWorld(glm::vec2(1, 1));
+            auto rd = cameraInfo->UVToWorld(glm::vec2(1, 0));
+
+            auto wlu = cameraInfo->WorldToUV(lu);
+            auto wld = cameraInfo->WorldToUV(ld);
+            auto wru = cameraInfo->WorldToUV(ru);
+            auto wrd = cameraInfo->WorldToUV(rd);
+
+            cout << "wlu : " << wlu << endl;
+            cout << "wld : " << wld << endl;
+            cout << "wru : " << wru << endl;
+            cout << "wrd : " << wrd << endl;
+
+            cout << "cameraInfo->UVToWorld(glm::vec2(0.0, 0.0)) = " << cameraInfo->UVToWorld(glm::vec2(0.0, 0.0)) << endl;
+            cout << "??? : " << cameraInfo->WorldToUV(cameraInfo->UVToWorld(glm::vec2(1.0, 1.0))) << endl;
+
+            vd->AddLine(cameraInfo->GetPosition(), cameraInfo->UVToWorld(glm::vec2(0.25, 0.75)), HeColor::CYAN, HeColor::CYAN);
+
+            auto pc = frustum->GetPosition();
+            auto ic = frustum->GetImageCenter();
+            auto ilu = frustum->GetImageLeftUp();
+            auto ild = frustum->GetImageLeftDown();
+            auto iru = frustum->GetImageRightUp();
+            auto ird = frustum->GetImageRightDown();
+
+            vd->AddLine(pc, ic, color, color);
+            vd->AddLine(pc, ilu, color, color);
+            vd->AddLine(pc, ild, color, color);
+            vd->AddLine(pc, iru, color, color);
+            vd->AddLine(pc, ird, color, color);
+
+            //if (frameIndex == 4)
+            //{
+            //    auto tw = HeColor(1.0f, 1.0f, 1.0f, 1.0f);
+            //    vd->AddTriangle(pc, ild, ilu, tw);
+            //    vd->AddTriangle(pc, ilu, iru, tw);
+            //    vd->AddTriangle(pc, iru, ird, tw);
+            //    vd->AddTriangle(pc, ird, ild, tw);
+            //}
+
+            vd->AddLine(ilu, iru, color, color);
+            vd->AddLine(iru, ird, color, color);
+            vd->AddLine(ird, ild, color, color);
+            vd->AddLine(ild, ilu, color, color);
+            vd->AddHalfAxisLines(cameraInfo->GetTransformMatrix(), 100, 100, 100);
+        };
+
+        auto DrawOverlap = [&](HeProject* project, int frameA, int frameB) {
+            auto frames = project->GetFrames();
+
+            auto pGeometry = gGraphics->GetGeometry("Mesh");
+            auto nof = pGeometry->GetFaceCount();
+            for (size_t i = 0; i < nof; i++)
+            {
+                auto i0 = pGeometry->GetIndex(i * 3);
+                auto i1 = pGeometry->GetIndex(i * 3 + 1);
+                auto i2 = pGeometry->GetIndex(i * 3 + 2);
+
+                auto& v0 = pGeometry->GetVertex(i0);
+                auto& v1 = pGeometry->GetVertex(i1);
+                auto& v2 = pGeometry->GetVertex(i2);
+
+                if (frames[frameA]->ContainsAny(v0, v1, v2) && frames[frameB]->ContainsAny(v0, v1, v2))
+                {
+                    vd->AddTriangle(v0, v1, v2, HeColor::MAGENTA);
+                }
+                else if (frames[frameA]->ContainsAny(v0, v1, v2))
+                {
+                    vd->AddTriangle(v0, v1, v2, HeColor::RED);
+                }
+                else if (frames[frameB]->ContainsAny(v0, v1, v2))
+                {
+                    vd->AddTriangle(v0, v1, v2, HeColor::BLUE);
+                }
+            }
+
+            DrawFrameOutline(project, frameA, HeColor::RED);
+            DrawFrameOutline(project, frameB, HeColor::BLUE);
+        };
+
+        DrawOverlap(project, 3, 4);
 
         });
 
@@ -179,8 +271,8 @@ int main(int argc, char** argv)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
-        //glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
-        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+        //glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         gScene->Update((float)delta);

@@ -3,10 +3,11 @@
 
 namespace ArtificialNature {
 
-	HeFrustum::HeFrustum(const glm::vec3& position, const glm::mat3& rotation, int imageWidth, int imageHeight, float fx, float fy)
+	HeFrustum::HeFrustum(const glm::mat4& transform, int imageWidth, int imageHeight, float fx, float fy)
 	{
-		this->position = position;
-		this->rotation = rotation;
+		this->transform = transform;
+		this->position = transform[3];
+		this->rotation = transform;
 		this->imageWidth = imageWidth;
 		this->imageHeight = imageHeight;
 		this->fx = fx;
@@ -15,20 +16,32 @@ namespace ArtificialNature {
 		auto halfWidth = imageWidth * 0.5f;
 		auto halfHeight = imageHeight * 0.5f;
 
-		auto imageCenter = glm::vec3(0, 0, fx);
-		auto imageLeftUp = imageCenter + glm::vec3(-halfWidth, halfHeight, 0);
-		auto imageLeftDown = imageCenter + glm::vec3(-halfWidth, -halfHeight, 0);
-		auto imageRightUp = imageCenter + glm::vec3(halfWidth, halfHeight, 0);
-		auto imageRightDown = imageCenter + glm::vec3(halfWidth, -halfHeight, 0);
+		//this->fov = glm::radians(2 * atan(halfWidth / fx));
+		//this->projection = glm::perspective(this->fov, (float)imageWidth / (float)imageHeight, 0.00001f, fx);
+		//auto mvp = this->projection;// *view* this->transform;
 
-		this->transform = glm::mat4(rotation);
-		this->transform[3] = glm::vec4(position, 1);
+		auto iCenter = glm::vec3(0, 0, fx);
+		auto iLeftUp = glm::vec3(-halfWidth, halfHeight, fx);
+		auto iLeftDown = glm::vec3(-halfWidth, -halfHeight, fx);
+		auto iRightUp = glm::vec3(halfWidth, halfHeight, fx);
+		auto iRightDown = glm::vec3(halfWidth, -halfHeight, fx);
 
-		this->imageCenter = this->transform * glm::vec4(imageCenter, 1);
-		this->imageLeftUp = this->transform * glm::vec4(imageLeftUp, 1);
-		this->imageLeftDown = this->transform * glm::vec4(imageLeftDown, 1);
-		this->imageRightUp = this->transform * glm::vec4(imageRightUp, 1);
-		this->imageRightDown = this->transform * glm::vec4(imageRightDown, 1);
+		this->imageCenter = this->transform * glm::vec4(iCenter, 0);
+		this->imageLeftUp = this->transform * glm::vec4(iLeftUp, 0);
+		this->imageLeftDown = this->transform * glm::vec4(iLeftDown, 0);
+		this->imageRightUp = this->transform * glm::vec4(iRightUp, 0);
+		this->imageRightDown = this->transform * glm::vec4(iRightDown, 0);
+
+		//auto ic = mvp * glm::vec4(0.5f, 0.5f, 1.0f, 1.0f);// ic /= ic.w;
+		//this->imageCenter = ic * this->transform;
+		//auto ilu = mvp * glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);// ilu /= ilu.w;
+		//this->imageLeftUp = ilu * this->transform;
+		//auto ild = mvp * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);// ild /= ild.w;
+		//this->imageLeftDown = ild * this->transform;
+		//auto iru = mvp * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);// iru /= iru.w;
+		//this->imageRightUp = iru * this->transform;
+		//auto ird = mvp * glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);// ird /= ird.w;
+		//this->imageRightDown = ird * this->transform;
 
 		this->forward = rotation[2];
 		this->right = rotation[0];
@@ -39,11 +52,13 @@ namespace ArtificialNature {
 		auto dru = glm::normalize(this->imageRightUp - this->position);
 		auto drd = glm::normalize(this->imageRightDown - this->position);
 
+		this->nearPlaneNormal = glm::normalize(this->imageCenter - this->position);
 		this->leftPlaneNormal = glm::normalize(glm::cross( dlu, dld));
 		this->rightPlaneNormal = glm::normalize(glm::cross(drd, dru));
 		this->upperPlaneNormal = glm::normalize(glm::cross(dru, dlu));
 		this->lowerPlaneNormal = glm::normalize(glm::cross(dld, drd));
 
+		this->nearPlane = new HePlane(this->position, this->nearPlaneNormal);
 		this->leftPlane = new HePlane(this->position, this->leftPlaneNormal);
 		this->rightPlane = new HePlane(this->position, this->rightPlaneNormal);
 		this->upperPlane = new HePlane(this->position, this->upperPlaneNormal);
@@ -52,6 +67,7 @@ namespace ArtificialNature {
 
 	HeFrustum::~HeFrustum()
 	{
+		delete nearPlane;
 		delete leftPlane;
 		delete rightPlane;
 		delete upperPlane;
@@ -60,6 +76,7 @@ namespace ArtificialNature {
 
 	bool HeFrustum::Contains(const glm::vec3& point) const
 	{
+		if (this->nearPlane->PointIsOnPositiveSide(point) == false) return false;
 		if (this->leftPlane->PointIsOnPositiveSide(point)) return false;
 		if (this->rightPlane->PointIsOnPositiveSide(point)) return false;
 		if (this->upperPlane->PointIsOnPositiveSide(point)) return false;

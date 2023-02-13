@@ -61,4 +61,28 @@ namespace ArtificialNature {
 		}
 	}
 
+	bool HeFrameInfo::Contains(const glm::vec3& point) const
+	{
+		return this->cameraInfo->GetFrustum()->Contains(point);
+	}
+
+	bool HeFrameInfo::ContainsAny(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2) const
+	{
+		return this->cameraInfo->GetFrustum()->ContainsAny(v0, v1, v2);
+	}
+	
+	bool HeFrameInfo::ContainsAny(const vector<glm::vec3>& points) const
+	{
+		return this->cameraInfo->GetFrustum()->ContainsAny(points);
+	}
+
+	bool HeFrameInfo::ContainsAll(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2) const
+	{
+		return this->cameraInfo->GetFrustum()->ContainsAll(v0, v1, v2);
+	}
+	
+	bool HeFrameInfo::ContainsAll(const vector<glm::vec3>& points) const
+	{
+		return this->cameraInfo->GetFrustum()->ContainsAll(points);
+	}
 }

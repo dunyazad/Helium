@@ -9,7 +9,7 @@ namespace ArtificialNature {
 	class HeFrustum
 	{
 	public:
-		HeFrustum(const glm::vec3& position, const glm::mat3& rotation, int imageWidth, int imageHeight, float fx, float fy);
+		HeFrustum(const glm::mat4& transform, int imageWidth, int imageHeight, float fx, float fy);
 
 		~HeFrustum();
 
@@ -53,12 +53,15 @@ namespace ArtificialNature {
 		int imageHeight = 0;
 		float fx = 0.0f;
 		float fy = 0.0f;
+		float fov = 0.0f;
 
-		glm::mat4 transform = glm::mat4();
+		glm::mat4 transform = glm::identity<glm::mat4>();
+		glm::mat4 projection = glm::identity<glm::mat4>();
 		glm::vec3 forward = glm::vec3(0, 0, 0);
 		glm::vec3 right = glm::vec3(0, 0, 0);
 		glm::vec3 up = glm::vec3(0, 0, 0);
 
+		glm::vec3 nearPlaneNormal = glm::vec3(0, 0, 0);
 		glm::vec3 leftPlaneNormal = glm::vec3(0, 0, 0);
 		glm::vec3 rightPlaneNormal = glm::vec3(0, 0, 0);
 		glm::vec3 upperPlaneNormal = glm::vec3(0, 0, 0);
@@ -70,6 +73,7 @@ namespace ArtificialNature {
 		glm::vec3 imageRightUp = glm::vec3(0, 0, 0);
 		glm::vec3 imageRightDown = glm::vec3(0, 0, 0);
 
+		HePlane* nearPlane = nullptr;
 		HePlane* leftPlane = nullptr;
 		HePlane* rightPlane = nullptr;
 		HePlane* upperPlane = nullptr;

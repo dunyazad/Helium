@@ -19,7 +19,7 @@ namespace ArtificialNature {
 		return q;
 	}
 
-	HeGeometry* HeResourceIO::ReadPoints(HeGraphics* pGraphics, const string& name, const string& filename)
+	HeGeometry* HeResourceIO::ReadPoints(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		HeFile file;
 		file.Open(filename, false);
@@ -40,7 +40,7 @@ namespace ArtificialNature {
 			ss >> r; ss >> g; ss >> b; ss >> a;
 			ss >> nx; ss >> ny; ss >> nz;
 
-			glm::vec3 translation(px * 100, py * 100, pz * 100);
+			glm::vec3 translation(px * scaleX, py * scaleY, pz * scaleZ);
 			glm::quat rotation = GetRotation(glm::vec3(0, 0, 1), glm::vec3(nx, ny, nz));
 
 			glm::vec3 ll(-scale * 0.5f, -scale * 0.5f, 0.0f);
@@ -55,7 +55,7 @@ namespace ArtificialNature {
 		return pGeometry;
 	}
 
-	HeGeometry* HeResourceIO::ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
+	HeGeometry* HeResourceIO::ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		ifstream ifs(filename);
 		if (ifs.is_open() == false)
@@ -67,18 +67,18 @@ namespace ArtificialNature {
 		if (solid == "solid ")
 		{
 			ifs.close();
-			return ReadASCIISTLFile(pGraphics, name, filename);
+			return ReadASCIISTLFile(pGraphics, name, filename, scaleX, scaleY, scaleZ);
 		}
 		else
 		{
 			ifs.close();
-			return ReadBinarySTLFile(pGraphics, name, filename);
+			return ReadBinarySTLFile(pGraphics, name, filename, scaleX, scaleY, scaleZ);
 		}
 
 		return nullptr;
 	}
 
-	HeGeometry* HeResourceIO::ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
+	HeGeometry* HeResourceIO::ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		pGeometry->Initialize();
@@ -105,6 +105,10 @@ namespace ArtificialNature {
 				fread_s(&v2, 12, 12, 1, fp);
 				fread_s(&dummy, 2, 2, 1, fp);
 
+				v0.x *= scaleX; v0.y *= scaleY; v0.z *= scaleZ;
+				v1.x *= scaleX; v1.y *= scaleY; v1.z *= scaleZ;
+				v2.x *= scaleX; v2.y *= scaleY; v2.z *= scaleZ;
+
 				pGeometry->AddTriangle(v0, v1, v2, fn, fn, fn);
 			}
 		}
@@ -112,7 +116,7 @@ namespace ArtificialNature {
 		return pGeometry;
 	}
 
-	HeGeometry* HeResourceIO::ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
+	HeGeometry* HeResourceIO::ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		pGeometry->Initialize();
@@ -144,9 +148,9 @@ namespace ArtificialNature {
 			}
 			else if (words[0] == "vertex")
 			{
-				vertices[vertex_index].x = safe_stof(words[1]);
-				vertices[vertex_index].y = safe_stof(words[2]);
-				vertices[vertex_index].z = safe_stof(words[3]);
+				vertices[vertex_index].x = safe_stof(words[1]) * scaleX;
+				vertices[vertex_index].y = safe_stof(words[2]) * scaleY;
+				vertices[vertex_index].z = safe_stof(words[3]) * scaleZ;
 				vertex_index++;
 			}
 			else if (words[0] == "endfacet")
@@ -159,7 +163,7 @@ namespace ArtificialNature {
 		return pGeometry;
 	}
 
-	HeGeometry* HeResourceIO::ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filename)
+	HeGeometry* HeResourceIO::ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		pGeometry->Initialize();
@@ -177,7 +181,7 @@ namespace ArtificialNature {
 		while (buffer.good())
 		{
 			getline(buffer, line);
-			ParseOneLine(line, vertices, uvs, vertex_normals, faces);
+			ParseOneLine(line, vertices, uvs, vertex_normals, faces, scaleX, scaleY, scaleZ);
 		}
 
 		for (auto& face : faces)
@@ -215,6 +219,10 @@ namespace ArtificialNature {
 				auto& uv1 = uvs[fi1[1] - 1];
 				auto& uv2 = uvs[fi2[1] - 1];
 
+				v0.x *= scaleX; v0.y *= scaleY; v0.z *= scaleZ;
+				v1.x *= scaleX; v1.y *= scaleY; v1.z *= scaleZ;
+				v2.x *= scaleX; v2.y *= scaleY; v2.z *= scaleZ;
+
 				pGeometry->AddTriangle(v0, v1, v2, uv0, uv1, uv2);
 			}
 			else if (ni_ok)
@@ -227,15 +235,23 @@ namespace ArtificialNature {
 				auto& vn1 = vertex_normals[fi1[2] - 1];
 				auto& vn2 = vertex_normals[fi2[2] - 1];
 
+				v0.x *= scaleX; v0.y *= scaleY; v0.z *= scaleZ;
+				v1.x *= scaleX; v1.y *= scaleY; v1.z *= scaleZ;
+				v2.x *= scaleX; v2.y *= scaleY; v2.z *= scaleZ;
+
 				pGeometry->AddTriangle(v0, v1, v2, vn0, vn1, vn2);
 			}
 			else
 			{
-			auto& v0 = vertices[fi0[0] - 1];
-			auto& v1 = vertices[fi1[0] - 1];
-			auto& v2 = vertices[fi2[0] - 1];
+				auto& v0 = vertices[fi0[0] - 1];
+				auto& v1 = vertices[fi1[0] - 1];
+				auto& v2 = vertices[fi2[0] - 1];
 
-			pGeometry->AddTriangle(v0, v1, v2);
+				v0.x *= scaleX; v0.y *= scaleY; v0.z *= scaleZ;
+				v1.x *= scaleX; v1.y *= scaleY; v1.z *= scaleZ;
+				v2.x *= scaleX; v2.y *= scaleY; v2.z *= scaleZ;
+
+				pGeometry->AddTriangle(v0, v1, v2);
 			}
 		}
 
@@ -247,7 +263,8 @@ namespace ArtificialNature {
 		vector<glm::vec3>& vertices,
 		vector<glm::vec2>& uvs,
 		vector<glm::vec3>& vertex_normals,
-		vector<tuple<glm::ivec3, glm::ivec3, glm::ivec3>>& faces)
+		vector<tuple<glm::ivec3, glm::ivec3, glm::ivec3>>& faces,
+		float scaleX, float scaleY, float scaleZ)
 	{
 		if (line.empty())
 			return;
@@ -256,9 +273,9 @@ namespace ArtificialNature {
 
 		if (words[0] == "v")
 		{
-			float x = safe_stof(words[1]);
-			float y = safe_stof(words[2]);
-			float z = safe_stof(words[3]);
+			float x = safe_stof(words[1]) * scaleX;
+			float y = safe_stof(words[2]) * scaleY;
+			float z = safe_stof(words[3]) * scaleZ;
 			vertices.push_back(glm::vec3(x, y, z));
 		}
 		else if (words[0] == "vt")
@@ -319,7 +336,7 @@ namespace ArtificialNature {
 		}
 	}
 
-	void HeResourceIO::WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filename)
+	void HeResourceIO::WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		if (pGeometry == nullptr) {
@@ -355,12 +372,16 @@ namespace ArtificialNature {
 				auto vi1 = pGeometry->GetIndex(i * 3 + 1);
 				auto vi2 = pGeometry->GetIndex(i * 3 + 2);
 
-				auto& v0 = pGeometry->GetVertex(vi0);
-				auto& v1 = pGeometry->GetVertex(vi1);
-				auto& v2 = pGeometry->GetVertex(vi2);
+				auto v0 = pGeometry->GetVertex(vi0);
+				auto v1 = pGeometry->GetVertex(vi1);
+				auto v2 = pGeometry->GetVertex(vi2);
 
 				auto& fn = pGeometry->GetNormal(vi0);
 				short dummy = 0;
+
+				v0.x *= scaleX; v0.y *= scaleY; v0.z *= scaleZ;
+				v1.x *= scaleX; v1.y *= scaleY; v1.z *= scaleZ;
+				v2.x *= scaleX; v2.y *= scaleY; v2.z *= scaleZ;
 
 				memcpy(buffer + buffer_index, &fn, 12); buffer_index += 12;
 				memcpy(buffer + buffer_index, &v0, 12); buffer_index += 12;
@@ -377,7 +398,7 @@ namespace ArtificialNature {
 		fclose(fp);
 	}
 
-	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filename)
+	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		auto pGeometry = pGraphics->GetGeometryTriangleSoup(name);
 		if (pGeometry == nullptr) {
@@ -393,7 +414,9 @@ namespace ArtificialNature {
 		auto nov = (int)pGeometry->GetVertexCount();
 		for (int i = 0; i < nov; i++)
 		{
-			auto& v = pGeometry->GetVertex(i);
+			auto v = pGeometry->GetVertex(i);
+			v.x *= scaleX; v.y *= scaleY; v.z *= scaleZ;
+
 			ss << "v " << v << endl;
 		}
 
@@ -450,7 +473,7 @@ namespace ArtificialNature {
 		ofs.close();
 	}
 
-	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const vector<HeGeometryTriangleSoup*>& geometries, const string& filename)
+	void HeResourceIO::WriteOBJFile(HeGraphics* pGraphics, const vector<HeGeometryTriangleSoup*>& geometries, const string& filename, float scaleX, float scaleY, float scaleZ)
 	{
 		auto filepath = filesystem::path(filename);
 		auto directory = filepath.parent_path();
@@ -487,7 +510,8 @@ namespace ArtificialNature {
 			auto nov = (int)geometry->GetVertexCount();
 			for (int i = 0; i < nov; i++)
 			{
-				auto& v = geometry->GetVertex(i);
+				auto v = geometry->GetVertex(i);
+				v.x *= scaleX; v.y *= scaleY; v.z *= scaleZ;
 				ss << "v " << v << endl;
 			}
 

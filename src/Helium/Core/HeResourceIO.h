@@ -13,15 +13,15 @@ namespace ArtificialNature {
 	class HeResourceIO
 	{
 	public:
-		static HeGeometry* ReadPoints(HeGraphics* pGraphics, const string& name, const string& filename);
-		static HeGeometry* ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
-		static HeGeometry* ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
-		static HeGeometry* ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
-		static HeGeometry* ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filename);
+		static HeGeometry* ReadPoints(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
+		static HeGeometry* ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
+		static HeGeometry* ReadBinarySTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
+		static HeGeometry* ReadASCIISTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
+		static HeGeometry* ReadOBJFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
 
-		static void WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filename);
-		static void WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filename);
-		static void WriteOBJFile(HeGraphics* pGraphics, const vector<HeGeometryTriangleSoup*>& geometries, const string& filename);
+		static void WriteSTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
+		static void WriteOBJFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
+		static void WriteOBJFile(HeGraphics* pGraphics, const vector<HeGeometryTriangleSoup*>& geometries, const string& filename, float scaleX = 1.0f, float scaleY = 1.0f, float scaleZ = 1.0f);
 
 	protected:
 		static void ParseOneLine(
@@ -29,7 +29,8 @@ namespace ArtificialNature {
 			vector<glm::vec3>& vertices,
 			vector<glm::vec2>& uvs,
 			vector<glm::vec3>& vertex_normals,
-			vector<tuple<glm::ivec3, glm::ivec3, glm::ivec3>>& faces);
+			vector<tuple<glm::ivec3, glm::ivec3, glm::ivec3>>& faces,
+			float scaleX, float scaleY, float scaleZ);
 	};
 
 }
