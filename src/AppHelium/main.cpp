@@ -136,11 +136,11 @@ int main(int argc, char** argv)
         vd = gScene->GetVisualDebugger();
         vd->AddAxisLines();
 
-        {
+ /*       {
             auto pNode = gScene->CreateSceneNode("Mesh");
-            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl", 1000.0f, 1000.0f, 1000.0f);
+            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
 
-            //pGeometry->SetFillMode(HeGeometry::Wireframe);
+            pGeometry->SetFillMode(HeGeometry::Wireframe);
             pGeometry->Initialize();
             pNode->AddGeometry(pGeometry);
 
@@ -149,35 +149,30 @@ int main(int argc, char** argv)
 
             auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
             pMaterial->SetShader(pShader);
-        }
+        }*/
 
         auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+        auto frames = project->GetFrames();
+
+  /*      auto DrawFramePixels = [&](HeProject* project, int frameIndex) {
+            auto frame = frames[frameIndex];
+            auto image = frame->LoadColorImage(gGraphics);
+
+            for (size_t h = 0; h < image->GetHeight(); h++)
+            {
+                for (size_t w = 0; w < image->GetWidth(); w++)
+                {
+
+                }
+            }
+        };*/
 
         auto DrawFrameOutline = [&](HeProject* project, int frameIndex, const HeColor& color) {
-            auto frames = project->GetFrames();
             auto frame = frames[frameIndex];
             auto cameraInfo = frame->GetCameraInfo();
             auto frustum = cameraInfo->GetFrustum();
 
-            auto lu = cameraInfo->UVToWorld(glm::vec2(0, 1));
-            auto ld = cameraInfo->UVToWorld(glm::vec2(0, 0));
-            auto ru = cameraInfo->UVToWorld(glm::vec2(1, 1));
-            auto rd = cameraInfo->UVToWorld(glm::vec2(1, 0));
-
-            auto wlu = cameraInfo->WorldToUV(lu);
-            auto wld = cameraInfo->WorldToUV(ld);
-            auto wru = cameraInfo->WorldToUV(ru);
-            auto wrd = cameraInfo->WorldToUV(rd);
-
-            cout << "wlu : " << wlu << endl;
-            cout << "wld : " << wld << endl;
-            cout << "wru : " << wru << endl;
-            cout << "wrd : " << wrd << endl;
-
-            cout << "cameraInfo->UVToWorld(glm::vec2(0.0, 0.0)) = " << cameraInfo->UVToWorld(glm::vec2(0.0, 0.0)) << endl;
-            cout << "??? : " << cameraInfo->WorldToUV(cameraInfo->UVToWorld(glm::vec2(1.0, 1.0))) << endl;
-
-            vd->AddLine(cameraInfo->GetPosition(), cameraInfo->UVToWorld(glm::vec2(0.25, 0.75)), HeColor::CYAN, HeColor::CYAN);
+            //vd->AddLine(cameraInfo->GetPosition(), cameraInfo->UVToWorld(glm::vec2(0.25, 0.75)), HeColor::CYAN, HeColor::CYAN);
 
             auto pc = frustum->GetPosition();
             auto ic = frustum->GetImageCenter();
@@ -191,6 +186,11 @@ int main(int argc, char** argv)
             vd->AddLine(pc, ild, color, color);
             vd->AddLine(pc, iru, color, color);
             vd->AddLine(pc, ird, color, color);
+
+            cout << "ilu : " << ilu << endl;
+            cout << "ild : " << ild << endl;
+            cout << "iru : " << iru << endl;
+            cout << "ird : " << ird << endl;
 
             //if (frameIndex == 4)
             //{
@@ -208,9 +208,24 @@ int main(int argc, char** argv)
             vd->AddHalfAxisLines(cameraInfo->GetTransformMatrix(), 100, 100, 100);
         };
 
-        auto DrawOverlap = [&](HeProject* project, int frameA, int frameB) {
-            auto frames = project->GetFrames();
+        auto DrawFrameImage = [&](HeProject* project, int frameIndex) {
+            auto frame = frames[frameIndex];
+            auto cameraInfo = frame->GetCameraInfo();
+            auto frustum = cameraInfo->GetFrustum();
 
+            auto ilu = frustum->GetImageLeftUp();
+            auto ild = frustum->GetImageLeftDown();
+            auto iru = frustum->GetImageRightUp();
+            auto ird = frustum->GetImageRightDown();
+
+            auto image = frame->LoadColorImage(gGraphics);
+            auto texture = gGraphics->GetTexture(format("frame_{}", frameIndex), image);
+            texture->Initialize();
+
+            vd->AddPlane(ilu, ild, iru, ird, texture);
+        };
+
+        auto DrawOverlap = [&](HeProject* project, int frameA, int frameB) {
             auto pGeometry = gGraphics->GetGeometry("Mesh");
             auto nof = pGeometry->GetFaceCount();
             for (size_t i = 0; i < nof; i++)
@@ -241,7 +256,12 @@ int main(int argc, char** argv)
             DrawFrameOutline(project, frameB, HeColor::BLUE);
         };
 
-        DrawOverlap(project, 3, 4);
+        //DrawFramePixels(project, 3);
+        DrawFrameImage(project, 1);
+        DrawFrameImage(project, 2);
+        DrawFrameOutline(project, 1, HeColor::RED);
+        DrawFrameOutline(project, 2, HeColor::BLUE);
+        //DrawOverlap(project, 3, 4);
 
         });
 
