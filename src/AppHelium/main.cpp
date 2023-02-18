@@ -18,62 +18,6 @@ HeScene* gScene = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorBase* pCameraManipulator = nullptr;
 
-class OnOff {
-public:
-    void AddSceneNode(HeSceneNode* node) {
-        nodes.push_back(node);
-    }
-
-    void First()
-    {
-        nodes[index]->SetActive(false);
-        nodes[0]->SetActive(true);
-        index = 0;
-    }
-
-    void Last()
-    {
-        nodes[index]->SetActive(false);
-        nodes[nodes.size() - 1]->SetActive(true);
-        index = nodes.size() - 1;
-    }
-
-    void Next()
-    {
-        if (index + 1 < nodes.size()) {
-            HideAll();
-
-            nodes[index]->SetActive(false);
-            nodes[index + 1]->SetActive(true);
-            index++;
-        }
-    }
-
-    void Previous()
-    {
-        if (index > 0) {
-            HideAll();
-
-            nodes[index]->SetActive(false);
-            nodes[index - 1]->SetActive(true);
-            index--;
-        }
-    }
-
-    void HideAll()
-    {
-        for (auto& n : nodes)
-        {
-            n->SetActive(false);
-        }
-    }
-
-protected:
-    vector<HeSceneNode*> nodes;
-    size_t index = 0;
-};
-OnOff onoff;
-
 HeVisualDebugger* vd = nullptr;
 
 
@@ -120,9 +64,6 @@ int main(int argc, char** argv)
 
     Helium helium("helium", windowWidth, windowHeight);
     helium.InitializeImgui(mWindow);
-    gGraphics = helium.GetGraphics();
-
-
     gGraphics = helium.GetGraphics();
     gScene = helium.GetScene("Default Scene");
 

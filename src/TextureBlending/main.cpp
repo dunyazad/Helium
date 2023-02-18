@@ -18,7 +18,7 @@ HeGraphics* gGraphics = nullptr;
 HeScene* gScene = nullptr;
 //HeOrthogonalCamera* pCamera = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
-HeCameraManipulatorFlight* pCameraManipulator = nullptr;
+HeCameraManipulatorBase* pCameraManipulator = nullptr;
 //HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
 int capturedFrameCount = 0;
@@ -145,15 +145,11 @@ int main(int argc, char** argv)
 	gScene = helium.GetScene("Default Scene");
 
 	helium.OnPrepare([&]() {
-		cout << "Helium::OnPrepare" << endl;
-
-		gScene = helium.GetScene("Default Scene");
-
 		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
 		//pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
 		pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+		pCameraManipulator = gScene->CreateCameraManipulatoObital("Main Camera Manipulator", pCamera);
 		gScene->SetMainCamera(pCamera);
-		pCameraManipulator = gScene->CreateCameraManipulatoFlight("Main Camera Manipulator", pCamera);
 
 		vd = gScene->GetVisualDebugger();
 
@@ -169,7 +165,7 @@ int main(int argc, char** argv)
 
 		{
 			auto pNode = gScene->CreateSceneNode("Mesh");
-			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl", 1000, 1000, 1000);
 			//auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
 
 			//pGeometry->SetFillMode(HeGeometry::Wireframe);
@@ -485,6 +481,8 @@ int main(int argc, char** argv)
 
 		glfwSwapBuffers(mWindow);
 		glfwPollEvents();
+
+		helium.SetFinished(glfwWindowShouldClose(mWindow));
 		});
 
 	helium.Run();

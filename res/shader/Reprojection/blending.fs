@@ -157,7 +157,7 @@ void main() {
 			vec3 frameDirection = GetFrameDirection(i);
 			float angle = acos(dot(frameDirection, worldNormal));
 			float frameDistance = distance(worldPosition, GetFramePosition(i));
-			float ratio = pow(cos(angle), 2) / pow(frameDistance, 2);
+			float ratio = pow(cos(angle), 2) / pow(frameDistance / 1000, 2);
 			vec4 color = texture(textureArray, vec3(uv.x, uv.y, i));
 			accColor = mix(accColor, color, ratio);
 		}
