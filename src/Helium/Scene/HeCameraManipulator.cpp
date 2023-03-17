@@ -174,6 +174,8 @@ namespace ArtificialNature {
 
 			if (angleV < -90.0f) angleV = -90.0f + 0.01f;
 			if (angleV > 90.0f) angleV = 90.0f - 0.01f;
+
+			ApplyCamera();
 		}
 		else if (mouseMiddleButtonDown)
 		{
@@ -185,9 +187,9 @@ namespace ArtificialNature {
 			auto dr = camera->GetCameraRight() * (float)(-offsetX * distance * 0.001);
 			auto du = camera->GetCameraUp() * (float)(offsetY * distance * 0.001);
 			center = center + (dr + du);
-		}
 
-		ApplyCamera();
+			ApplyCamera();
+		}
 	}
 
 	void HeCameraManipulatorObital::OnMouseButton(GLFWwindow* window, int button, int action, int mods)

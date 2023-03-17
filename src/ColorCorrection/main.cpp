@@ -81,8 +81,8 @@ int main(int argc, char** argv)
         vd = gScene->GetVisualDebugger();
         //onoff = vd->GetOnOff();
 
-        auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
-        auto pMesh = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+        auto project = new HeProject("default", "data", "D:/Resources/Scan");
+        auto pMesh = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl");
         
         {
             vector<HeRay> rays;
@@ -256,7 +256,7 @@ int main(int argc, char** argv)
 
         //{
         //    auto pNode = gScene->CreateSceneNode("Mesh");
-        //    auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+        //    auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl");
 
         //    //pGeometry->SetFillMode(HeGeometry::Wireframe);
         //    pGeometry->Initialize();

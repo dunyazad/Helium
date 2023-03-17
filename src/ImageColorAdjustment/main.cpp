@@ -78,7 +78,7 @@ int main(int argc, char** argv)
 		vd = gScene->GetVisualDebugger();
 		vd->AddAxisLines();
 
-		HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+		HeProject project("default", "data", "D:/Resources/Scan");
 		capturedFrameCount = project.GetFrames().size();
 		vector<float> dataToFragmentShader;
 

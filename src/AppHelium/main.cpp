@@ -79,7 +79,7 @@ int main(int argc, char** argv)
 
  /*       {
             auto pNode = gScene->CreateSceneNode("Mesh");
-            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
+            auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl");
 
             pGeometry->SetFillMode(HeGeometry::Wireframe);
             pGeometry->Initialize();
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
             pMaterial->SetShader(pShader);
         }*/
 
-        auto project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+        auto project = new HeProject("default", "data", "D:/Resources/Scan");
         auto frames = project->GetFrames();
 
   /*      auto DrawFramePixels = [&](HeProject* project, int frameIndex) {

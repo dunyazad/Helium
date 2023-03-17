@@ -221,16 +221,23 @@ namespace ArtificialNature {
 	{
 		//auto pp = this->viewProjectionMatrix * glm::vec4(worldPosition, 1.0f);
 
-		auto ip4 = this->transformMatrixInversed * glm::vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1);
-		//auto uv4 = this->projectionMatrix * this->transformMatrixInversed * glm::vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1);
-		glm::vec3 planePoint = glm::vec3(0, 0, this->original_fx);
-		glm::vec3 planeNormal = glm::vec3(0, 0, 1);
-		glm::vec3 rayOrigin = glm::vec3(0, 0, 0);
-		glm::vec3 rayDirection = glm::normalize(glm::vec3(ip4.x, ip4.y, ip4.z));
-		glm::vec3 intersection = RayPlaneIntersection(planePoint, planeNormal, rayOrigin, rayDirection);
-		float u = ((intersection.x / (this->colorImageWidth * 0.5f)) * 0.5f + 0.5f);
-		float v = 1 - ((intersection.y / (this->colorImageHeight * 0.5f)) * 0.5f + 0.5f);
-		return glm::vec2(u, v);
+		//auto ip4 = this->transformMatrixInversed * glm::vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1);
+		////auto uv4 = this->projectionMatrix * this->transformMatrixInversed * glm::vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1);
+		//glm::vec3 planePoint = glm::vec3(0, 0, this->original_fx);
+		//glm::vec3 planeNormal = glm::vec3(0, 0, 1);
+		//glm::vec3 rayOrigin = glm::vec3(0, 0, 0);
+		//glm::vec3 rayDirection = glm::normalize(glm::vec3(ip4.x, ip4.y, ip4.z));
+		//glm::vec3 intersection = RayPlaneIntersection(planePoint, planeNormal, rayOrigin, rayDirection);
+		//float u = ((intersection.x / (this->colorImageWidth * 0.5f)) * 0.5f + 0.5f);
+		//float v = 1 - ((intersection.y / (this->colorImageHeight * 0.5f)) * 0.5f + 0.5f);
+		//return glm::vec2(u, v);
+
+		auto intrinsic = glm::mat3(this->scaled_fx, 0, this->scaled_ox, 0, this->scaled_fy, this->scaled_oy, 0, 0, 1);
+		auto extrinsic = this->transformMatrix;
+		auto world = glm::vec4(worldPosition, 1);
+		auto s = intrinsic * glm::vec3(extrinsic * world);
+		s /= s.z;
+		return glm::vec2(s.x, s.y);
 	}
 
 	glm::vec3 HeCameraInfo::UVToWorld(const glm::vec2& uv) const

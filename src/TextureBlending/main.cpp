@@ -99,6 +99,7 @@ HeShader* pShaderByDistance = nullptr;
 HeShader* pShaderByUV = nullptr;
 HeShader* pShaderBlending = nullptr;
 HeShader* pShaderCustomBlending = nullptr;
+HeShader* pShaderBlendingBestUV2 = nullptr;
 
 int main(int argc, char** argv)
 {
@@ -165,8 +166,8 @@ int main(int argc, char** argv)
 
 		{
 			auto pNode = gScene->CreateSceneNode("Mesh");
-			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl", 1000, 1000, 1000);
-			//auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
+			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
+			//auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/01_MeshFromRGBD.obj");
 
 			//pGeometry->SetFillMode(HeGeometry::Wireframe);
 			pGeometry->Initialize();
@@ -181,7 +182,7 @@ int main(int argc, char** argv)
 
 		{
 			//HeProject project(argv[1], argv[2]);
-			project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+			project = new HeProject("default", "data", "D:/Resources/Scan");
 			capturedFrameCount = project->GetFrames().size();
 			vector<float> dataToFragmentShader;
 
@@ -398,6 +399,23 @@ int main(int argc, char** argv)
 
 				pShader->SetUniformFloatArray("controlValues", controlValues);
 			}
+			{
+				auto pShader = gGraphics->GetShader("blending_best_uv_2", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/blending_best_uv_2.fs");
+				pShaderBlendingBestUV2 = pShader;
+
+				pShader->Use();
+				pShader->SetUniformInt("screenWidth", windowWidth);
+				pShader->SetUniformInt("screenHeight", windowHeight);
+
+				pShader->SetUniformInt("imageWidth", colorTextures[0].GetWidth());
+				pShader->SetUniformInt("imageHeight", colorTextures[0].GetHeight());
+
+				pShader->SetUniformFloat("controlValue", controlValue);
+
+				pShader->SetUniformInt("frameCount", capturedFrameCount);
+
+				pShader->SetUniformFloatArray("controlValues", controlValues);
+			}
 
 			auto mesh = gGraphics->GetGeometryTriangleSoup("Mesh");
 			auto nof = mesh->GetFaceCount();
@@ -598,6 +616,18 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			pShaderCustomBlending->SetUniformInt("screenWidth", windowWidth);
 			pShaderCustomBlending->SetUniformInt("screenHeight", windowHeight);
 			cout << "custom blending" << endl;
+		}
+	}
+	else if (key == GLFW_KEY_5 && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+		if (pMaterial)
+		{
+			pMaterial->SetShader(pShaderBlendingBestUV2);
+			pShaderCustomBlending->Use();
+			pShaderCustomBlending->SetUniformInt("screenWidth", windowWidth);
+			pShaderCustomBlending->SetUniformInt("screenHeight", windowHeight);
+			cout << "blending best uv 2" << endl;
 		}
 	}
 	else if (key == GLFW_KEY_PAGE_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))

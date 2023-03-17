@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 		auto pShader = gGraphics->GetShader("vertex", "./res/shader/vertex.vs", "./res/shader/vertex.fs");
 		pMaterial->SetShader(pShader);
 
-		//HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\TestOBJ.obj");
+		//HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:/Resources/Scan/projects/default/data/reconstructed/TestOBJ.obj");
 	}
 
 	{

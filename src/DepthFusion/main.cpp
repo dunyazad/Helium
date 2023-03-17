@@ -296,7 +296,7 @@ int main(int argc, char** argv)
 
 
 		{
-			project = new HeProject("default", "data", "D:\\Workspace\\Reconstruct");
+			project = new HeProject("default", "data", "D:/Resources/Scan");
 			capturedFrameCount = project->GetFrames().size();
 
 			for (size_t i = 0; i < capturedFrameCount; i++)

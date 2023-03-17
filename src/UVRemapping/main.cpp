@@ -175,8 +175,8 @@ int main(int argc, char** argv)
 
     {
         auto pNode = gScene->CreateSceneNode("Mesh");
-        auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\04_Fixed.stl");
-        //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:\\Workspace\\Reconstruct\\projects\\default\\data\\reconstructed\\01_MeshFromRGBD.obj");
+        auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl");
+        //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/01_MeshFromRGBD.obj");
 
         //pGeometry->SetFillMode(HeGeometry::Wireframe);
         pGeometry->Initialize();
@@ -192,7 +192,7 @@ int main(int argc, char** argv)
     /*
     {
         //HeProject project(argv[1], argv[2]);
-        HeProject project("default", "data", "D:\\Workspace\\Reconstruct");
+        HeProject project("default", "data", "D:/Resources/Scan");
 
         vector<HeGeometryTriangleSoup*> frameGeometries;
         for (auto& frame : project.GetFrames())
