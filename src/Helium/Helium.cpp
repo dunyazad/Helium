@@ -2,6 +2,8 @@
 
 namespace ArtificialNature {
 
+	HeSettings Helium::Settings;
+
 	Helium::Helium(const string& name, int windowWidth, int windowHeight)
 		: HeObject(name)
 	{

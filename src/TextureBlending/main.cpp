@@ -18,7 +18,7 @@ HeGraphics* gGraphics = nullptr;
 HeScene* gScene = nullptr;
 //HeOrthogonalCamera* pCamera = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
-HeCameraManipulatorBase* pCameraManipulator = nullptr;
+HeCameraManipulatorObital* pCameraManipulator = nullptr;
 //HeCameraManipulatorOrtho* pCameraManipulator = nullptr;
 
 int capturedFrameCount = 0;
@@ -139,6 +139,7 @@ int main(int argc, char** argv)
 
 	glEnable(GL_MULTISAMPLE);
 
+	Helium::Settings["ResourceRoot"] = "../../";
 	Helium helium("helium", windowWidth, windowHeight);
 	helium.InitializeImgui(mWindow);
 
@@ -148,8 +149,9 @@ int main(int argc, char** argv)
 	helium.OnPrepare([&]() {
 		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
 		//pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
-		pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+		//pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
 		pCameraManipulator = gScene->CreateCameraManipulatoObital("Main Camera Manipulator", pCamera);
+		pCameraManipulator->SetDistance(1000);
 		gScene->SetMainCamera(pCamera);
 
 		vd = gScene->GetVisualDebugger();
@@ -166,8 +168,8 @@ int main(int argc, char** argv)
 
 		{
 			auto pNode = gScene->CreateSceneNode("Mesh");
-			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
-			//auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/01_MeshFromRGBD.obj");
+			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server/projects/default/2023-04-16_11-54-40/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
+			//auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/body/reconstructed/01_MeshFromRGBD.obj");
 
 			//pGeometry->SetFillMode(HeGeometry::Wireframe);
 			pGeometry->Initialize();
@@ -182,7 +184,7 @@ int main(int argc, char** argv)
 
 		{
 			//HeProject project(argv[1], argv[2]);
-			project = new HeProject("default", "data", "D:/Resources/Scan");
+			project = new HeProject("default", "2023-04-16_11-54-40", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server");
 			capturedFrameCount = project->GetFrames().size();
 			vector<float> dataToFragmentShader;
 
@@ -193,6 +195,9 @@ int main(int argc, char** argv)
 				controlValues[i] = 1.0f;
 
 				auto frame = project->GetFrames()[i];
+				auto cameraInfo = frame->GetCameraInfo();
+				auto frustum = cameraInfo->GetFrustum();
+
 				frameInformations.push_back(frame);
 
 				dataToFragmentShader.push_back(frame->GetCameraInfo()->GetOriginalFX());
@@ -213,6 +218,15 @@ int main(int argc, char** argv)
 					dataToFragmentShader.push_back(frameInverseTransform[j]);
 				}
 
+				auto intrinsic = glm::value_ptr(glm::mat3(cameraInfo->GetScaledFX(), 0, cameraInfo->GetScaledOX(), 0, cameraInfo->GetScaledFY(), cameraInfo->GetScaledOY(), 0, 0, 1));
+				for (int j = 0; j < 9; j++) {
+					dataToFragmentShader.push_back(intrinsic[j]);
+				}
+				
+				auto extrinsic = glm::value_ptr(cameraInfo->GetTransformMatrix());
+				for (int j = 0; j < 16; j++) {
+					dataToFragmentShader.push_back(extrinsic[j]);
+				}
 				auto image = frame->LoadColorImage(gGraphics);
 				image->Initialize();
 				colorImages.push_back(image);
@@ -225,8 +239,6 @@ int main(int argc, char** argv)
 				auto hiw = width * 0.5f;
 				auto hih = height * 0.5f;
 
-				auto cameraInfo = frame->GetCameraInfo();
-				auto frustum = cameraInfo->GetFrustum();
 				auto& nr = frustum->GetRight();
 				auto& nu = frustum->GetUp();
 				auto& nf = frustum->GetForward();
@@ -468,7 +480,7 @@ int main(int argc, char** argv)
 		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (cnt == 20)
+		if (cnt == 60)
 		{
 			auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
 			//auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
@@ -741,38 +753,41 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 		auto faceIndices = pGeometry->RayIntersect(xpos, ypos, gScene->GetMainCamera()->GetProjectionMatrix(), gScene->GetMainCamera()->GetViewMatrix());
 		//auto faceIndices = pGeometry->RayIntersect(gScene->GetMainCamera()->GetLocalPosition(), gScene->GetMainCamera()->GetCameraFront());
-		auto faceIndex = faceIndices[0];
-		auto vi0 = pGeometry->GetIndex(faceIndex * 3);
-		auto vi1 = pGeometry->GetIndex(faceIndex * 3 + 1);
-		auto vi2 = pGeometry->GetIndex(faceIndex * 3 + 2);
-
-		auto v0 = pGeometry->GetVertex(vi0);
-		auto v1 = pGeometry->GetVertex(vi1);
-		auto v2 = pGeometry->GetVertex(vi2);
-		auto vc = (v0 + v1 + v2) / 3.0f;
-		auto vn = pGeometry->GetNormal(vi0);
-
-		float dist = FLT_MAX;
-		int nearestFrame = 0;
-		for (auto& frame : frameInformations)
+		if (faceIndices.size() != 0)
 		{
-			auto camera_info = frame->GetCameraInfo();
-			if (camera_info->GetFrustum()->ContainsAll(v0, v1, v2))
+			auto faceIndex = faceIndices[0];
+			auto vi0 = pGeometry->GetIndex(faceIndex * 3);
+			auto vi1 = pGeometry->GetIndex(faceIndex * 3 + 1);
+			auto vi2 = pGeometry->GetIndex(faceIndex * 3 + 2);
+
+			auto v0 = pGeometry->GetVertex(vi0);
+			auto v1 = pGeometry->GetVertex(vi1);
+			auto v2 = pGeometry->GetVertex(vi2);
+			auto vc = (v0 + v1 + v2) / 3.0f;
+			auto vn = pGeometry->GetNormal(vi0);
+
+			float dist = FLT_MAX;
+			int nearestFrame = 0;
+			for (auto& frame : frameInformations)
 			{
-				auto& position = camera_info->GetPosition();
-				auto distance2 = glm::distance2(vc, position);
-				if (distance2 < dist)
+				auto camera_info = frame->GetCameraInfo();
+				if (camera_info->GetFrustum()->ContainsAll(v0, v1, v2))
 				{
-					dist = distance2;
-					nearestFrame = frame->GetFrameIndex();
+					auto& position = camera_info->GetPosition();
+					auto distance2 = glm::distance2(vc, position);
+					if (distance2 < dist)
+					{
+						dist = distance2;
+						nearestFrame = frame->GetFrameIndex();
+					}
 				}
 			}
+			selectedFrame = nearestFrame;
+
+			gScene->GetSceneNodeIMGUI()->SetText(format("{}", selectedFrame));
+
+			vd->AddTriangle(v0, v1, v2, HeColor::RED, HeColor::RED, HeColor::RED);
 		}
-		selectedFrame = nearestFrame;
-
-		gScene->GetSceneNodeIMGUI()->SetText(format("{}", selectedFrame));
-
-		vd->AddTriangle(v0, v1, v2, HeColor::RED, HeColor::RED, HeColor::RED);
 	}
 }
 

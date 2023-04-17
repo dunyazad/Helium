@@ -9,6 +9,8 @@ namespace ArtificialNature {
 	class Helium : public HeObject
 	{
 	public:
+		static HeSettings Settings;
+
 		Helium(const string& name, int windowWidth, int windowHeight);
 		~Helium();
 
@@ -29,8 +31,9 @@ namespace ArtificialNature {
 		inline void SetFinished(bool finished) { this->finished = finished; }
 
 	private:
-		int windowWidth;
-		int windowHeight;
+		
+		int windowWidth = 1024;
+		int windowHeight = 768;
 
 		HeGraphics* graphics = nullptr;
 		map<string, HeScene*> scenes;

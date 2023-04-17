@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerWorkingDirectory>C:\Users\Mickey\Desktop\iPhotorealSpaceAndAvatar\Server</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>C:\Users\Mickey\Desktop\iPhotorealScan\Server</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>C:\Users\Mickey\Desktop\iPhotorealSpaceAndAvatar\Server/ProjectTexture.exe "default" "data" "C:\Users\Mickey\Desktop\iPhotorealSpaceAndAvatar\Server/projects/default/data/reconstructed/04_Fixed.stl" "D:/Projects/3dobj_viewer/backend/objs/default/space/data/result.obj"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\Users\Mickey\Desktop\iPhotorealScan\Server/ProjectTexture.exe "default" "2023-04-17_21-31-09" "C:\Users\Mickey\Desktop\iphotorealscan\Server/projects/default/2023-04-17_21-31-09/reconstructed/04_Fixed.stl" "D:/3dobj_viewer/backend/objs/default/space/2023-04-17_21-31-09/result.obj"</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerWorkingDirectory>C:\Users\Mickey\Desktop\iPhotorealSpaceAndAvatar\Server</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>C:\Users\Mickey\Desktop\iPhotorealScan\Server</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>C:\Users\Mickey\Desktop\iPhotorealSpaceAndAvatar\Server/ProjectTexture.exe "default" "data" "C:\Users\Mickey\Desktop\iPhotorealSpaceAndAvatar\Server/projects/default/data/reconstructed/04_Fixed.stl" "D:/Projects/3dobj_viewer/backend/objs/default/space/data/result.obj"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\Users\Mickey\Desktop\iPhotorealScan\Server/ProjectTexture.exe "default" "2023-04-17_21-31-09" "C:\Users\Mickey\Desktop\iphotorealscan\Server/projects/default/2023-04-17_21-31-09/reconstructed/04_Fixed.stl" "D:/3dobj_viewer/backend/objs/default/space/2023-04-17_21-31-09/result.obj"</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

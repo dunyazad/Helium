@@ -369,7 +369,7 @@ namespace ArtificialNature {
 		if (dirty == true) {
 			if (dynamic_cast<HeGeometryThickLines*>(this) == nullptr)
 			{
-				RebuildOctree();
+				//RebuildOctree();
 				dirty = false;
 			}
 		}
@@ -394,6 +394,8 @@ namespace ArtificialNature {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 
+		CheckGLError();
+
 		if (ibo->Size() > 0)
 		{
 			glDrawElements(drawingMode, (GLsizei)ibo->Size(), GL_UNSIGNED_INT, 0);
@@ -402,6 +404,8 @@ namespace ArtificialNature {
 		{
 			glDrawArrays(drawingMode, 0, (GLsizei)vbo->Size());
 		}
+
+		CheckGLError();
 
 		if (fillMode == Wireframe)
 		{

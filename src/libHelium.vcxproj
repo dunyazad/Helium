@@ -94,6 +94,7 @@
     <ClCompile Include="Helium\Core\HeObject.cpp" />
     <ClCompile Include="Helium\Core\HePerformance.cpp" />
     <ClCompile Include="Helium\Core\HeResourceIO.cpp" />
+    <ClCompile Include="Helium\Core\HeSettings.cpp" />
     <ClCompile Include="Helium\Core\HeTime.cpp" />
     <ClCompile Include="Helium\Core\HeWindow.cpp" />
     <ClCompile Include="Helium\Core\imgui\imgui.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Helium\Core\HeObject.h" />
     <ClInclude Include="Helium\Core\HePerformance.h" />
     <ClInclude Include="Helium\Core\HeResourceIO.h" />
+    <ClInclude Include="Helium\Core\HeSettings.h" />
     <ClInclude Include="Helium\Core\HeTime.h" />
     <ClInclude Include="Helium\Core\HeWindow.h" />
     <ClInclude Include="Helium\Core\Project\HeCameraInfo.h" />

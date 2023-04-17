@@ -43,13 +43,40 @@ vec3 GetWorldPosition() {
 }
 
 float GetFX(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16);
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16);
 	float fx = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 	return fx;
 }
 
 mat4 GetFrameInverseMatrix(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16) + 7;
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 7;
+	mat4 m;
+	for(int i = 0; i < 4; i++) {
+		float e0 = texelFetch(customDataSampler, ivec2(index + i * 4, 0), 0).r;
+		float e1 = texelFetch(customDataSampler, ivec2(index + i * 4 + 1, 0), 0).r;
+		float e2 = texelFetch(customDataSampler, ivec2(index + i * 4 + 2, 0), 0).r;
+		float e3 = texelFetch(customDataSampler, ivec2(index + i * 4 + 3, 0), 0).r;
+		m[i] = vec4(e0, e1, e2, e3);
+	}
+
+	return m;
+}
+
+mat3 GetIntrinsicMatrix(int frameIndex) {
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 23;
+	mat3 m;
+	for(int i = 0; i < 3; i++) {
+		float e0 = texelFetch(customDataSampler, ivec2(index + i * 3, 0), 0).r;
+		float e1 = texelFetch(customDataSampler, ivec2(index + i * 3 + 1, 0), 0).r;
+		float e2 = texelFetch(customDataSampler, ivec2(index + i * 3 + 2, 0), 0).r;
+		m[i] = vec3(e0, e1, e2);
+	}
+
+	return m;
+}
+
+mat4 GetExtrinsicMatrix(int frameIndex) {
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 32;
 	mat4 m;
 	for(int i = 0; i < 4; i++) {
 		float e0 = texelFetch(customDataSampler, ivec2(index + i * 4, 0), 0).r;
@@ -63,7 +90,7 @@ mat4 GetFrameInverseMatrix(int frameIndex) {
 }
 
 vec3 GetFramePosition(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16) + 1;
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 1;
 	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
 	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;
@@ -71,11 +98,11 @@ vec3 GetFramePosition(int frameIndex) {
 }
 
 vec3 GetFrameDirection(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16) + 4;
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 4;
 	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
 	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;
-	return -vec3(x, y, z);
+	return vec3(x, y, z);
 }
 
 vec3 RayPlaneIntersection(vec3 planePoint, vec3 planeNormal, vec3 rayOrigin, vec3 rayDirection) {
@@ -91,6 +118,13 @@ vec3 RayPlaneIntersection(vec3 planePoint, vec3 planeNormal, vec3 rayOrigin, vec
 }
 
 vec2 WorldToUV(int frameIndex, vec3 worldPosition) {
+	// mat3 intrinsic = GetIntrinsicMatrix(frameIndex);
+	// mat4 extrinsic = GetExtrinsicMatrix(frameIndex);
+	// vec4 world = vec4(worldPosition, 1);
+	// vec3 uv = intrinsic * vec3(extrinsic * world);
+	// uv /= uv.z;
+	// return vec2(uv.x, uv.y);
+
 	vec4 ip4 = GetFrameInverseMatrix(frameIndex) * vec4(worldPosition, 1);
 	vec3 planePoint = vec3(0, 0, GetFX(frameIndex));
 	vec3 planeNormal = vec3(0, 0, 1);
@@ -114,38 +148,6 @@ bool equals(float a, float b) {
 	}
 }
 
-#define WithQuickAndDirtyLuminancePreservation        
-
-const float LuminancePreservationFactor = 1.0;
-
-// Valid from 1000 to 40000 K (and additionally 0 for pure full white)
-vec3 colorTemperatureToRGB(float temperature){
-  // Values from: http://blenderartists.org/forum/showthread.php?270332-OSL-Goodness&p=2268693&viewfull=1#post2268693   
-  mat3 m = (temperature <= 6500.0) ? mat3(vec3(0.0, -2902.1955373783176, -8257.7997278925690),
-	                                      vec3(0.0, 1669.5803561666639, 2575.2827530017594),
-	                                      vec3(1.0, 1.3302673723350029, 1.8993753891711275)) : 
-	 								 mat3(vec3(1745.0425298314172, 1216.6168361476490, -8257.7997278925690),
-   	                                      vec3(-2666.3474220535695, -2173.1012343082230, 2575.2827530017594),
-	                                      vec3(0.55995389139931482, 0.70381203140554553, 1.8993753891711275)); 
-  return mix(clamp(vec3(m[0] / (vec3(clamp(temperature, 1000.0, 40000.0)) + m[1]) + m[2]), vec3(0.0), vec3(1.0)), vec3(1.0), smoothstep(1000.0, 0.0, temperature));
-}
-
-vec3 RGB2YUV(vec3 rgb)
-{
-	float y = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-	float u = (rgb.b - y) * 0.565;
-	float v = (rgb.r - y) * 0.713;
-	return vec3(y, u, v);
-}
-
-vec3 YUV2RGB(vec3 yuv)
-{
-	float r = yuv.x + 1.403 * yuv.z;
-	float g = yuv.x - 0.344 * yuv.y - 0.714 * yuv.z;
-	float b = yuv.x + 1.770 * yuv.y;
-	return vec3(r, g, b);
-}
-
 void main() {
 	vec3 worldPosition = GetWorldPosition();
 
@@ -157,9 +159,9 @@ void main() {
 		vec2 uv = WorldToUV(i, worldPosition);
 		if(IsInsideOfFOV(uv)) {
 			vec3 worldNormal = normalize(GetFramePosition(i) - worldPosition);
-			vec3 frameDirection = GetFrameDirection(i);
+			vec3 frameDirection = normalize(GetFrameDirection(i));
 			float angle = acos(dot(frameDirection, worldNormal));
-			if(abs(angle) < PI / 2) {
+			if(abs(angle) > PI / 2) {
 				float frameDistance = distance(worldPosition, GetFramePosition(i));
 				if(frameDistance < frameDistanceDistance) {
 					frameDistanceDistance = frameDistance;

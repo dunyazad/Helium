@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30611.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libHelium", "src\libHelium.vcxproj", "{B572468D-A94C-4EDE-8082-F6DE865B19CD}"
 EndProject
@@ -38,6 +38,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{889CCC8F-3941-49DD-8D1E-BC4029276E70}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColorCorrection", "src\ColorCorrection.vcxproj", "{B4B06A48-B339-498D-A592-CB688CE14CC9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B572468D-A94C-4EDE-8082-F6DE865B19CD} = {B572468D-A94C-4EDE-8082-F6DE865B19CD}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubeGeometryShader", "src\CubeGeometryShader.vcxproj", "{EC6B12CC-EF13-45DD-A7DF-998F6BE434CD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B572468D-A94C-4EDE-8082-F6DE865B19CD} = {B572468D-A94C-4EDE-8082-F6DE865B19CD}
 	EndProjectSection
@@ -80,6 +85,10 @@ Global
 		{B4B06A48-B339-498D-A592-CB688CE14CC9}.Debug|x64.Build.0 = Debug|x64
 		{B4B06A48-B339-498D-A592-CB688CE14CC9}.Release|x64.ActiveCfg = Release|x64
 		{B4B06A48-B339-498D-A592-CB688CE14CC9}.Release|x64.Build.0 = Release|x64
+		{EC6B12CC-EF13-45DD-A7DF-998F6BE434CD}.Debug|x64.ActiveCfg = Debug|x64
+		{EC6B12CC-EF13-45DD-A7DF-998F6BE434CD}.Debug|x64.Build.0 = Debug|x64
+		{EC6B12CC-EF13-45DD-A7DF-998F6BE434CD}.Release|x64.ActiveCfg = Release|x64
+		{EC6B12CC-EF13-45DD-A7DF-998F6BE434CD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +101,7 @@ Global
 		{8F356941-A7A9-48A0-A184-9393C91CD33E} = {889CCC8F-3941-49DD-8D1E-BC4029276E70}
 		{F07448B8-9603-4E48-A734-39A41E4E56ED} = {889CCC8F-3941-49DD-8D1E-BC4029276E70}
 		{B4B06A48-B339-498D-A592-CB688CE14CC9} = {889CCC8F-3941-49DD-8D1E-BC4029276E70}
+		{EC6B12CC-EF13-45DD-A7DF-998F6BE434CD} = {889CCC8F-3941-49DD-8D1E-BC4029276E70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FFBAE130-8C03-4DC8-92E5-ACB618F62F7B}

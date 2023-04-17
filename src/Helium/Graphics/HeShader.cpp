@@ -30,6 +30,8 @@ namespace ArtificialNature {
 				glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 				std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 			}
+
+			fclose(fp);
 		}
 
 		{
@@ -57,6 +59,8 @@ namespace ArtificialNature {
 				glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 				std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 			}
+
+			fclose(fp);
 		}
 
 		shaderProgram = glCreateProgram();
@@ -121,6 +125,8 @@ namespace ArtificialNature {
 				glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 				std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 			}
+
+			fclose(fp);
 		}
 
 		{
@@ -148,6 +154,8 @@ namespace ArtificialNature {
 				glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
 				std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
 			}
+
+			fclose(fp);
 		}
 
 		{
@@ -175,16 +183,24 @@ namespace ArtificialNature {
 				glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 				std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 			}
+
+			fclose(fp);
 		}
 
 		shaderProgram = glCreateProgram();
 
 		glAttachShader(shaderProgram, vertexShader);
+		glAttachShader(shaderProgram, geometryShader);
 		glAttachShader(shaderProgram, fragmentShader);
 		glLinkProgram(shaderProgram);
 
+		CheckGLError();
+
 		glDeleteShader(vertexShader);
+		glDeleteShader(geometryShader);
 		glDeleteShader(fragmentShader);
+
+		CheckGLError();
 	}
 
 	HeShader::~HeShader()

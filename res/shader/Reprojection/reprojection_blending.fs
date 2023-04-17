@@ -118,13 +118,13 @@
 //}
 
 //float GetFX(int frameIndex) {
-//	int index = frameIndex * (1 + 3 + 3 + 16);
+//	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16);
 //	float fx = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 //	return fx;
 //}
 
 //mat4 GetFrameInverseMatrix(int frameIndex) {
-//	int index = frameIndex * (1 + 3 + 3 + 16) + 7;
+//	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 7;
 //	mat4 m;
 //	for(int i = 0; i < 4; i++) {
 //		float e0 = texelFetch(customDataSampler, ivec2(index + i * 4, 0), 0).r;
@@ -138,7 +138,7 @@
 //}
 
 //vec3 GetFramePosition(int frameIndex) {
-//	int index = frameIndex * (1 + 3 + 3 + 16) + 1;
+//	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 1;
 //	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 //	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
 //	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;
@@ -146,7 +146,7 @@
 //}
 
 //vec3 GetFrameDirection(int frameIndex) {
-//	int index = frameIndex * (1 + 3 + 3 + 16) + 4;
+//	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 4;
 //	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 //	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
 //	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;
@@ -432,13 +432,13 @@ vec3 GetWorldPosition() {
 }
 
 float GetFX(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16);
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16);
 	float fx = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 	return fx;
 }
 
 mat4 GetFrameInverseMatrix(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16) + 7;
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 7;
 	mat4 m;
 	for(int i = 0; i < 4; i++) {
 		float e0 = texelFetch(customDataSampler, ivec2(index + i * 4, 0), 0).r;
@@ -452,7 +452,7 @@ mat4 GetFrameInverseMatrix(int frameIndex) {
 }
 
 vec3 GetFramePosition(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16) + 1;
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 1;
 	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
 	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;
@@ -460,7 +460,7 @@ vec3 GetFramePosition(int frameIndex) {
 }
 
 vec3 GetFrameDirection(int frameIndex) {
-	int index = frameIndex * (1 + 3 + 3 + 16) + 4;
+	int index = frameIndex * (1 + 3 + 3 + 16 + 9 + 16) + 4;
 	float x = texelFetch(customDataSampler, ivec2(index, 0), 0).r;
 	float y = texelFetch(customDataSampler, ivec2(index + 1, 0), 0).r;
 	float z = texelFetch(customDataSampler, ivec2(index + 2, 0), 0).r;

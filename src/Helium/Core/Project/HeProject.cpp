@@ -74,7 +74,7 @@ namespace ArtificialNature {
 			if (info.count("capturedFrameNumber") != 0)
 			{
 				int capturedFrameNumber = info["capturedFrameNumber"].get<int>();
-				for (size_t i = 0; i < capturedFrameNumber; i++)
+				for (size_t i = 0; i <= capturedFrameNumber; i++)
 				{
 					if (reconstruction_info.empty()) {
 						this->frames.push_back(new HeFrameInfo(this, (int)i));

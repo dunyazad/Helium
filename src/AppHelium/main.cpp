@@ -60,8 +60,7 @@ int main(int argc, char** argv)
     glEnable(GL_MULTISAMPLE);
 
 
-
-
+    Helium::Settings["ResourceRoot"] = "../../";
     Helium helium("helium", windowWidth, windowHeight);
     helium.InitializeImgui(mWindow);
     gGraphics = helium.GetGraphics();
@@ -92,7 +91,7 @@ int main(int argc, char** argv)
             pMaterial->SetShader(pShader);
         }*/
 
-        auto project = new HeProject("default", "data", "D:/Resources/Scan");
+        auto project = new HeProject("default", "Body", "D:/Resources/Scan");
         auto frames = project->GetFrames();
 
   /*      auto DrawFramePixels = [&](HeProject* project, int frameIndex) {

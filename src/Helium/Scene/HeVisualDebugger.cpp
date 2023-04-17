@@ -289,12 +289,19 @@ namespace ArtificialNature {
         axisGeometry->SetThickness(1);
         axisGeometry->SetDrawingMode(HeGeometry::DrawingMode::Lines);
 
-        auto nx = glm::vec3(transform * glm::vec4(-xLenth * 0.5f, 0.0f, 0.0f, 1.0f));
-        auto px = glm::vec3(transform * glm::vec4( xLenth * 0.5f, 0.0f, 0.0f, 1.0f));
-        auto ny = glm::vec3(transform * glm::vec4(0.0f, -yLenth * 0.5f, 0.0f, 1.0f));
-        auto py = glm::vec3(transform * glm::vec4(0.0f,  yLenth * 0.5f, 0.0f, 1.0f));
-        auto nz = glm::vec3(transform * glm::vec4(0.0f, 0.0f, -zLenth * 0.5f, 1.0f));
-        auto pz = glm::vec3(transform * glm::vec4(0.0f, 0.0f,  zLenth * 0.5f, 1.0f));
+        auto nx = glm::vec3(transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        auto px = glm::vec3(transform * glm::vec4(xLenth, 0.0f, 0.0f, 1.0f));
+        auto ny = glm::vec3(transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        auto py = glm::vec3(transform * glm::vec4(0.0f, yLenth, 0.0f, 1.0f));
+        auto nz = glm::vec3(transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        auto pz = glm::vec3(transform * glm::vec4(0.0f, 0.0f, zLenth, 1.0f));
+
+        //auto nx = glm::vec3(transform * glm::vec4(-xLenth * 0.5f, 0.0f, 0.0f, 1.0f));
+        //auto px = glm::vec3(transform * glm::vec4(xLenth * 0.5f, 0.0f, 0.0f, 1.0f));
+        //auto ny = glm::vec3(transform * glm::vec4(0.0f, -yLenth * 0.5f, 0.0f, 1.0f));
+        //auto py = glm::vec3(transform * glm::vec4(0.0f, yLenth * 0.5f, 0.0f, 1.0f));
+        //auto nz = glm::vec3(transform * glm::vec4(0.0f, 0.0f, -zLenth * 0.5f, 1.0f));
+        //auto pz = glm::vec3(transform * glm::vec4(0.0f, 0.0f, zLenth * 0.5f, 1.0f));
 
         axisGeometry->AddVertex(nx);
         axisGeometry->AddVertex(px);

@@ -246,6 +246,7 @@ int main(int argc, char** argv)
 
 	glEnable(GL_MULTISAMPLE);
 
+	Helium::Settings["ResourceRoot"] = "../../";
 	Helium helium("helium", windowWidth, windowHeight);
 	helium.InitializeImgui(mWindow);
 

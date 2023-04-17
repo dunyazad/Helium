@@ -64,13 +64,22 @@ namespace ArtificialNature {
 		virtual void OnWheel(GLFWwindow* window, double xoffset, double yoffset);
 		virtual void Reset();
 
+		void ApplyCamera();
+
+		inline float GetDistance() const { return distance; }
+		inline void SetDistance(float distance) { this->distance = distance; }
+
+		inline float GetAngleH() const { return angleH; }
+		inline void SetAngleH(float angleH) { this->angleH = angleH; }
+
+		inline float GetAngleV() const { return angleV; }
+		inline void SetAngleV(float angleV) { this->angleV = angleV; }
+
 	protected:
 		glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
 		float angleH = 0.0f;
 		float angleV = 0.0f;
 		float distance = 1.0f;
-
-		void ApplyCamera();
 	};
 
 	class HeCameraManipulatorFlight : public HeCameraManipulatorBase
