@@ -86,7 +86,7 @@ int main(int argc, char** argv)
             auto pMaterial = gGraphics->GetMaterial("Mesh Material");
             pGeometry->SetMaterial(pMaterial);
 
-            auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+            auto pShader = gGraphics->GetShader("vertex", HeURL::GetShaderFileURL("vertex.vs", HeURL::GetShaderFileURL("vertex.fs");
             pMaterial->SetShader(pShader);
         }*/
 

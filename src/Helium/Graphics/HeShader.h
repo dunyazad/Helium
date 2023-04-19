@@ -27,14 +27,14 @@ namespace ArtificialNature {
 		inline void AddOnUseCallback(function<void(HeShader*)> callback) { onUseCallbacks.push_back(callback); }
 
 	protected:
-		HeShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);
-		HeShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
+		HeShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL);
+		HeShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL, const HeURL& geometryShaderFileURL);
 		~HeShader();
 
 	private:
-		string vertexShaderFileName;
-		string geometryShaderFileName;
-		string fragmentShaderFileName;
+		HeURL vertexShaderFileURL;
+		HeURL geometryShaderFileURL;
+		HeURL fragmentShaderFileURL;
 
 		GLuint vertexShader;
 		GLuint geometryShader;

@@ -4,13 +4,27 @@ using namespace ArtificialNature;
 const int windowWidth = 1024;
 const int windowHeight = 1024;
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouse_position_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset);
+
 HeGraphics* gGraphics = nullptr;
 HeScene* gScene = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
-HeCameraManipulatorFlight* pCameraManipulator = nullptr;
+HeCameraManipulatorBase* pCameraManipulator = nullptr;
+
 
 int main(int argc, char** argv)
 {
+	cout << "arguments" << endl;
+	for (size_t i = 0; i < argc; i++)
+	{
+		cout << argv[i] << endl;
+	}
+	cout << endl;
+
 	// Load GLFW and Create a Window
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -36,6 +50,12 @@ int main(int argc, char** argv)
 	glfwSwapInterval(1); // Enable vsync
 	//glfwSwapInterval(0); // Disable vsync
 
+	glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
+	glfwSetKeyCallback(mWindow, key_callback);
+	glfwSetCursorPosCallback(mWindow, mouse_position_callback);
+	glfwSetMouseButtonCallback(mWindow, mouse_button_callback);
+	glfwSetScrollCallback(mWindow, mouse_wheel_callback);
+
 	gladLoadGL();
 	fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
@@ -46,21 +66,22 @@ int main(int argc, char** argv)
 
 
 	Helium helium("helium", windowWidth, windowHeight);
+	HeSettings["Current Working Directory"] = "./";
+
 	helium.InitializeImgui(mWindow);
 	gGraphics = helium.GetGraphics();
 	gScene = helium.GetScene("Default Scene");
 
-	pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
-	//pCamera = pScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
-	HeCameraManipulatorFlight manipulator(pCamera);
-	pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
-	//HeCameraManipulatorOrtho manipulator(pCamera);
-	pCameraManipulator = &manipulator;
-	gScene->SetMainCamera(pCamera);
+	helium.OnPrepare([&]() {
+		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+		//pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+		pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
+		pCameraManipulator = gScene->CreateCameraManipulatoObital("Main Camera Manipulator", pCamera);
+		gScene->SetMainCamera(pCamera);
 
 	{
 		auto pNode = gScene->CreateSceneNode("Mesh");
-		auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", argv[4]);
+		auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", argv[4], 1000, 1000, 1000);
 
 		if (pGeometry == nullptr) {
 			cout << "pGeometry == nullptr" << endl;
@@ -68,12 +89,12 @@ int main(int argc, char** argv)
 
 		//pGeometry->SetFillMode(HeGeometry::Wireframe);
 		pGeometry->Initialize();
-		//pNode->AddGeometry(pGeometry);
+		pNode->AddGeometry(pGeometry);
 
 		auto pMaterial = gGraphics->GetMaterial("Mesh Material");
 		pGeometry->SetMaterial(pMaterial);
 
-		auto pShader = gGraphics->GetShader("vertex", "./res/shader/vertex.vs", "./res/shader/vertex.fs");
+		auto pShader = gGraphics->GetShader("vertex", HeURL::GetShaderFileURL("vertex.vs"), HeURL::GetShaderFileURL("vertex.fs"));
 		pMaterial->SetShader(pShader);
 
 		//HeResourceIO::WriteOBJFile(gGraphics, pGeometry->GetName(), "D:/Resources/Scan/projects/default/data/reconstructed/TestOBJ.obj");
@@ -97,7 +118,7 @@ int main(int argc, char** argv)
 			auto pMaterial = gGraphics->GetMaterialSingleTexture(id);
 			pGeometry->SetMaterial(pMaterial);
 
-			auto pShader = gGraphics->GetShader("texture", "./res/shader/texture.vs", "./res/shader/texture.fs");
+			auto pShader = gGraphics->GetShader("texture", HeURL::GetShaderFileURL("texture.vs"), HeURL::GetShaderFileURL("texture.fs"));
 			pMaterial->SetShader(pShader);
 
 			auto image = frame->LoadColorImage(gGraphics);
@@ -193,12 +214,162 @@ int main(int argc, char** argv)
 
 		HeResourceIO::WriteOBJFile(gGraphics, frameGeometries, argv[5]);
 	}
+		});
 
-	helium.TerminateImgui();
 
-	glfwTerminate();
+		int cnt = 0;
+
+		auto lastTime = HeTime::Now();
+		double accTime = 0.0;
+		int frameCount = 0;
+		int fps = 0;
+		int incremental = 0;
+
+		//helium.SetFinished(true);
+		helium.OnFrame([&]() {
+			auto delta = HeTime::DeltaMili(lastTime);
+		lastTime = HeTime::Now();
+
+		accTime += delta;
+		frameCount++;
+		if (accTime >= 1000.0)
+		{
+			accTime -= 1000.0;
+			fps = frameCount;
+			frameCount = 0;
+		}
+
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+
+		glClearColor(0.3f, 0.5f, 0.7f, 1.0f);
+		//glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		gScene->Update((float)delta);
+		gScene->Render();
+
+		gGraphics->Flush();
+
+		{
+			auto pNode = gScene->GetSceneNodeIMGUI();
+			pNode->SetText(format("{}", frameCount));
+		}
+
+		gScene->UpdateImgui((float)delta);
+		gScene->RenderImgui();
+
+		glfwSwapBuffers(mWindow);
+		glfwPollEvents();
+
+		helium.SetFinished(glfwWindowShouldClose(mWindow));
+			});
+
+		helium.Run();
+
+		helium.OnTerminate([&]() {
+			helium.TerminateImgui();
+
+		glfwTerminate();
+			});
 
 	system("break");
 
 	return 0;
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+	pCamera->SetAspectRatio((float)width / (float)height);
+
+	//gGraphics->GetFrameBuffer("FrameBuffer")->Resize(width, height);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (pCameraManipulator != nullptr)
+	{
+		pCameraManipulator->OnKey(window, key, scancode, action, mods);
+	}
+
+	if (key == '1' && action == GLFW_RELEASE)
+	{
+		auto pGeometry = gGraphics->GetGeometry("Mesh");
+		if (pGeometry != nullptr)
+		{
+			if (pGeometry->GetFillMode() == HeGeometry::FillMode::Fill)
+			{
+				pGeometry->SetFillMode(HeGeometry::FillMode::Wireframe);
+			}
+			else if (pGeometry->GetFillMode() == HeGeometry::FillMode::Wireframe)
+			{
+				pGeometry->SetFillMode(HeGeometry::FillMode::Fill);
+			}
+		}
+	}
+	else if (key == GLFW_KEY_C && action == GLFW_RELEASE)
+	{
+		//auto image = gGraphics->GetCanvasImage("Capture", mWidth, mHeight);
+		//image->CaptureFrame("capture.png");
+
+		vector<string> fileNames;
+		for (size_t i = 0; i < 256; i++)
+		{
+			stringstream ss;
+			ss << "texture_" << i << ".png";
+			fileNames.push_back(ss.str());
+		}
+
+		gGraphics->SerialFrameCapture(fileNames, [&](int frameNumber) {
+			pCamera->SetLocalPosition(pCamera->GetLocalPosition() + glm::vec3(0.0f, 1.0f, 0.0f));
+			});
+	}
+	else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		//onoff.Previous();
+	}
+	else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		//onoff.Next();
+	}
+	else if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+	}
+	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+	}
+	else if (key == GLFW_KEY_PAGE_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+	}
+	else if (key == GLFW_KEY_PAGE_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+	}
+}
+
+void mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (pCameraManipulator != nullptr)
+	{
+		pCameraManipulator->OnMousePosition(window, xpos, ypos);
+	}
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (pCameraManipulator != nullptr)
+	{
+		pCameraManipulator->OnMouseButton(window, button, action, mods);
+	}
+}
+
+void mouse_wheel_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	if (pCameraManipulator != nullptr)
+	{
+		pCameraManipulator->OnWheel(window, xoffset, yoffset);
+	}
 }

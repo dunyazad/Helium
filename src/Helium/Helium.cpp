@@ -7,23 +7,48 @@ namespace ArtificialNature {
 	{
 		graphics = new HeGraphics(name + ".Graphics", windowWidth, windowHeight);
 
+		system("cd");
+
 		std::ifstream i("Settings.json");
 		if (i.is_open()) {
 			i >> HeSettings;
 
 			if (HeSettings.contains("Current Working Directory")) {
-				auto path = std::filesystem::current_path();
-				std::filesystem::current_path(HeSettings["Current Working Directory"]);
+				auto path = HeSettings["Current Working Directory"].get<string>();
+				std::filesystem::current_path(path);
+
+				if (HeSettings.contains("Resource Root Directory"))
+				{
+					auto resourceRoot = HeSettings["Resource Root Directory"].get<string>();
+					auto rr = (std::filesystem::current_path() / resourceRoot).string();
+					replace(rr.begin(), rr.end(), '\\', '/');
+					HeSettings["Resource Root Directory"] = rr;
+				}
+				else
+				{
+					auto rr = (std::filesystem::current_path() / "../../res").string();
+					replace(rr.begin(), rr.end(), '\\', '/');
+					HeSettings["Resource Root Directory"] = rr;
+				}
 			}
 			else {
 				auto path = std::filesystem::current_path();
-				HeSettings["Current Working Directory"] = path.string();
+				auto cwd = path.string();
+				replace(cwd.begin(), cwd.end(), '\\', '/');
+				HeSettings["Current Working Directory"] = cwd;
+				auto rr = (path / "../../res/").string();
+				replace(rr.begin(), rr.end(), '\\', '/');
+				HeSettings["Resource Root Directory"] = rr;
 			}
 		}
 		else {
-			HeSettings["Resource Root Directory"] = "../../";
 			auto path = std::filesystem::current_path();
-			HeSettings["Current Working Directory"] = path.string();
+			auto cwd = path.string();
+			replace(cwd.begin(), cwd.end(), '\\', '/');
+			HeSettings["Current Working Directory"] = cwd;
+			auto rr = (path / "../../res/").string();
+			replace(rr.begin(), rr.end(), '\\', '/');
+			HeSettings["Resource Root Directory"] = rr;
 
 			std::ofstream o("Settings.json");
 			o << std::setw(4) << HeSettings << std::endl;

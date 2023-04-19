@@ -101,7 +101,7 @@ int main(int argc, char** argv)
 			//auto pMaterial = gGraphics->GetMaterialSingleTexture(format("plane{}", i));
 			//pGeometry->SetMaterial(pMaterial);
 
-			//auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+			//auto pShader = gGraphics->GetShader("texture", HeURL::GetShaderFileURL("texture.vs", HeURL::GetShaderFileURL("texture.fs");
 			//pMaterial->SetShader(pShader);
 
 			//auto pTexture = gGraphics->GetTexture(format("plane{}", i), image);
@@ -133,7 +133,7 @@ int main(int argc, char** argv)
 			auto pMaterial = gGraphics->GetMaterialSingleTexture("plane0");
 			pGeometry->SetMaterial(pMaterial);
 
-			auto pShader = gGraphics->GetShader("colorAdjustment0", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment_LAB.fs");
+			auto pShader = gGraphics->GetShader("colorAdjustment0", HeURL::GetShaderFileURL("colorAdjustment.vs"), HeURL::GetShaderFileURL("colorAdjustment_LAB.fs"));
 			pMaterial->SetShader(pShader);
 
 			auto pTexture = gGraphics->GetTexture("plane0", colorImages[1]);
@@ -155,7 +155,7 @@ int main(int argc, char** argv)
 			auto pMaterial = gGraphics->GetMaterialSingleTexture("plane1");
 			pGeometry->SetMaterial(pMaterial);
 
-			auto pShader = gGraphics->GetShader("colorAdjustment1", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment_LAB.fs");
+			auto pShader = gGraphics->GetShader("colorAdjustment1", HeURL::GetShaderFileURL("colorAdjustment.vs"), HeURL::GetShaderFileURL("colorAdjustment_LAB.fs"));
 			pMaterial->SetShader(pShader);
 
 			auto pTexture = gGraphics->GetTexture("plane1", colorImages[2]);

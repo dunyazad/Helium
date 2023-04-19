@@ -146,7 +146,7 @@ int main(int argc, char** argv)
 	gScene = helium.GetScene("Default Scene");
 
 	helium.OnPrepare([&]() {
-		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, windowWidth, windowHeight);
+		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, float(windowWidth), float(windowHeight));
 		//pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
 		//pCamera->SetLocalPosition(glm::vec3(0.5f, 0.5f, 0.0f));
 		pCameraManipulator = gScene->CreateCameraManipulatoObital("Main Camera Manipulator", pCamera);
@@ -177,7 +177,7 @@ int main(int argc, char** argv)
 			auto pMaterial = gGraphics->GetMaterial("Mesh Material");
 			pGeometry->SetMaterial(pMaterial);
 
-			auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+			auto pShader = gGraphics->GetShader("vertex", HeURL::GetShaderFileURL("vertex.vs"), HeURL::GetShaderFileURL("vertex.fs"));
 			pMaterial->SetShader(pShader);
 		}
 
@@ -305,7 +305,7 @@ int main(int argc, char** argv)
 
 				//	auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
 
-				//	auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+				//	auto pShader = gGraphics->GetShader("thick lines", HeURL::GetShaderFileURL("thick lines.vs", HeURL::GetShaderFileURL("thick lines.fs");
 				//	pMaterial->SetShader(pShader);
 
 				//	pLines->SetMaterial(pMaterial);
@@ -342,7 +342,7 @@ int main(int argc, char** argv)
 			pMaterial->SetTextureFloatData(textureFloatData);
 
 			{
-				auto pShader = gGraphics->GetShader("by_distance", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/by_distance.fs");
+				auto pShader = gGraphics->GetShader("by_distance", HeURL::GetShaderFileURL("reprojection/reprojection.vs"), HeURL::GetShaderFileURL("reprojection/by_distance.fs"));
 				pMaterial->SetShader(pShader);
 				pShaderByDistance = pShader;
 
@@ -360,7 +360,7 @@ int main(int argc, char** argv)
 				pShader->SetUniformFloatArray("controlValues", controlValues);
 			}
 			{
-				auto pShader = gGraphics->GetShader("by_uv", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/by_uv.fs");
+				auto pShader = gGraphics->GetShader("by_uv", HeURL::GetShaderFileURL("reprojection/reprojection.vs"), HeURL::GetShaderFileURL("reprojection/by_uv.fs"));
 				pShaderByUV = pShader;
 
 				pShader->Use();
@@ -377,7 +377,7 @@ int main(int argc, char** argv)
 				pShader->SetUniformFloatArray("controlValues", controlValues);
 			}
 			{
-				auto pShader = gGraphics->GetShader("blending", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/blending.fs");
+				auto pShader = gGraphics->GetShader("blending", HeURL::GetShaderFileURL("reprojection/reprojection.vs"), HeURL::GetShaderFileURL("reprojection/blending.fs"));
 				pShaderBlending = pShader;
 
 				pShader->Use();
@@ -394,7 +394,7 @@ int main(int argc, char** argv)
 				pShader->SetUniformFloatArray("controlValues", controlValues);
 			}
 			{
-				auto pShader = gGraphics->GetShader("custom_blending", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/custom_blending.fs");
+				auto pShader = gGraphics->GetShader("custom_blending", HeURL::GetShaderFileURL("reprojection/reprojection.vs"), HeURL::GetShaderFileURL("reprojection/custom_blending.fs"));
 				pShaderCustomBlending = pShader;
 
 				pShader->Use();
@@ -411,7 +411,7 @@ int main(int argc, char** argv)
 				pShader->SetUniformFloatArray("controlValues", controlValues);
 			}
 			{
-				auto pShader = gGraphics->GetShader("blending_best_uv_2", "../../res/shader/reprojection/reprojection.vs", "../../res/shader/reprojection/blending_best_uv_2.fs");
+				auto pShader = gGraphics->GetShader("blending_best_uv_2", HeURL::GetShaderFileURL("reprojection/reprojection.vs"), HeURL::GetShaderFileURL("reprojection/blending_best_uv_2.fs"));
 				pShaderBlendingBestUV2 = pShader;
 
 				pShader->Use();

@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 
         auto pMaterial = gGraphics->GetMaterial("Debug");
 
-        auto pShader = gGraphics->GetShader("Debug", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        auto pShader = gGraphics->GetShader("Debug", HeURL::GetShaderFileURL("thick lines.vs"), HeURL::GetShaderFileURL("thick lines.fs"));
         pMaterial->SetShader(pShader);
 
         pLines->SetMaterial(pMaterial);
@@ -185,7 +185,7 @@ int main(int argc, char** argv)
         auto pMaterial = gGraphics->GetMaterial("Mesh Material");
         pGeometry->SetMaterial(pMaterial);
 
-        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+        auto pShader = gGraphics->GetShader("vertex", HeURL::GetShaderFileURL("vertex.vs"), HeURL::GetShaderFileURL("vertex.fs"));
         pMaterial->SetShader(pShader);
     }
 
@@ -207,7 +207,7 @@ int main(int argc, char** argv)
             auto pMaterial = gGraphics->GetMaterialSingleTexture(id);
             pGeometry->SetMaterial(pMaterial);
 
-            auto pShader = gGraphics->GetShader("texture", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+            auto pShader = gGraphics->GetShader("texture", HeURL::GetShaderFileURL("texture.vs", HeURL::GetShaderFileURL("texture.fs");
             pMaterial->SetShader(pShader);
 
             auto image = frame->LoadColorImage(gGraphics);
@@ -328,7 +328,7 @@ int main(int argc, char** argv)
         auto pMaterial = gGraphics->GetMaterial("Mesh Material");
         pGeometry->SetMaterial(pMaterial);
 
-        auto pShader = gGraphics->GetShader("vertex", "../../res/shader/vertex.vs", "../../res/shader/vertex.fs");
+        auto pShader = gGraphics->GetShader("vertex", HeURL::GetShaderFileURL("vertex.vs", HeURL::GetShaderFileURL("vertex.fs");
         pMaterial->SetShader(pShader);
 
 
@@ -423,7 +423,7 @@ int main(int argc, char** argv)
 
         auto pMaterial = gGraphics->GetMaterialTextureArray("texture array plane");
         
-        auto pShader = gGraphics->GetShader("textureArray", "../../res/shader/textureArray.vs", "../../res/shader/textureArray.fs");
+        auto pShader = gGraphics->GetShader("textureArray", HeURL::GetShaderFileURL("textureArray.vs"), HeURL::GetShaderFileURL("textureArray.fs"));
         pMaterial->SetShader(pShader);
 
         pMaterial->SetTextureArray(pTextureArray);

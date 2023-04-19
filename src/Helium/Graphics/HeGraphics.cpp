@@ -136,21 +136,21 @@ namespace ArtificialNature {
 		return nullptr;
 	}
 
-	HeShader* HeGraphics::GetShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName)
+	HeShader* HeGraphics::GetShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL)
 	{
 		if (shaders.count(name) == 0)
 		{
-			shaders[name] = new HeShader(name, vertexShaderFileName, fragmentShaderFileName);
+			shaders[name] = new HeShader(name, vertexShaderFileURL, fragmentShaderFileURL);
 		}
 
 		return shaders[name];
 	}
 
-	HeShader* HeGraphics::GetShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName)
+	HeShader* HeGraphics::GetShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL, const HeURL& geometryShaderFileURL)
 	{
 		if (shaders.count(name) == 0)
 		{
-			shaders[name] = new HeShader(name, vertexShaderFileName, geometryShaderFileName, fragmentShaderFileName);
+			shaders[name] = new HeShader(name, vertexShaderFileURL, fragmentShaderFileURL, geometryShaderFileURL);
 		}
 
 		return shaders[name];

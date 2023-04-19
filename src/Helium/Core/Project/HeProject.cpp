@@ -9,6 +9,9 @@ namespace ArtificialNature {
 		this->projectName = projectName;
 		this->rootPath = (filesystem::current_path() / "projects" / userName / projectName).string();
 
+		cout << "user name: " << userName << ", project name: " << projectName << endl;
+		cout << "project root directory: " << rootPath << endl;
+
 		FillOther();
 	}
 
@@ -17,6 +20,9 @@ namespace ArtificialNature {
 		this->userName = userName;
 		this->projectName = projectName;
 		this->rootPath = projectsRootPath + "/projects/" + userName + "/" + projectName;
+
+		cout << "user name: " << userName << ", project name: " << projectName << endl;
+		cout << "project root directory: " << rootPath << endl;
 
 		FillOther();
 	}

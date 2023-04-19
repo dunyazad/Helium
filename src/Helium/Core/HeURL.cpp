@@ -27,6 +27,23 @@ namespace ArtificialNature {
 		return cwd + rp;
 	}
 
+	HeURL HeURL::GetShaderFileURL(const string& shaderFileName)
+	{
+		auto shaderRootDirectory = HeURL(HeSettings["Resource Root Directory"].get<string>()) + "shader/";
+		return HeURL(shaderRootDirectory + shaderFileName);
+	}
+
+	HeURL HeURL::GetFontFileURL(const string& fontFileName)
+	{
+		auto fontRootDirectory = HeURL(HeSettings["Resource Root Directory"].get<string>()) + "fonts/";
+		return HeURL(fontRootDirectory + fontFileName);
+	}
+
+	HeURL::HeURL()
+		: path("")
+	{
+	}
+
 	HeURL::HeURL(const HeURL& other)
 		: path(other.path)
 	{
@@ -36,10 +53,6 @@ namespace ArtificialNature {
 		: path(absolutePath)
 	{
 		replace(path.begin(), path.end(), '\\', '/');
-
-		if (path.back() != '/') {
-			path.push_back('/');
-		}
 	}
 
 	HeURL::~HeURL()
@@ -49,33 +62,69 @@ namespace ArtificialNature {
 
 	HeURL HeURL::operator + (const HeURL& other)
 	{
-		return HeURL(path + makeRelative(other.path));
+		if (path.back() == '/')
+		{
+			return HeURL(path + makeRelative(other.path));
+		}
+		else
+		{
+			return HeURL(path + "/" + makeRelative(other.path));
+		}
 	}
 
 	HeURL& HeURL::operator += (const HeURL& other)
 	{
+		if (path.back() != '/')
+		{
+			path += "/";
+		}
 		path += makeRelative(other.path);
 		return *this;
 	}
 
 	HeURL HeURL::operator + (const string& other)
 	{
-		return HeURL(path + makeRelative(other));
+		if (path.back() == '/')
+		{
+			return HeURL(path + makeRelative(other));
+		}
+		else
+		{
+			return HeURL(path + "/" + makeRelative(other));
+		}
 	}
 
 	HeURL& HeURL::operator += (const string& other)
 	{
+		if (path.back() != '/')
+		{
+			path += "/";
+		}
 		path += makeRelative(other);
 		return *this;
 	}
 
 	HeURL operator + (const HeURL& a, const HeURL& b)
 	{
-		return HeURL(a.path + makeRelative(b.path));
+		if (a.path.back() == '/')
+		{
+			return HeURL(a.path + makeRelative(b.path));
+		}
+		else
+		{
+			return HeURL(a.path + "/" + makeRelative(b.path));
+		}
 	}
 
 	HeURL operator + (const HeURL& a, const string& b)
 	{
-		return HeURL(a.path + makeRelative(b));
+		if (a.path.back() == '/')
+		{
+			return HeURL(a.path + makeRelative(b));
+		}
+		else
+		{
+			return HeURL(a.path + "/" + makeRelative(b));
+		}
 	}
 }

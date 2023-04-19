@@ -113,9 +113,9 @@ public:
 
 	glm::ivec3 GetIndex(const glm::vec3& position)
 	{
-		int xIndex = floorf(position.x / voxelSize);
-		int yIndex = floorf(position.y / voxelSize);
-		int zIndex = floorf(position.z / voxelSize);
+		int xIndex = int(floorf(position.x / voxelSize));
+		int yIndex = int(floorf(position.y / voxelSize));
+		int zIndex = int(floorf(position.z / voxelSize));
 		return glm::ivec3(xIndex, yIndex, zIndex);
 	}
 
@@ -159,9 +159,9 @@ HeVisualDebugger* vd = nullptr;
 
 #include <math.h>
 
-const float voxel_size = 0.05; // size of each voxel in meters
-const float truncation_distance = 1.0; // maximum distance to consider in TSDF
-const int grid_size = 256 / voxel_size;
+const float voxel_size = 0.05f; // size of each voxel in meters
+const float truncation_distance = 1.0f; // maximum distance to consider in TSDF
+const int grid_size = int(256 / voxel_size);
 
 vector<vector<vector<float>>> tsdf(const vector<vector<vector<float>>>& depth_maps) {
 	// Initialize an empty voxel grid
@@ -175,12 +175,12 @@ vector<vector<vector<float>>> tsdf(const vector<vector<vector<float>>>& depth_ma
 				// Compute the point coordinates in the camera frame
 				glm::vec3 point(x * depth, y * depth, depth);
 				// Compute the voxel coordinates
-				int x_voxel = point.x / voxel_size;
-				int y_voxel = point.y / voxel_size;
-				int z_voxel = point.z / voxel_size;
+				int x_voxel = int(point.x / voxel_size);
+				int y_voxel = int(point.y / voxel_size);
+				int z_voxel = int(point.z / voxel_size);
 				// Update the TSDF value for the voxel
 				float current_tsdf = voxel_grid[x_voxel][y_voxel][z_voxel];
-				float new_tsdf = fminf(current_tsdf, sqrt(pow(point.x, 2) + pow(point.y, 2) + pow(point.z, 2)));
+				float new_tsdf = fminf(current_tsdf, sqrtf(powf(point.x, 2) + powf(point.y, 2) + powf(point.z, 2)));
 				voxel_grid[x_voxel][y_voxel][z_voxel] = new_tsdf;
 			}
 		}
@@ -203,9 +203,9 @@ int main(int argc, char** argv)
 {
 	// Example usage
 	vector<vector<vector<float>>> depth_maps;
-	depth_maps.push_back({ {0.5, 0.6, 0.7}, {0.8, 0.9, 1.0} });
-	depth_maps.push_back({ {1.2, 1.3, 1.4}, {1.5, 1.6, 1.7} });
-	depth_maps.push_back({ {1.8, 1.9, 2.0}, {2.1, 2.2, 2.3} });
+	depth_maps.push_back({ {0.5f, 0.6f, 0.7f}, {0.8f, 0.9f, 1.0f} });
+	depth_maps.push_back({ {1.2f, 1.3f, 1.4f}, {1.5f, 1.6f, 1.7f} });
+	depth_maps.push_back({ {1.8f, 1.9f, 2.0f}, {2.1f, 2.2f, 2.3f} });
 
 	vector<vector<vector<float>>> voxel_grid = tsdf(depth_maps);
 
@@ -344,7 +344,7 @@ int main(int argc, char** argv)
 
 					//auto pMaterial = gGraphics->GetMaterialSingleTexture(format("Frame Material {}", i));
 					//pGeometry->SetMaterial(pMaterial);
-					//auto pShader = gGraphics->GetShader(format("Frame Color Image Shader {}", i), "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+					//auto pShader = gGraphics->GetShader(format("Frame Color Image Shader {}", i), HeURL::GetShaderFileURL("texture.vs", HeURL::GetShaderFileURL("texture.fs");
 					//pMaterial->SetShader(pShader);
 
 					//auto pImage = frame->LoadColorImage(gGraphics);
@@ -359,7 +359,7 @@ int main(int argc, char** argv)
 					pGeometry->Initialize();
 					pNode->AddGeometry(pGeometry);
 					auto pMaterial = gGraphics->GetMaterial("Line Geometry.LineMaterial");
-					auto pShader = gGraphics->GetShader("Line Geometry.LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+					auto pShader = gGraphics->GetShader("Line Geometry.LineShader", HeURL::GetShaderFileURL("thick lines.vs"), HeURL::GetShaderFileURL("thick lines.fs"));
 					pMaterial->SetShader(pShader);
 					pGeometry->SetMaterial(pMaterial);
 					pGeometry->SetThickness(1);
@@ -407,7 +407,7 @@ int main(int argc, char** argv)
 
 					auto pMaterial = gGraphics->GetMaterialSingleTexture(format("Frame Depth Image Material {}", i));
 					pGeometry->SetMaterial(pMaterial);
-					auto pShader = gGraphics->GetShader(format("Frame Depth Image Shader {}", i), "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+					auto pShader = gGraphics->GetShader(format("Frame Depth Image Shader {}", i), HeURL::GetShaderFileURL("texture.vs"), HeURL::GetShaderFileURL("texture.fs"));
 					pMaterial->SetShader(pShader);
 
 					auto pImage = frame->LoadColorImage(gGraphics, false);

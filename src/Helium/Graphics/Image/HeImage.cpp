@@ -40,8 +40,8 @@ namespace ArtificialNature {
 
 		for (size_t h = 0; h < from->height; h++)
 		{
-			int targetIndex = h * n * from->nrChannels;
-			int sourceIndex = h * from->width * from->nrChannels;
+			int targetIndex = int(h * n * from->nrChannels);
+			int sourceIndex = int(h * from->width * from->nrChannels);
 			memcpy(newData + targetIndex, from->data + sourceIndex, from->width * from->nrChannels);
 		}
 

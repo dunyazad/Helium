@@ -2,6 +2,7 @@
 
 #include <Helium/Core/HeliumCommon.h>
 #include <Helium/Core/HeObject.h>
+#include <Helium/Core/HeURL.h>
 
 namespace ArtificialNature {
 
@@ -40,8 +41,8 @@ namespace ArtificialNature {
 		HeGeometryTriangleSoup* GetGeometryTriangleSoup(const string& name);
 
 		HeShader* GetShader(const string& name);
-		HeShader* GetShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName);
-		HeShader* GetShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName);
+		HeShader* GetShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL);
+		HeShader* GetShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL, const HeURL& geometryShaderFileURL);
 
 		HeMaterial* GetMaterial(const string& name);
 		HeMaterialSingleTexture* GetMaterialSingleTexture(const string& name);

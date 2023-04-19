@@ -1,13 +1,14 @@
 #include <Helium/Graphics/HeShader.h>
+#include <Helium/Core/HeURL.h>
 
 namespace ArtificialNature {
 
-	HeShader::HeShader(const string& name, const string& vertexShaderFileName, string fragmentShaderFileName)
-		: HeObject(name), vertexShaderFileName(vertexShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
+	HeShader::HeShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL)
+		: HeObject(name), vertexShaderFileURL(vertexShaderFileURL), fragmentShaderFileURL(fragmentShaderFileURL)
 	{
 		{
 			FILE* fp;
-			fopen_s(&fp, vertexShaderFileName.c_str(), "r");
+			fopen_s(&fp, vertexShaderFileURL.path.c_str(), "r");
 			fseek(fp, 0, SEEK_END);
 			auto length = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
@@ -36,7 +37,7 @@ namespace ArtificialNature {
 
 		{
 			FILE* fp;
-			fopen_s(&fp, fragmentShaderFileName.c_str(), "r");
+			fopen_s(&fp, fragmentShaderFileURL.path.c_str(), "r");
 			fseek(fp, 0, SEEK_END);
 			auto length = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
@@ -97,12 +98,12 @@ namespace ArtificialNature {
 		glDeleteShader(fragmentShader);
 	}
 
-	HeShader::HeShader(const string& name, const string& vertexShaderFileName, string geometryShaderFileName, string fragmentShaderFileName)
-		: HeObject(name), vertexShaderFileName(vertexShaderFileName), geometryShaderFileName(geometryShaderFileName), fragmentShaderFileName(fragmentShaderFileName)
+	HeShader::HeShader(const string& name, const HeURL& vertexShaderFileURL, const HeURL& fragmentShaderFileURL, const HeURL& geometryShaderFileURL)
+		: HeObject(name), vertexShaderFileURL(vertexShaderFileURL), geometryShaderFileURL(geometryShaderFileURL), fragmentShaderFileURL(fragmentShaderFileURL)
 	{
 		{
 			FILE* fp;
-			fopen_s(&fp, vertexShaderFileName.c_str(), "r");
+			fopen_s(&fp, vertexShaderFileURL.path.c_str(), "r");
 			fseek(fp, 0, SEEK_END);
 			auto length = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
@@ -131,7 +132,7 @@ namespace ArtificialNature {
 
 		{
 			FILE* fp;
-			fopen_s(&fp, geometryShaderFileName.c_str(), "r");
+			fopen_s(&fp, geometryShaderFileURL.path.c_str(), "r");
 			fseek(fp, 0, SEEK_END);
 			auto length = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
@@ -160,7 +161,7 @@ namespace ArtificialNature {
 
 		{
 			FILE* fp;
-			fopen_s(&fp, fragmentShaderFileName.c_str(), "r");
+			fopen_s(&fp, fragmentShaderFileURL.path.c_str(), "r");
 			fseek(fp, 0, SEEK_END);
 			auto length = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
@@ -262,7 +263,7 @@ namespace ArtificialNature {
 
 	void HeShader::SetUniformIntArray(const string& uniformName, const vector<int>& intArray)
 	{
-		glUniform1iv(GetUniformLocation(uniformName), intArray.size(), &intArray[0]);
+		glUniform1iv(GetUniformLocation(uniformName), GLsizei(intArray.size()), &intArray[0]);
 
 		CheckGLError();
 	}
@@ -276,7 +277,7 @@ namespace ArtificialNature {
 
 	void HeShader::SetUniformFloatArray(const string& uniformName, const vector<float>& floatArray)
 	{
-		glUniform1fv(GetUniformLocation(uniformName), floatArray.size(), &floatArray[0]);
+		glUniform1fv(GetUniformLocation(uniformName), GLsizei(floatArray.size()), &floatArray[0]);
 
 		CheckGLError();
 	}
@@ -297,7 +298,7 @@ namespace ArtificialNature {
 
 	void HeShader::SetUniformVec2Array(const string& uniformName, const vector<glm::vec2>& vec2Array)
 	{
-		glUniform2fv(GetUniformLocation(uniformName), vec2Array.size(), (const float*)&vec2Array[0]);
+		glUniform2fv(GetUniformLocation(uniformName), GLsizei(vec2Array.size()), (const float*)&vec2Array[0]);
 
 		CheckGLError();
 	}
@@ -311,7 +312,7 @@ namespace ArtificialNature {
 
 	void HeShader::SetUniformMat4Array(const string& uniformName, const vector<glm::mat4>& mats)
 	{
-		glUniformMatrix4fv(GetUniformLocation(uniformName), mats.size(), false, (const float*)&(mats[0]));
+		glUniformMatrix4fv(GetUniformLocation(uniformName), GLsizei(mats.size()), false, (const float*)&(mats[0]));
 
 		CheckGLError();
 	}

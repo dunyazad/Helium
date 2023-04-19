@@ -17,8 +17,8 @@ namespace ArtificialNature {
 			memcpy(&this->frameIndex, buffer + index, 4); index += 4;
 			memcpy(&this->depthImageWidth, buffer + index, 4); index += 4;
 			memcpy(&this->depthImageHeight, buffer + index, 4); index += 4;
-			this->colorImageWidth = depthImageWidth * 7.5;
-			this->colorImageHeight = depthImageHeight * 7.5;
+			this->colorImageWidth = int(depthImageWidth * 7.5);
+			this->colorImageHeight = int(depthImageHeight * 7.5);
 
 			memcpy(&this->original_fx, buffer + index, 4); index += 4;
 			memcpy(&this->original_fy, buffer + index, 4); index += 4;
@@ -80,7 +80,7 @@ namespace ArtificialNature {
 			rr[2] = r2;
 
 			//this->frustum = new HeFrustum(this->position, this->rotation, this->imageWidth, this->imageHeight, this->fx, this->fy);
-			this->frustum = new HeFrustum(this->transformMatrix, this->colorImageWidth * 0.01f, this->colorImageHeight * 0.01f, this->original_fx * 0.01f, this->original_fy * 0.01f);
+			this->frustum = new HeFrustum(this->transformMatrix, int(this->colorImageWidth * 0.01f), int(this->colorImageHeight * 0.01f), this->original_fx * 0.01f, this->original_fy * 0.01f);
 		}
 	}
 
@@ -166,8 +166,8 @@ namespace ArtificialNature {
 			this->frameIndex = frameInfo->GetFrameIndex();
 			this->depthImageWidth = info["image_width"].get<int>();
 			this->depthImageHeight = info["image_height"].get<int>();
-			this->colorImageWidth = this->depthImageWidth * 7.5f;
-			this->colorImageHeight = this->depthImageHeight * 7.5f;
+			this->colorImageWidth = int(this->depthImageWidth * 7.5f);
+			this->colorImageHeight = int(this->depthImageHeight * 7.5f);
 			this->scaled_fx = info["fx"].get<float>();
 			this->scaled_fy = info["fy"].get<float>();
 			this->scaled_ox = info["ox"].get<float>();
@@ -232,7 +232,7 @@ namespace ArtificialNature {
 		//float v = 1 - ((intersection.y / (this->colorImageHeight * 0.5f)) * 0.5f + 0.5f);
 		//return glm::vec2(u, v);
 
-		auto intrinsic = glm::mat3(this->scaled_fx, 0, this->scaled_ox, 0, this->scaled_fy, this->scaled_oy, 0, 0, 1);
+		auto intrinsic = glm::mat3(this->original_fx, 0, this->original_ox, 0, this->original_fy, this->original_oy, 0, 0, 1);
 		auto extrinsic = this->transformMatrix;
 		auto world = glm::vec4(worldPosition, 1);
 		auto s = intrinsic * glm::vec3(extrinsic * world);

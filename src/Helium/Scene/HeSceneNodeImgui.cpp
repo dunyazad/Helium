@@ -1,11 +1,12 @@
 #include <Helium/Scene/HeSceneNodeImgui.h>
+#include <Helium/Core/HeURL.h>
 
 namespace ArtificialNature {
 
 	HeSceneNodeImgui::HeSceneNodeImgui(const string& name, HeScene* scene) : HeSceneNode(name, scene)
 	{
         defaultFont = ImGui::GetIO().Fonts->AddFontDefault();
-        customFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("../../res/fonts/arial.ttf", 128);
+        customFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(HeURL::GetFontFileURL("arial.ttf").path.c_str(), 128);
         //customFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("./res/fonts/arial.ttf", 128);
         customFont->FontSize = 24;
 	}

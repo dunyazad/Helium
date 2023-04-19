@@ -63,7 +63,7 @@ namespace ArtificialNature {
         solidGeometry->Initialize();
         solidSceneNode->AddGeometry(solidGeometry);
         solidMaterial = graphics->GetMaterial(name + ".SolidMaterial");
-        solidShader = graphics->GetShader(name + ".SolidShader", "../../res/shader/vertexColor.vs", "../../res/shader/vertexColor.fs");
+        solidShader = graphics->GetShader(name + ".SolidShader", HeURL::GetShaderFileURL("vertexColor.vs"), HeURL::GetShaderFileURL("vertexColor.fs"));
         solidMaterial->SetShader(solidShader);
         solidGeometry->SetMaterial(solidMaterial);
 
@@ -73,7 +73,7 @@ namespace ArtificialNature {
         lineGeometry->Initialize();
         lineSceneNode->AddGeometry(lineGeometry);
         lineMaterial = graphics->GetMaterial(name + ".LineMaterial");
-        lineShader = graphics->GetShader(name + ".LineShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        lineShader = graphics->GetShader(name + ".LineShader", HeURL::GetShaderFileURL("thick lines.vs"), HeURL::GetShaderFileURL("thick lines.fs"));
         lineMaterial->SetShader(lineShader);
         lineGeometry->SetMaterial(lineMaterial);
         lineGeometry->SetThickness(1);
@@ -86,7 +86,7 @@ namespace ArtificialNature {
         //	pNode->AddGeometry(pGeometry);
         //	auto pMaterial = gGraphics->GetMaterial("Grid.Material");
         //	pGeometry->SetMaterial(pMaterial);
-        //	auto pShader = gGraphics->GetShader("Grid.Shader", "../../res/shader/grid.vs", "../../res/shader/grid.fs");
+        //	auto pShader = gGraphics->GetShader("Grid.Shader", HeURL::GetShaderFileURL("grid.vs", HeURL::GetShaderFileURL("grid.fs");
         //	pMaterial->SetShader(pShader);
         //}
     }
@@ -210,7 +210,7 @@ namespace ArtificialNature {
             pNode->AddGeometry(pGeometry);
             auto pMaterial = graphics->GetMaterialSingleTexture(name + ".TexturedMaterial " + texture->GetName());
             pMaterial->SetTexture(texture);
-            auto pShader = graphics->GetShader(name + ".TexturedShader", "../../res/shader/texture.vs", "../../res/shader/texture.fs");
+            auto pShader = graphics->GetShader(name + ".TexturedShader", HeURL::GetShaderFileURL("texture.vs"), HeURL::GetShaderFileURL("texture.fs"));
             pMaterial->SetShader(pShader);
             pGeometry->SetMaterial(pMaterial);
         }
@@ -283,7 +283,7 @@ namespace ArtificialNature {
         sceneNode->AddChild(axisSceneNode);
         axisSceneNode->AddGeometry(axisGeometry);
         axisMaterial = graphics->GetMaterial(name + ".AxisMaterial");
-        axisShader = graphics->GetShader(name + ".AxisShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        axisShader = graphics->GetShader(name + ".AxisShader", HeURL::GetShaderFileURL("thick lines.vs"), HeURL::GetShaderFileURL("thick lines.fs"));
         axisMaterial->SetShader(axisShader);
         axisGeometry->SetMaterial(axisMaterial);
         axisGeometry->SetThickness(1);
@@ -326,7 +326,7 @@ namespace ArtificialNature {
         sceneNode->AddChild(axisSceneNode);
         axisSceneNode->AddGeometry(axisGeometry);
         axisMaterial = graphics->GetMaterial(name + ".AxisMaterial");
-        axisShader = graphics->GetShader(name + ".AxisShader", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+        axisShader = graphics->GetShader(name + ".AxisShader", HeURL::GetShaderFileURL("thick lines.vs"), HeURL::GetShaderFileURL("thick lines.fs"));
         axisMaterial->SetShader(axisShader);
         axisGeometry->SetMaterial(axisMaterial);
         axisGeometry->SetThickness(1);
