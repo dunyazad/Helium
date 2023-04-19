@@ -15,6 +15,7 @@ HeScene* gScene = nullptr;
 HePerspectiveCamera* pCamera = nullptr;
 HeCameraManipulatorBase* pCameraManipulator = nullptr;
 
+HeVisualDebugger* vd = nullptr;
 
 int main(int argc, char** argv)
 {
@@ -79,6 +80,9 @@ int main(int argc, char** argv)
 		pCameraManipulator = gScene->CreateCameraManipulatoObital("Main Camera Manipulator", pCamera);
 		gScene->SetMainCamera(pCamera);
 
+		vd = gScene->GetVisualDebugger();
+		vd->AddAxisLines();
+
 	{
 		auto pNode = gScene->CreateSceneNode("Mesh");
 		auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", argv[4], 1000, 1000, 1000);
@@ -102,12 +106,57 @@ int main(int argc, char** argv)
 
 	{
 		HeProject project(argv[2], argv[3]);
+		auto frames = project.GetFrames();
 
-		cout << "number of frames " << project.GetFrames().size() << endl;
+		cout << "number of frames " << frames.size() << endl;
+
+		auto DrawFrameOutline = [&](HeProject* project, int frameIndex, const HeColor& color) {
+			auto frame = frames[frameIndex];
+			auto cameraInfo = frame->GetCameraInfo();
+			auto frustum = cameraInfo->GetFrustum();
+
+			//vd->AddLine(cameraInfo->GetPosition(), cameraInfo->UVToWorld(glm::vec2(0.25, 0.75)), HeColor::CYAN, HeColor::CYAN);
+
+			auto pc = frustum->GetPosition();
+			auto ic = frustum->GetImageCenter();
+			auto ilu = frustum->GetImageLeftUp();
+			auto ild = frustum->GetImageLeftDown();
+			auto iru = frustum->GetImageRightUp();
+			auto ird = frustum->GetImageRightDown();
+
+			vd->AddLine(pc, ic, color, color);
+			vd->AddLine(pc, ilu, color, color);
+			vd->AddLine(pc, ild, color, color);
+			vd->AddLine(pc, iru, color, color);
+			vd->AddLine(pc, ird, color, color);
+
+			cout << "ilu : " << ilu << endl;
+			cout << "ild : " << ild << endl;
+			cout << "iru : " << iru << endl;
+			cout << "ird : " << ird << endl;
+
+			//if (frameIndex == 4)
+			//{
+			//    auto tw = HeColor(1.0f, 1.0f, 1.0f, 1.0f);
+			//    vd->AddTriangle(pc, ild, ilu, tw);
+			//    vd->AddTriangle(pc, ilu, iru, tw);
+			//    vd->AddTriangle(pc, iru, ird, tw);
+			//    vd->AddTriangle(pc, ird, ild, tw);
+			//}
+
+			vd->AddLine(ilu, iru, color, color);
+			vd->AddLine(iru, ird, color, color);
+			vd->AddLine(ird, ild, color, color);
+			vd->AddLine(ild, ilu, color, color);
+			vd->AddHalfAxisLines(cameraInfo->GetTransformMatrix(), 100, 100, 100);
+		};
+
 
 		vector<HeGeometryTriangleSoup*> frameGeometries;
-		for (auto& frame : project.GetFrames())
+		for (size_t i = 0; i < frames.size(); i++)
 		{
+			auto& frame = frames[i];
+
 			auto id = format("frame_{}", frame->GetFrameIndex());
 			auto pNode = gScene->CreateSceneNode(id);
 			auto pGeometry = gGraphics->GetGeometryTriangleSoup(id);
@@ -125,6 +174,8 @@ int main(int argc, char** argv)
 			auto pTexture = gGraphics->GetTexture(id, image);
 			pTexture->Initialize();
 			pMaterial->SetTexture(pTexture);
+
+			DrawFrameOutline(&project, i, HeColor::RED);
 		}
 
 		auto mesh = gGraphics->GetGeometry("Mesh");
@@ -149,7 +200,7 @@ int main(int argc, char** argv)
 
 			HeFrameInfo* nearUVCenterFrame = nullptr;
 			float uvCenterDistance2 = FLT_MAX;
-			for (auto& frame : project.GetFrames())
+			for (auto& frame : frames)
 			{
 				auto cameraInfo = frame->GetCameraInfo();
 				auto cameraFront = glm::vec3(cameraInfo->GetViewMatrix()[3]);

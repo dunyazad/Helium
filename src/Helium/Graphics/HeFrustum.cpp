@@ -26,11 +26,11 @@ namespace ArtificialNature {
 		auto iRightUp = glm::vec3(halfWidth, halfHeight, fx);
 		auto iRightDown = glm::vec3(halfWidth, -halfHeight, fx);
 
-		this->imageCenter = this->transform * glm::vec4(iCenter, 0);
-		this->imageLeftUp = this->transform * glm::vec4(iLeftUp, 0);
-		this->imageLeftDown = this->transform * glm::vec4(iLeftDown, 0);
-		this->imageRightUp = this->transform * glm::vec4(iRightUp, 0);
-		this->imageRightDown = this->transform * glm::vec4(iRightDown, 0);
+		this->imageCenter = this->transform * glm::vec4(iCenter, 1);
+		this->imageLeftUp = this->transform * glm::vec4(iLeftUp, 1);
+		this->imageLeftDown = this->transform * glm::vec4(iLeftDown, 1);
+		this->imageRightUp = this->transform * glm::vec4(iRightUp, 1);
+		this->imageRightDown = this->transform * glm::vec4(iRightDown, 1);
 
 		//auto ic = mvp * glm::vec4(0.5f, 0.5f, 1.0f, 1.0f);// ic /= ic.w;
 		//this->imageCenter = ic * this->transform;
@@ -43,9 +43,9 @@ namespace ArtificialNature {
 		//auto ird = mvp * glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);// ird /= ird.w;
 		//this->imageRightDown = ird * this->transform;
 
-		this->forward = rotation[2];
-		this->right = rotation[0];
-		this->up = rotation[1];
+		this->forward = glm::normalize(rotation[2]);
+		this->right = glm::normalize(rotation[0]);
+		this->up = glm::normalize(rotation[1]);
 
 		auto dlu = glm::normalize(this->imageLeftUp - this->position);
 		auto dld = glm::normalize(this->imageLeftDown - this->position);
