@@ -58,9 +58,10 @@ void _CheckGLError(const char* file, int line);
 #define HeDelete(x) if(x != nullptr) { delete x; x = nullptr; }
 
 
-enum HePlaneType { XY, YX, YZ, ZY, XZ, ZX };
-
 namespace ArtificialNature {
+	extern json HeSettings;
+
+	enum HePlaneType { XY, YX, YZ, ZY, XZ, ZX };
 
 	ostream& operator << (ostream& o, const glm::vec2& v);
 

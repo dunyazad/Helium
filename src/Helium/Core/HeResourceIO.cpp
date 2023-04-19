@@ -1,7 +1,6 @@
 #include <Helium/Core/HeResourceIO.h>
 
 #include <Helium/Graphics/Graphics.h>
-#include <Helium/Core/HeFile.h>
 
 using namespace tinyply;
 

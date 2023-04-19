@@ -2,6 +2,11 @@
 
 namespace ArtificialNature {
 
+	bool HeFile::Exists(const string& filename)
+	{
+		return filesystem::exists(filename);
+	}
+
 	HeFile::HeFile()
 		: m_pFileStream(nullptr)
 	{

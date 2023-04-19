@@ -10,6 +10,8 @@ namespace ArtificialNature {
 		HeFile();
 		~HeFile();
 
+		static bool Exists(const string& filename);
+
 		void Create(string fileName, bool isBinary);
 		bool Open(string fileName, bool isBinary);
 		void Close();
@@ -50,8 +52,8 @@ namespace ArtificialNature {
 		inline int GetFileLength() const { return m_fileLength; }
 
 	private:
-		fstream* m_pFileStream;
-		string m_stlFileName;
-		int m_fileLength;
+		fstream* m_pFileStream = nullptr;
+		string m_stlFileName = "";
+		int m_fileLength = 0;
 	};
 }

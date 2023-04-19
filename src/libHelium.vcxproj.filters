@@ -165,7 +165,7 @@
     <ClCompile Include="Helium\Graphics\HeRay.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Helium\Core\HeSettings.cpp">
+    <ClCompile Include="Helium\Core\HeURL.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -336,7 +336,7 @@
     <ClInclude Include="Helium\Graphics\HeRay.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Helium\Core\HeSettings.h">
+    <ClInclude Include="Helium\Core\HeURL.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

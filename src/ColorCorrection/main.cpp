@@ -61,7 +61,6 @@ int main(int argc, char** argv)
 
 
 
-    Helium::Settings["ResourceRoot"] = "../../";
     Helium helium("helium", windowWidth, windowHeight);
     helium.InitializeImgui(mWindow);
     gGraphics = helium.GetGraphics();

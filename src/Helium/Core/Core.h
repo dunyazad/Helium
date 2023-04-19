@@ -8,6 +8,6 @@
 #include <Helium/Core/HeResourceIO.h>
 #include <Helium/Core/HePerformance.h>
 #include <Helium/Core/HeWindow.h>
-#include <Helium/Core/HeSettings.h>
+#include <Helium/Core/HeURL.h>
 
 #include <Helium/Core/Project/Project.h>

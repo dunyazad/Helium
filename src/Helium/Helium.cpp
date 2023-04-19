@@ -2,12 +2,32 @@
 
 namespace ArtificialNature {
 
-	HeSettings Helium::Settings;
-
 	Helium::Helium(const string& name, int windowWidth, int windowHeight)
 		: HeObject(name)
 	{
 		graphics = new HeGraphics(name + ".Graphics", windowWidth, windowHeight);
+
+		std::ifstream i("Settings.json");
+		if (i.is_open()) {
+			i >> HeSettings;
+
+			if (HeSettings.contains("Current Working Directory")) {
+				auto path = std::filesystem::current_path();
+				std::filesystem::current_path(HeSettings["Current Working Directory"]);
+			}
+			else {
+				auto path = std::filesystem::current_path();
+				HeSettings["Current Working Directory"] = path.string();
+			}
+		}
+		else {
+			HeSettings["Resource Root Directory"] = "../../";
+			auto path = std::filesystem::current_path();
+			HeSettings["Current Working Directory"] = path.string();
+
+			std::ofstream o("Settings.json");
+			o << std::setw(4) << HeSettings << std::endl;
+		}
 	}
 
 	Helium::~Helium()
@@ -27,6 +47,9 @@ namespace ArtificialNature {
 			delete graphics;
 			graphics = nullptr;
 		}
+
+		std::ofstream o("Settings.json");
+		o << std::setw(4) << HeSettings << std::endl;
 	}
 
 	HeScene* Helium::GetScene(const string& sceneName)

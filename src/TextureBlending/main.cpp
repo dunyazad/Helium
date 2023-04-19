@@ -139,7 +139,6 @@ int main(int argc, char** argv)
 
 	glEnable(GL_MULTISAMPLE);
 
-	Helium::Settings["ResourceRoot"] = "../../";
 	Helium helium("helium", windowWidth, windowHeight);
 	helium.InitializeImgui(mWindow);
 
@@ -168,7 +167,7 @@ int main(int argc, char** argv)
 
 		{
 			auto pNode = gScene->CreateSceneNode("Mesh");
-			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server/projects/default/2023-04-16_11-54-40/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
+			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server/projects/default/2023-04-18_02-09-37/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
 			//auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/body/reconstructed/01_MeshFromRGBD.obj");
 
 			//pGeometry->SetFillMode(HeGeometry::Wireframe);
@@ -184,7 +183,7 @@ int main(int argc, char** argv)
 
 		{
 			//HeProject project(argv[1], argv[2]);
-			project = new HeProject("default", "2023-04-16_11-54-40", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server");
+			project = new HeProject("default", "2023-04-18_02-09-37", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server");
 			capturedFrameCount = project->GetFrames().size();
 			vector<float> dataToFragmentShader;
 
@@ -232,92 +231,92 @@ int main(int argc, char** argv)
 				colorImages.push_back(image);
 
 
-				auto camera_info = frame->GetCameraInfo();
-				auto width = camera_info->GetColorImageWidth();
-				auto height = camera_info->GetColorImageHeight();
-				auto fx = camera_info->GetOriginalFX();
-				auto hiw = width * 0.5f;
-				auto hih = height * 0.5f;
+				//auto camera_info = frame->GetCameraInfo();
+				//auto width = camera_info->GetColorImageWidth();
+				//auto height = camera_info->GetColorImageHeight();
+				//auto fx = camera_info->GetOriginalFX();
+				//auto hiw = width * 0.5f;
+				//auto hih = height * 0.5f;
 
-				auto& nr = frustum->GetRight();
-				auto& nu = frustum->GetUp();
-				auto& nf = frustum->GetForward();
-				auto& fp = frustum->GetPosition();
+				//auto& nr = frustum->GetRight();
+				//auto& nu = frustum->GetUp();
+				//auto& nf = frustum->GetForward();
+				//auto& fp = frustum->GetPosition();
 
-				auto pNode = gScene->CreateSceneNode(format("frame{}", frame->GetFrameIndex()));
-				onoff.AddSceneNode(pNode);
-				{
-					auto pLines = gGraphics->GetGeometryThickLines(format("frame{}_Lines", frame->GetFrameIndex()));
-					pLines->Initialize();
-					pLines->SetThickness(1);
-					pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
-					pNode->AddGeometry(pLines);
+				//auto pNode = gScene->CreateSceneNode(format("frame{}", frame->GetFrameIndex()));
+				//onoff.AddSceneNode(pNode);
+				//{
+				//	auto pLines = gGraphics->GetGeometryThickLines(format("frame{}_Lines", frame->GetFrameIndex()));
+				//	pLines->Initialize();
+				//	pLines->SetThickness(1);
+				//	pLines->SetDrawingMode(HeGeometry::DrawingMode::Lines);
+				//	pNode->AddGeometry(pLines);
 
-					pLines->AddVertex(fp);
-					pLines->AddVertex(fp + nr * 0.1f);
-					pLines->AddVertex(fp);
-					pLines->AddVertex(fp + nu * 0.1f);
-					pLines->AddVertex(fp);
-					pLines->AddVertex(fp + nf * 0.1f);
+				//	pLines->AddVertex(fp);
+				//	pLines->AddVertex(fp + nr * 0.1f);
+				//	pLines->AddVertex(fp);
+				//	pLines->AddVertex(fp + nu * 0.1f);
+				//	pLines->AddVertex(fp);
+				//	pLines->AddVertex(fp + nf * 0.1f);
 
-					pLines->AddColor(HeColor::RED);
-					pLines->AddColor(HeColor::RED);
-					pLines->AddColor(HeColor::GREEN);
-					pLines->AddColor(HeColor::GREEN);
-					pLines->AddColor(HeColor::BLUE);
-					pLines->AddColor(HeColor::BLUE);
+				//	pLines->AddColor(HeColor::RED);
+				//	pLines->AddColor(HeColor::RED);
+				//	pLines->AddColor(HeColor::GREEN);
+				//	pLines->AddColor(HeColor::GREEN);
+				//	pLines->AddColor(HeColor::BLUE);
+				//	pLines->AddColor(HeColor::BLUE);
 
-					auto length = sqrt(fx * fx + hiw * hiw) * 0.01f;
-					pLines->AddVertex(fp);
-					pLines->AddVertex(frustum->GetImageLeftUp());
-					pLines->AddVertex(fp);
-					pLines->AddVertex(frustum->GetImageRightUp());
-					pLines->AddVertex(fp);
-					pLines->AddVertex(frustum->GetImageLeftDown());
-					pLines->AddVertex(fp);
-					pLines->AddVertex(frustum->GetImageRightDown());
+				//	auto length = sqrt(fx * fx + hiw * hiw) * 0.01f;
+				//	pLines->AddVertex(fp);
+				//	pLines->AddVertex(frustum->GetImageLeftUp());
+				//	pLines->AddVertex(fp);
+				//	pLines->AddVertex(frustum->GetImageRightUp());
+				//	pLines->AddVertex(fp);
+				//	pLines->AddVertex(frustum->GetImageLeftDown());
+				//	pLines->AddVertex(fp);
+				//	pLines->AddVertex(frustum->GetImageRightDown());
 
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
 
-					pLines->AddVertex(frustum->GetImageLeftUp());
-					pLines->AddVertex(frustum->GetImageRightUp());
-					pLines->AddVertex(frustum->GetImageRightUp());
-					pLines->AddVertex(frustum->GetImageRightDown());
-					pLines->AddVertex(frustum->GetImageRightDown());
-					pLines->AddVertex(frustum->GetImageLeftDown());
-					pLines->AddVertex(frustum->GetImageLeftDown());
-					pLines->AddVertex(frustum->GetImageLeftUp());
+				//	pLines->AddVertex(frustum->GetImageLeftUp());
+				//	pLines->AddVertex(frustum->GetImageRightUp());
+				//	pLines->AddVertex(frustum->GetImageRightUp());
+				//	pLines->AddVertex(frustum->GetImageRightDown());
+				//	pLines->AddVertex(frustum->GetImageRightDown());
+				//	pLines->AddVertex(frustum->GetImageLeftDown());
+				//	pLines->AddVertex(frustum->GetImageLeftDown());
+				//	pLines->AddVertex(frustum->GetImageLeftUp());
 
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
-					pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
+				//	pLines->AddColor(HeColor::YELLOW);
 
-					auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
+				//	auto pMaterial = gGraphics->GetMaterial("Gizmo Materials");
 
-					auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
-					pMaterial->SetShader(pShader);
+				//	auto pShader = gGraphics->GetShader("thick lines", "../../res/shader/thick lines.vs", "../../res/shader/thick lines.fs");
+				//	pMaterial->SetShader(pShader);
 
-					pLines->SetMaterial(pMaterial);
+				//	pLines->SetMaterial(pMaterial);
 
 
-					glEnable(GL_LINE_SMOOTH);
-					glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+				//	glEnable(GL_LINE_SMOOTH);
+				//	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-					glEnable(GL_BLEND);
-					glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				}
+				//	glEnable(GL_BLEND);
+				//	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				//}
 			}
 
 			//for (size_t i = 0; i < dataToFragmentShader.size(); i++)
@@ -480,21 +479,21 @@ int main(int argc, char** argv)
 		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (cnt == 60)
-		{
-			auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
-			//auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
-			pMaterial->SetIncremental(incremental);
-			onoff.On(incremental);
+		//if (cnt == 60)
+		//{
+		//	auto pMaterial = gGraphics->GetMaterialReprojection("reprojection");
+		//	//auto pMaterial = dynamic_cast<HeMaterialTextureArray*>(gGraphics->GetMaterial("texture array plane"));
+		//	pMaterial->SetIncremental(incremental);
+		//	onoff.On(incremental);
 
-			incremental++;
-			if (incremental > capturedFrameCount) {
-				incremental = 0;
-			}
+		//	incremental++;
+		//	if (incremental > capturedFrameCount) {
+		//		incremental = 0;
+		//	}
 
-			cnt = 0;
-		}
-		cnt++;
+		//	cnt = 0;
+		//}
+		//cnt++;
 
 		gScene->Update((float)delta);
 		gScene->Render();

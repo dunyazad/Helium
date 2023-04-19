@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Helium/Core/HeliumCommon.h>
+#include <Helium/Core/HeFile.h>
 
 using namespace std::chrono;
 

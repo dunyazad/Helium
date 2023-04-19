@@ -63,7 +63,6 @@ int main(int argc, char** argv)
 
 	glEnable(GL_MULTISAMPLE);
 
-	Helium::Settings["ResourceRoot"] = "../../";
 	Helium helium("helium", windowWidth, windowHeight);
 	helium.InitializeImgui(mWindow);
 	gGraphics = helium.GetGraphics();
@@ -79,7 +78,7 @@ int main(int argc, char** argv)
 		vd = gScene->GetVisualDebugger();
 		vd->AddAxisLines();
 
-		HeProject project("default", "2023-04-17_13-53-49", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server");
+		HeProject project("default", "2023-04-17_23-19-12", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server");
 		capturedFrameCount = project.GetFrames().size();
 		vector<float> dataToFragmentShader;
 
@@ -137,7 +136,7 @@ int main(int argc, char** argv)
 			auto pShader = gGraphics->GetShader("colorAdjustment0", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment_LAB.fs");
 			pMaterial->SetShader(pShader);
 
-			auto pTexture = gGraphics->GetTexture("plane0", colorImages[2]);
+			auto pTexture = gGraphics->GetTexture("plane0", colorImages[1]);
 			pTexture->Initialize();
 			pMaterial->SetTexture(pTexture);
 
@@ -159,7 +158,7 @@ int main(int argc, char** argv)
 			auto pShader = gGraphics->GetShader("colorAdjustment1", "../../res/shader/colorAdjustment.vs", "../../res/shader/colorAdjustment_LAB.fs");
 			pMaterial->SetShader(pShader);
 
-			auto pTexture = gGraphics->GetTexture("plane1", colorImages[5]);
+			auto pTexture = gGraphics->GetTexture("plane1", colorImages[2]);
 			pTexture->Initialize();
 			pMaterial->SetTexture(pTexture);
 

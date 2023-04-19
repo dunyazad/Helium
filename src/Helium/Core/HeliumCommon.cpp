@@ -26,6 +26,7 @@ void _CheckGLError(const char* file, int line)
 }
 
 namespace ArtificialNature {
+	json HeSettings;
 
 	ostream& operator << (ostream& o, const glm::vec2& v)
 	{
