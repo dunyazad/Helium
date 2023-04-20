@@ -26,9 +26,18 @@ namespace ArtificialNature {
 				}
 				else
 				{
-					auto rr = (std::filesystem::current_path() / "../../res").string();
-					replace(rr.begin(), rr.end(), '\\', '/');
-					HeSettings["Resource Root Directory"] = rr;
+					if (std::filesystem::exists(std::filesystem::current_path() / "res"))
+					{
+						auto rr = (std::filesystem::current_path() / "res").string();
+						replace(rr.begin(), rr.end(), '\\', '/');
+						HeSettings["Resource Root Directory"] = rr;
+					}
+					else// if (std::filesystem::exists(std::filesystem::current_path() / "../../res"))
+					{
+						auto rr = (std::filesystem::current_path() / "../../res").string();
+						replace(rr.begin(), rr.end(), '\\', '/');
+						HeSettings["Resource Root Directory"] = rr;
+					}
 				}
 			}
 			else {
@@ -36,9 +45,19 @@ namespace ArtificialNature {
 				auto cwd = path.string();
 				replace(cwd.begin(), cwd.end(), '\\', '/');
 				HeSettings["Current Working Directory"] = cwd;
-				auto rr = (path / "../../res/").string();
-				replace(rr.begin(), rr.end(), '\\', '/');
-				HeSettings["Resource Root Directory"] = rr;
+
+				if (std::filesystem::exists(std::filesystem::current_path() / "res"))
+				{
+					auto rr = (path / "res").string();
+					replace(rr.begin(), rr.end(), '\\', '/');
+					HeSettings["Resource Root Directory"] = rr;
+				}
+				else// if (std::filesystem::exists(std::filesystem::current_path() / "../../res"))
+				{
+					auto rr = (path / "../../res/").string();
+					replace(rr.begin(), rr.end(), '\\', '/');
+					HeSettings["Resource Root Directory"] = rr;
+				}
 			}
 		}
 		else {
@@ -46,9 +65,19 @@ namespace ArtificialNature {
 			auto cwd = path.string();
 			replace(cwd.begin(), cwd.end(), '\\', '/');
 			HeSettings["Current Working Directory"] = cwd;
-			auto rr = (path / "../../res/").string();
-			replace(rr.begin(), rr.end(), '\\', '/');
-			HeSettings["Resource Root Directory"] = rr;
+
+			if (std::filesystem::exists(std::filesystem::current_path() / "res"))
+			{
+				auto rr = (path / "res").string();
+				replace(rr.begin(), rr.end(), '\\', '/');
+				HeSettings["Resource Root Directory"] = rr;
+			}
+			else// if (std::filesystem::exists(std::filesystem::current_path() / "../../res"))
+			{
+				auto rr = (path / "../../res/").string();
+				replace(rr.begin(), rr.end(), '\\', '/');
+				HeSettings["Resource Root Directory"] = rr;
+			}
 
 			std::ofstream o("Settings.json");
 			o << std::setw(4) << HeSettings << std::endl;

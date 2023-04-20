@@ -142,8 +142,27 @@ int main(int argc, char** argv)
 	Helium helium("helium", windowWidth, windowHeight);
 	helium.InitializeImgui(mWindow);
 
+	string user_name = "default";
+	string scan_id = "data";
+
 	gGraphics = helium.GetGraphics();
 	gScene = helium.GetScene("Default Scene");
+
+	if (HeSettings.contains("Viewer User Name")) {
+		user_name = HeSettings["Viewer User Name"].get<string>();
+	}
+	
+	if (HeSettings.contains("Viewer Scan ID")) {
+		scan_id = HeSettings["Viewer Scan ID"].get<string>();
+	}
+
+	if (argc > 1) {
+		user_name = argv[1];
+	}
+
+	if (argc > 2) {
+		scan_id = argv[2];
+	}
 
 	helium.OnPrepare([&]() {
 		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, float(windowWidth), float(windowHeight));
@@ -167,8 +186,7 @@ int main(int argc, char** argv)
 
 		{
 			auto pNode = gScene->CreateSceneNode("Mesh");
-			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server/projects/default/2023-04-18_02-09-37/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
-			//auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/body/reconstructed/01_MeshFromRGBD.obj");
+			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "projects/" + user_name + "/" + scan_id + "/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
 
 			//pGeometry->SetFillMode(HeGeometry::Wireframe);
 			pGeometry->Initialize();
@@ -183,7 +201,7 @@ int main(int argc, char** argv)
 
 		{
 			//HeProject project(argv[1], argv[2]);
-			project = new HeProject("default", "2023-04-18_02-09-37", "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server");
+			project = new HeProject("default", scan_id);
 			capturedFrameCount = project->GetFrames().size();
 			vector<float> dataToFragmentShader;
 
