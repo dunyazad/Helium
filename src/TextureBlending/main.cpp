@@ -140,7 +140,7 @@ int main(int argc, char** argv)
 	glEnable(GL_MULTISAMPLE);
 
 	Helium helium("helium", windowWidth, windowHeight);
-	HeSettings["Current Working Directory"] = "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server";
+	//HeSettings["Current Working Directory"] = "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server";
 	helium.InitializeImgui(mWindow);
 
 	string user_name = "default";
