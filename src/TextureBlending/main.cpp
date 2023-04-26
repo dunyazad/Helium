@@ -165,7 +165,7 @@ int main(int argc, char** argv)
 		scan_id = argv[2];
 	}
 
-	scan_id = "TestData";
+	//scan_id = "TestData";
 
 	helium.OnPrepare([&]() {
 		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, float(windowWidth), float(windowHeight));
