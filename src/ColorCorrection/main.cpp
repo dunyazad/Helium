@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         //onoff = vd->GetOnOff();
 
         auto project = new HeProject("default", "data", "D:/Resources/Scan");
-        auto pMesh = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl");
+        auto pMesh = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", HeURL("D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl"));
         
         {
             vector<HeRay> rays;

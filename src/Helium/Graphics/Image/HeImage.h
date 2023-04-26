@@ -14,7 +14,7 @@ namespace ArtificialNature {
 		inline int GetHeight() { return height; }
 		inline int GetChannels() { return nrChannels; }
 
-		const unsigned char* Data() { return data; }
+		unsigned char* Data() { return data; }
 
 		virtual void Initialize();
 

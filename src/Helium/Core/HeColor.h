@@ -20,6 +20,10 @@ namespace ArtificialNature {
 		float b = 0.0f;
 		float a = 0.0f;
 
+		float y = 0.0f;
+		float u = 0.0f;
+		float v = 0.0f;
+
 		operator glm::vec4() const { return glm::vec4(r, g, b, a); }
 	};
 

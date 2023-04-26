@@ -175,7 +175,7 @@ int main(int argc, char** argv)
 
     {
         auto pNode = gScene->CreateSceneNode("Mesh");
-        auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl");
+        auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", HeURL("D:/Resources/Scan/projects/default/data/reconstructed/04_Fixed.stl"));
         //auto pGeometry = HeResourceIO::ReadOBJFile(gGraphics, "Mesh", "D:/Resources/Scan/projects/default/data/reconstructed/01_MeshFromRGBD.obj");
 
         //pGeometry->SetFillMode(HeGeometry::Wireframe);

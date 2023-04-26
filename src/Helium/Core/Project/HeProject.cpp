@@ -7,8 +7,8 @@ namespace ArtificialNature {
 	{
 		this->userName = userName;
 		this->projectName = projectName;
-		this->rootPath = (filesystem::current_path() / "projects" / userName / projectName).string();
-
+		//this->rootPath = (filesystem::current_path() / "projects" / userName / projectName).string();
+		this->rootPath = HeSettings["Current Working Directory"].get<string>() + "/projects/" + userName + "/" + projectName;
 		cout << "user name: " << userName << ", project name: " << projectName << endl;
 		cout << "project root directory: " << rootPath << endl;
 

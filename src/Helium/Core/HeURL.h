@@ -7,6 +7,7 @@ namespace ArtificialNature {
 	class HeURL {
 	public:
 		static HeURL FromRelativePath(const string& relativePath);
+		static HeURL GetCurrentPath();
 		static HeURL GetShaderFileURL(const string& shaderFileName);
 		static HeURL GetFontFileURL(const string& fontFileName);
 

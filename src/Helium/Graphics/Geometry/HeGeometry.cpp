@@ -369,7 +369,7 @@ namespace ArtificialNature {
 		if (dirty == true) {
 			if (dynamic_cast<HeGeometryThickLines*>(this) == nullptr)
 			{
-				//RebuildOctree();
+				RebuildOctree();
 				dirty = false;
 			}
 		}

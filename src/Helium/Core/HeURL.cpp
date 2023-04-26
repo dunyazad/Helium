@@ -27,6 +27,11 @@ namespace ArtificialNature {
 		return cwd + rp;
 	}
 
+	HeURL HeURL::GetCurrentPath()
+	{
+		return HeURL(HeSettings["Current Working Directory"].get<string>());
+	}
+
 	HeURL HeURL::GetShaderFileURL(const string& shaderFileName)
 	{
 		auto shaderRootDirectory = HeURL(HeSettings["Resource Root Directory"].get<string>()) + "shader/";

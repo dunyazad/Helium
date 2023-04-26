@@ -54,9 +54,9 @@ namespace ArtificialNature {
 		return pGeometry;
 	}
 
-	HeGeometry* HeResourceIO::ReadSTLFile(HeGraphics* pGraphics, const string& name, const string& filename, float scaleX, float scaleY, float scaleZ)
+	HeGeometry* HeResourceIO::ReadSTLFile(HeGraphics* pGraphics, const string& name, const HeURL& fileurl, float scaleX, float scaleY, float scaleZ)
 	{
-		ifstream ifs(filename);
+		ifstream ifs(fileurl.path);
 		if (ifs.is_open() == false)
 			return nullptr;
 
@@ -66,12 +66,12 @@ namespace ArtificialNature {
 		if (solid == "solid ")
 		{
 			ifs.close();
-			return ReadASCIISTLFile(pGraphics, name, filename, scaleX, scaleY, scaleZ);
+			return ReadASCIISTLFile(pGraphics, name, fileurl.path, scaleX, scaleY, scaleZ);
 		}
 		else
 		{
 			ifs.close();
-			return ReadBinarySTLFile(pGraphics, name, filename, scaleX, scaleY, scaleZ);
+			return ReadBinarySTLFile(pGraphics, name, fileurl.path, scaleX, scaleY, scaleZ);
 		}
 
 		return nullptr;

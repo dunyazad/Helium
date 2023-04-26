@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 
 	{
 		auto pNode = gScene->CreateSceneNode("Mesh");
-		auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", argv[4], 1000, 1000, 1000);
+		auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", HeURL(argv[4]), 1000, 1000, 1000);
 
 		if (pGeometry == nullptr) {
 			cout << "pGeometry == nullptr" << endl;

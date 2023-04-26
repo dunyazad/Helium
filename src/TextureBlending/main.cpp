@@ -140,6 +140,7 @@ int main(int argc, char** argv)
 	glEnable(GL_MULTISAMPLE);
 
 	Helium helium("helium", windowWidth, windowHeight);
+	HeSettings["Current Working Directory"] = "C:/Users/Mickey/Desktop/bitbucket/spacecapture/Server";
 	helium.InitializeImgui(mWindow);
 
 	string user_name = "default";
@@ -164,6 +165,8 @@ int main(int argc, char** argv)
 		scan_id = argv[2];
 	}
 
+	scan_id = "TestData";
+
 	helium.OnPrepare([&]() {
 		pCamera = gScene->CreatePerspectiveCamera("Main Camera", 0, 0, float(windowWidth), float(windowHeight));
 		//pCamera = gScene->CreateOrthogonalCamera("Main Camera", 0, 0, windowWidth, windowHeight);
@@ -186,7 +189,7 @@ int main(int argc, char** argv)
 
 		{
 			auto pNode = gScene->CreateSceneNode("Mesh");
-			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", "projects/" + user_name + "/" + scan_id + "/reconstructed/04_Fixed.stl", 1000, 1000, 1000);
+			auto pGeometry = HeResourceIO::ReadSTLFile(gGraphics, "Mesh", HeURL::FromRelativePath("projects/" + user_name + "/" + scan_id + "/reconstructed/04_Fixed.stl"), 1000, 1000, 1000);
 
 			//pGeometry->SetFillMode(HeGeometry::Wireframe);
 			pGeometry->Initialize();
@@ -803,7 +806,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 			gScene->GetSceneNodeIMGUI()->SetText(format("{}", selectedFrame));
 
-			vd->AddTriangle(v0, v1, v2, HeColor::RED, HeColor::RED, HeColor::RED);
+			//vd->AddTriangle(v0, v1, v2, HeColor::RED, HeColor::RED, HeColor::RED);
+			vd->AddLine(v0, v1, HeColor::RED, HeColor::RED);
+			vd->AddLine(v1, v2, HeColor::RED, HeColor::RED);
+			vd->AddLine(v2, v0, HeColor::RED, HeColor::RED);
 		}
 	}
 }
